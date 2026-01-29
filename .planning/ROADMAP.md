@@ -48,10 +48,11 @@ Plans:
   3. Input validation rejects values outside 10-200cm range
   4. Price calculation uses integer cents (no floating-point errors)
   5. Pricing engine has zero Shopify dependencies (pure TypeScript functions)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] TBD (to be defined during planning)
+- [ ] 02-01-PLAN.md -- Pure pricing library (types, Zod validation, calculator functions)
+- [ ] 02-02-PLAN.md -- POST /api/pricing route handler wiring validation to calculator
 
 ### Phase 3: Product Page & Real-time Pricing
 **Goal**: Customers can view products, enter dimensions, and see prices update in real-time
@@ -135,8 +136,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Project Setup | 0/2 | Planned | - |
-| 2. Pricing Engine & Validation | 0/TBD | Not started | - |
+| 1. Project Setup | 2/2 | Complete | 2026-01-29 |
+| 2. Pricing Engine & Validation | 2/2 | Complete | 2026-01-29 |
 | 3. Product Page & Real-time Pricing | 0/TBD | Not started | - |
 | 4. Cart Management | 0/TBD | Not started | - |
 | 5. Shopify Integration & Checkout | 0/TBD | Not started | - |
