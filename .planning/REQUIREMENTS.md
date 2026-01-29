@@ -127,13 +127,69 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (To be populated by roadmapper) | | |
+| DIM-01 | Phase 3 | Pending |
+| DIM-02 | Phase 3 | Pending |
+| DIM-03 | Phase 3 | Pending |
+| DIM-04 | Phase 2 | Pending |
+| DIM-05 | Phase 2 | Pending |
+| DIM-06 | Phase 2 | Pending |
+| DIM-07 | Phase 2 | Pending |
+| DIM-08 | Phase 2 | Pending |
+| DIM-09 | Phase 2 | Pending |
+| DIM-10 | Phase 2 | Pending |
+| DIM-11 | Phase 2 | Pending |
+| PRICE-01 | Phase 2 | Pending |
+| PRICE-02 | Phase 2 | Pending |
+| PRICE-03 | Phase 2 | Pending |
+| PRICE-04 | Phase 2 | Pending |
+| PRICE-05 | Phase 2 | Pending |
+| PRICE-06 | Phase 2 | Pending |
+| PRICE-07 | Phase 2 | Pending |
+| PRICE-08 | Phase 3 | Pending |
+| PRICE-09 | Phase 3 | Pending |
+| CART-01 | Phase 4 | Pending |
+| CART-02 | Phase 4 | Pending |
+| CART-03 | Phase 4 | Pending |
+| CART-04 | Phase 4 | Pending |
+| CART-05 | Phase 4 | Pending |
+| SHOP-01 | Phase 5 | Pending |
+| SHOP-02 | Phase 5 | Pending |
+| SHOP-03 | Phase 5 | Pending |
+| SHOP-04 | Phase 5 | Pending |
+| SHOP-05 | Phase 5 | Pending |
+| SHOP-06 | Phase 5 | Pending |
+| SHOP-07 | Phase 5 | Pending |
+| ORDER-01 | Phase 5 | Pending |
+| ORDER-02 | Phase 5 | Pending |
+| ORDER-03 | Phase 5 | Pending |
+| ORDER-04 | Phase 5 | Pending |
+| ORDER-05 | Phase 5 | Pending |
+| UX-01 | Phase 3 | Pending |
+| UX-02 | Phase 3 | Pending |
+| UX-03 | Phase 4 | Pending |
+| UX-04 | Phase 5 | Pending |
+| UX-05 | Phase 3 | Pending |
+| UX-06 | Phase 3 | Pending |
+| UX-07 | Phase 3 | Pending |
+| UX-08 | Phase 3 | Pending |
+| UX-09 | Phase 6 | Pending |
+| UX-10 | Phase 6 | Pending |
+| UX-11 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 46 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 46 ⚠️
+- v1 requirements: 48 total
+- Mapped to phases: 48 (100%)
+- Unmapped: 0
+
+**Phase Distribution:**
+- Phase 1 (Setup): 0 requirements (foundation)
+- Phase 2 (Pricing Engine): 15 requirements
+- Phase 3 (Product Page): 11 requirements
+- Phase 4 (Cart): 6 requirements
+- Phase 5 (Shopify Integration): 13 requirements
+- Phase 6 (Order Confirmation): 3 requirements
+- Phase 7 (Mobile Polish): 0 requirements (validation phase)
 
 ---
 *Requirements defined: 2026-01-29*
-*Last updated: 2026-01-29 after initial definition*
+*Last updated: 2026-01-29 after roadmap creation*
