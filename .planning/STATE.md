@@ -5,33 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-01-29)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing through Shopify checkout on all plan tiers
-**Current focus:** Phase 1 - Project Setup
+**Current focus:** Phase 2 - Pricing Engine & Validation
 
 ## Current Position
 
-Phase: 1 of 7 (Project Setup)
-Plan: 02 of 02 (Shopify Integration)
-Status: Phase complete
-Last activity: 2026-01-29 — Completed 01-02-PLAN.md execution
+Phase: 2 of 7 (Pricing Engine & Validation)
+Plan: 01 of 02 (Pricing Library)
+Status: In progress
+Last activity: 2026-01-29 — Completed 02-01-PLAN.md execution
 
-Progress: [██░░░░░░░░] 20%
+Progress: [███████░░░] 75%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 5.5 min
-- Total execution time: 0.18 hours
+- Total plans completed: 3
+- Average duration: 4.3 min
+- Total execution time: 0.22 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-project-setup | 2 | 11 min | 5.5 min |
+| 02-pricing-engine---validation | 1 | 1.8 min | 1.8 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (3 min), 01-02 (8 min)
-- Trend: Steady pace
+- Last 5 plans: 01-01 (3 min), 01-02 (8 min), 02-01 (1.8 min)
+- Trend: Accelerating - pure library work faster than integrations
 
 *Updated after each plan completion*
 
@@ -44,6 +45,10 @@ Recent decisions affecting current work:
 
 | Decision | Phase-Plan | Impact |
 |----------|------------|--------|
+| Use Zod safeParse() pattern for validation | 02-01 | Consumers call safeParse for full error handling control |
+| Normalize dimensions via Math.ceil(dimension / 10) * 10 | 02-01 | Ensures 71→80, consistent rounding up to nearest 10cm |
+| Bounds checking before array access | 02-01 | Prevents undefined returns, throws descriptive errors |
+| formatPrice is single cents-to-dollars conversion point | 02-01 | All other code uses integer cents, prevents rounding bugs |
 | Use @shopify/shopify-api v12 request() method | 01-02 | Avoids deprecated query() API, follows current Shopify best practices |
 | Configure adminApiAccessToken at shopifyApi init | 01-02 | Required for custom store apps in v12 |
 | Create session-based GraphQL client per request | 01-02 | Stateless API pattern, no shared state bugs |
@@ -69,6 +74,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-29
-Stopped at: Completed 01-02-PLAN.md execution (Shopify Integration)
+Stopped at: Completed 02-01-PLAN.md execution (Pricing Library)
 Resume file: None
-Phase status: Phase 1 (Project Setup) complete — ready for Phase 2
+Phase status: Phase 2 in progress - Plan 01 of 02 complete
