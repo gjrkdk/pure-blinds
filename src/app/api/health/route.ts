@@ -5,27 +5,15 @@ export async function GET() {
   try {
     const client = createAdminClient();
 
-    const response = await client.query({
-      data: `{
-        shop {
-          name
-          url
-          myshopifyDomain
-        }
-      }`,
-    });
+    const response = await client.request(`{
+      shop {
+        name
+        url
+        myshopifyDomain
+      }
+    }`);
 
-    const shop = response.body as unknown as {
-      data?: {
-        shop?: {
-          name: string;
-          url: string;
-          myshopifyDomain: string;
-        };
-      };
-    };
-
-    if (!shop.data?.shop) {
+    if (!response.data?.shop) {
       return NextResponse.json(
         { status: "error", message: "No shop data returned" },
         { status: 500 }
@@ -35,9 +23,9 @@ export async function GET() {
     return NextResponse.json({
       status: "connected",
       shop: {
-        name: shop.data.shop.name,
-        url: shop.data.shop.url,
-        domain: shop.data.shop.myshopifyDomain,
+        name: response.data.shop.name,
+        url: response.data.shop.url,
+        domain: response.data.shop.myshopifyDomain,
       },
     });
   } catch (error) {

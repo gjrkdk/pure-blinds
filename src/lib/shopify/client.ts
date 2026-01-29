@@ -22,8 +22,5 @@ export function createAdminClient() {
     accessToken: env.SHOPIFY_ADMIN_ACCESS_TOKEN,
   });
 
-  return new shopify.clients.Graphql({
-    session,
-    apiVersion: env.SHOPIFY_API_VERSION as ApiVersion,
-  });
+  return new shopify.clients.Graphql({ session });
 }
