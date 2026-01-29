@@ -32,10 +32,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Application can connect to Shopify Admin API with valid credentials
   4. Pricing matrix JSON file exists with 20x20 sample data (10-200cm range)
   5. Development environment variables are configured and working
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] TBD (to be defined during planning)
+- [ ] 01-01-PLAN.md -- Initialize Next.js project, dependencies, env validation, and pricing matrix
+- [ ] 01-02-PLAN.md -- Shopify API client, health endpoint, and store configuration
 
 ### Phase 2: Pricing Engine & Validation
 **Goal**: Backend pricing engine calculates accurate prices using matrix lookup with dimension validation
@@ -130,11 +131,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Project Setup | 0/TBD | Not started | - |
+| 1. Project Setup | 0/2 | Planned | - |
 | 2. Pricing Engine & Validation | 0/TBD | Not started | - |
 | 3. Product Page & Real-time Pricing | 0/TBD | Not started | - |
 | 4. Cart Management | 0/TBD | Not started | - |
