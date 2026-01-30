@@ -64,10 +64,10 @@ Plans:
   3. Price updates in real-time as dimensions change (no page reload)
   4. Input fields show visual feedback (highlighting, confirmation)
   5. Page is mobile-responsive with numeric keyboard on mobile
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] TBD (to be defined during planning)
+- [ ] 03-01-PLAN.md -- Product page shell and dimension configurator with debounced real-time pricing
 
 ### Phase 4: Cart Management
 **Goal**: Customers can add multiple custom-dimension items to cart and view their configurations
@@ -138,7 +138,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 |-------|----------------|--------|-----------|
 | 1. Project Setup | 2/2 | Complete | 2026-01-29 |
 | 2. Pricing Engine & Validation | 2/2 | Complete | 2026-01-29 |
-| 3. Product Page & Real-time Pricing | 0/TBD | Not started | - |
+| 3. Product Page & Real-time Pricing | 0/1 | Not started | - |
 | 4. Cart Management | 0/TBD | Not started | - |
 | 5. Shopify Integration & Checkout | 0/TBD | Not started | - |
 | 6. Order Confirmation & Transparency | 0/TBD | Not started | - |
