@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-01-29)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing through Shopify checkout on all plan tiers
-**Current focus:** Phase 4 - Cart Management
+**Current focus:** Phase 5 - Shopify Integration & Checkout
 
 ## Current Position
 
