@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-29)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing through Shopify checkout on all plan tiers
-**Current focus:** Phase 2 - Pricing Engine & Validation
+**Current focus:** Phase 3 - Product Page & Real-time Pricing
 
 ## Current Position
 
-Phase: 2 of 7 (Pricing Engine & Validation)
-Plan: 02 of 02 (POST /api/pricing Route)
-Status: Phase complete
-Last activity: 2026-01-29 — Completed 02-02-PLAN.md execution
+Phase: 3 of 7 (Product Page & Real-time Pricing)
+Plan: 01 of 01 (Product Page & Dimension Configurator)
+Status: Plan complete
+Last activity: 2026-01-31 — Completed 03-01-PLAN.md execution
 
-Progress: [███░░░░░░░] 29%
+Progress: [████░░░░░░] 36%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 3.5 min
-- Total execution time: 0.24 hours
+- Total plans completed: 5
+- Average duration: 3.8 min
+- Total execution time: 0.32 hours
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [███░░░░░░░] 29%
 |-------|-------|-------|----------|
 | 01-project-setup | 2 | 11 min | 5.5 min |
 | 02-pricing-engine---validation | 2 | 3.1 min | 1.6 min |
+| 03-product-page---real-time-pricing | 1 | 5 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (3 min), 01-02 (8 min), 02-01 (1.8 min), 02-02 (1.3 min)
-- Trend: Accelerating - Phase 2 work highly efficient (1.6 min avg vs 5.5 min in Phase 1)
+- Last 5 plans: 01-02 (8 min), 02-01 (1.8 min), 02-02 (1.3 min), 03-01 (5 min)
+- Trend: Stable - Phase 3 implementation took moderate time due to component complexity
 
 *Updated after each plan completion*
 
@@ -45,6 +46,11 @@ Recent decisions affecting current work:
 
 | Decision | Phase-Plan | Impact |
 |----------|------------|--------|
+| Use text input with inputMode="decimal" instead of type="number" | 03-01 | Avoids React number input bugs, provides numeric keyboard on mobile |
+| 400ms debounce delay for pricing API | 03-01 | Balances responsiveness with API efficiency, user stops typing before calculation |
+| Ignore flag pattern in useEffect for API calls | 03-01 | Prevents race conditions when rapid typing causes overlapping API calls |
+| Client-side validation before debounced API call | 03-01 | Provides instant feedback for obvious errors without server round-trip |
+| Parse Zod errors from API details array | 03-01 | Maps field-level errors to inline error display below inputs |
 | POST method for pricing endpoint | 02-02 | Avoids Next.js caching issues with query parameters |
 | Return Zod error.issues in 400 responses | 02-02 | Frontend gets field-level validation errors for display |
 | Thin API handler pattern | 02-02 | Route handlers delegate to pure functions, contain no business logic |
@@ -76,7 +82,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-29
-Stopped at: Completed 02-02-PLAN.md execution (POST /api/pricing Route)
+Last session: 2026-01-31
+Stopped at: Completed 03-01-PLAN.md execution (Product Page & Dimension Configurator)
 Resume file: None
-Phase status: Phase 2 (Pricing Engine & Validation) complete - ready for Phase 3
+Phase status: Phase 3 (Product Page & Real-time Pricing) complete - ready for Phase 4
