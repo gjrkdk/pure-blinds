@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-29)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing through Shopify checkout on all plan tiers
-**Current focus:** Phase 3 - Product Page & Real-time Pricing
+**Current focus:** Phase 4 - Cart Management
 
 ## Current Position
 
-Phase: 3 of 7 (Product Page & Real-time Pricing)
-Plan: 01 of 01 (Product Page & Dimension Configurator)
+Phase: 4 of 7 (Cart Management)
+Plan: 01 of 02 (Cart State Foundation)
 Status: Plan complete
-Last activity: 2026-01-31 — Completed 03-01-PLAN.md execution
+Last activity: 2026-01-31 — Completed 04-01-PLAN.md execution
 
-Progress: [████░░░░░░] 36%
+Progress: [█████░░░░░] 43%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 3.8 min
-- Total execution time: 0.32 hours
+- Total plans completed: 6
+- Average duration: 4.4 min
+- Total execution time: 0.44 hours
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [████░░░░░░] 36%
 | 01-project-setup | 2 | 11 min | 5.5 min |
 | 02-pricing-engine---validation | 2 | 3.1 min | 1.6 min |
 | 03-product-page---real-time-pricing | 1 | 5 min | 5 min |
+| 04-cart-management | 1 | 7 min | 7 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (8 min), 02-01 (1.8 min), 02-02 (1.3 min), 03-01 (5 min)
-- Trend: Stable - Phase 3 implementation took moderate time due to component complexity
+- Last 5 plans: 02-01 (1.8 min), 02-02 (1.3 min), 03-01 (5 min), 04-01 (7 min)
+- Trend: Increasing - Phase 4 cart state took longer due to Zustand integration and multi-component changes
 
 *Updated after each plan completion*
 
@@ -46,6 +47,12 @@ Recent decisions affecting current work:
 
 | Decision | Phase-Plan | Impact |
 |----------|------------|--------|
+| Use Zustand with persist middleware for cart state | 04-01 | Lightweight state management, built-in localStorage support, no provider boilerplate |
+| 7-day TTL with lazy cleanup pattern | 04-01 | Cart expires automatically after inactivity, cleanup on read avoids background timers |
+| Hash-based item uniqueness (productId + options signature) | 04-01 | Same dimensions increment quantity, prevents duplicate line items |
+| Store original dimensions (not normalized) in cart | 04-01 | Customer sees exactly what they entered, normalization transparent |
+| Mount flag pattern for cart icon badge | 04-01 | Prevents hydration mismatch between server/client, eliminates console warnings |
+| 2-second success feedback on Add to Cart | 04-01 | Clear confirmation, button disabled during feedback prevents double-add |
 | Use text input with inputMode="decimal" instead of type="number" | 03-01 | Avoids React number input bugs, provides numeric keyboard on mobile |
 | 400ms debounce delay for pricing API | 03-01 | Balances responsiveness with API efficiency, user stops typing before calculation |
 | Ignore flag pattern in useEffect for API calls | 03-01 | Prevents race conditions when rapid typing causes overlapping API calls |
@@ -83,6 +90,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-31
-Stopped at: Completed 03-01-PLAN.md execution (Product Page & Dimension Configurator)
+Stopped at: Completed 04-01-PLAN.md execution (Cart State Foundation)
 Resume file: None
-Phase status: Phase 3 (Product Page & Real-time Pricing) complete - ready for Phase 4
+Phase status: Phase 4 in progress - 1 of 2 plans complete
