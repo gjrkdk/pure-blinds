@@ -99,8 +99,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md -- Backend: env validation, Draft Order creation function, POST /api/checkout route
-- [ ] 05-02-PLAN.md -- Frontend: wire checkout button with loading state, error handling, Shopify redirect
+- [x] 05-01-PLAN.md -- Backend: env validation, Draft Order creation function, POST /api/checkout route
+- [x] 05-02-PLAN.md -- Frontend: wire checkout button with loading state, error handling, Shopify redirect
 
 ### Phase 6: Order Confirmation & Transparency
 **Goal**: Customers see clear confirmation with exact dimensions and rounding explanations
@@ -142,6 +142,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 2. Pricing Engine & Validation | 2/2 | Complete | 2026-01-29 |
 | 3. Product Page & Real-time Pricing | 1/1 | Complete | 2026-01-31 |
 | 4. Cart Management | 2/2 | Complete | 2026-01-31 |
-| 5. Shopify Integration & Checkout | 0/2 | Not started | - |
+| 5. Shopify Integration & Checkout | 2/2 | Complete | 2026-01-31 |
 | 6. Order Confirmation & Transparency | 0/TBD | Not started | - |
 | 7. Mobile Optimization & Polish | 0/TBD | Not started | - |
