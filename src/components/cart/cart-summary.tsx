@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useCartStore } from '@/lib/cart/store';
+import { formatPrice } from '@/lib/pricing/calculator';
 
 export function CartSummary() {
   const [mounted, setMounted] = useState(false);
@@ -23,13 +24,6 @@ export function CartSummary() {
 
   const totalPrice = getTotalPrice();
   const itemCount = getItemCount();
-
-  const formatPrice = (cents: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(cents / 100);
-  };
 
   const handleCheckout = async () => {
     setLoading(true);

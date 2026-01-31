@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useDebounce } from 'use-debounce'
 import { useCartStore } from '@/lib/cart/store'
+import { formatPrice } from '@/lib/pricing/calculator'
 
 interface DimensionConfiguratorProps {
   productId: string
@@ -146,14 +147,6 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
       ignore = true
     }
   }, [debouncedWidth, debouncedHeight])
-
-  // Format price for display
-  const formatPrice = (cents: number): string => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(cents / 100)
-  }
 
   // Handle add to cart
   const handleAddToCart = () => {

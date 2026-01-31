@@ -5,6 +5,7 @@ import { CartItem as CartItemType } from '@/lib/cart/types';
 import { useCartStore } from '@/lib/cart/store';
 import { QuantityInput } from './quantity-input';
 import { RemoveDialog } from './remove-dialog';
+import { formatPrice } from '@/lib/pricing/calculator';
 
 interface CartItemProps {
   item: CartItemType;
@@ -14,13 +15,6 @@ export function CartItem({ item }: CartItemProps) {
   const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState(false);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
-
-  const formatPrice = (cents: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(cents / 100);
-  };
 
   const handleQuantityUpdate = (newQuantity: number) => {
     updateQuantity(item.id, newQuantity);
