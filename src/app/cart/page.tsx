@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/cart/store';
 import { CartItem } from '@/components/cart/cart-item';
+import { CartSummary } from '@/components/cart/cart-summary';
 
 export default function CartPage() {
   const [mounted, setMounted] = useState(false);
@@ -74,6 +75,8 @@ export default function CartPage() {
           <CartItem key={item.id} item={item} />
         ))}
       </div>
+
+      <CartSummary />
     </div>
   );
 }
