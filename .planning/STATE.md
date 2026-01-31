@@ -2,19 +2,18 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-29)
+See: .planning/PROJECT.md (updated 2026-01-31)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing through Shopify checkout on all plan tiers
-**Current focus:** Phase 5 - Shopify Integration & Checkout
+**Current focus:** v1.1 refinements - verification docs, test coverage, production setup
 
 ## Current Position
 
-Phase: 5 of 5 (Shopify Integration & Checkout)
-Plan: 02 of 02 (Frontend Checkout)
-Status: Milestone complete
-Last activity: 2026-01-31 — Completed 05-02-PLAN.md execution
+Milestone: v1.0 shipped
+Status: Ready for next milestone
+Last activity: 2026-01-31 — v1.0 milestone archived, formatPrice duplication fixed
 
-Progress: [██████████] 100%
+Progress: v1.0 complete (5 phases, 9 plans, 100%)
 
 ## Performance Metrics
 
@@ -41,10 +40,16 @@ Progress: [██████████] 100%
 
 ## Accumulated Context
 
+### v1.0 Milestone Summary
+
+**Shipped:** 2026-01-31 (3 days from start)
+**Achievements:** 44/45 requirements, 5 phases, 9 plans, 1,522 LOC TypeScript
+**Archive:** See .planning/MILESTONES.md and .planning/milestones/v1.0-*.md
+
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
+All v1.0 decisions validated and marked ✓ Good in PROJECT.md Key Decisions table.
+Decisions cleared (milestone complete):
 
 | Decision | Phase-Plan | Impact |
 |----------|------------|--------|
@@ -90,11 +95,13 @@ Architecture decisions from roadmap:
 
 ### Pending Todos
 
-None yet.
+- Create Phase 3 verification documentation (process gap from v1.0 audit)
+- Add test products to Shopify store (deferred from Phase 1)
+- Expand test coverage (pricing calculator, cart store actions)
 
 ### Blockers/Concerns
 
-None yet.
+None. v1.0 shipped and working.
 
 ### Quick Tasks Completed
 

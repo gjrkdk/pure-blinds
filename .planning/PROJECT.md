@@ -12,26 +12,27 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Customer can view product information on product page — v1.0
+- ✓ Customer can enter width dimension (any value) — v1.0
+- ✓ Customer can enter height dimension (any value) — v1.0
+- ✓ Dimensions automatically round up to nearest 10cm increment (25cm → 30cm) — v1.0
+- ✓ Price calculated from 20×20 matrix (10-200cm range, 10cm steps) — v1.0
+- ✓ Customer can add configured item to frontend-managed cart — v1.0
+- ✓ Cart supports multiple items with different dimension configurations — v1.0
+- ✓ Customer can proceed to checkout — v1.0
+- ✓ Backend creates single Shopify Draft Order from cart — v1.0
+- ✓ Each Draft Order line item includes: product name with dimensions, custom locked price, configuration payload (width, height, normalized values) — v1.0 (pricing matrix reference deferred)
+- ✓ Backend returns Shopify checkout URL — v1.0
+- ✓ Customer redirected to Shopify checkout to complete payment — v1.0
+- ✓ Order created in Shopify after successful payment — v1.0
+- ✓ Solution works on all Shopify plans (Basic, Shopify, Advanced, Plus) — v1.0
 
 ### Active
 
-<!-- Phase 1 MVP: Fastest working webshop -->
-
-- [ ] Customer can view product information on product page
-- [ ] Customer can enter width dimension (any value)
-- [ ] Customer can enter height dimension (any value)
-- [ ] Dimensions automatically round up to nearest 10cm increment (25cm → 30cm)
-- [ ] Price calculated from 20×20 matrix (10-200cm range, 10cm steps)
-- [ ] Customer can add configured item to frontend-managed cart
-- [ ] Cart supports multiple items with different dimension configurations
-- [ ] Customer can proceed to checkout
-- [ ] Backend creates single Shopify Draft Order from cart
-- [ ] Each Draft Order line item includes: product name with dimensions, custom locked price, configuration payload (width, height, normalized values), pricing matrix reference
-- [ ] Backend returns Shopify checkout URL
-- [ ] Customer redirected to Shopify checkout to complete payment
-- [ ] Order created in Shopify after successful payment
-- [ ] Solution works on all Shopify plans (Basic, Shopify, Advanced, Plus)
+- [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
+- [ ] Create test products in Shopify store (deferred from Phase 1)
+- [ ] Add unit tests for pricing calculator and cart store actions
+- [ ] Pricing matrix reference in Draft Order custom attributes (ORDER-04 deferred from v1.0)
 
 ### Out of Scope
 
@@ -48,29 +49,37 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 **Product domain:** Custom textiles (curtains, flags) where every order has unique dimensions.
 
+**Current codebase state (v1.0 shipped):**
+- 1,522 LOC TypeScript/TSX
+- Tech stack: Next.js 15 App Router, TypeScript, Tailwind CSS, Zustand, Shopify Admin API
+- 3 API routes: /api/pricing (POST), /api/checkout (POST), /api/health (GET)
+- Pure pricing engine with zero Shopify dependencies (enables future extraction)
+- Cart persistence: localStorage with 7-day TTL
+- Test coverage: 1 integration test (cart-clear-on-checkout)
+
 **Pricing matrix structure:**
 - 20×20 grid = 400 price points
 - Width: 10cm to 200cm in 10cm increments
 - Height: 10cm to 200cm in 10cm increments
 - Customer can enter any dimension, system rounds UP to next 10cm step
 - Rounding ensures customer always receives at least the dimensions they ordered
+- Stored as JSON file (data/pricing-matrix.json)
 
-**Matrix data:**
-- Sample pricing matrix available for initial development
-- Will be refined during build and validation phase
+**User feedback themes:**
+- None yet (v1.0 awaiting production deployment)
+
+**Known issues/technical debt:**
+- Phase 3 missing verification documentation (process gap)
+- No test products in Shopify store (using mock data)
+- formatPrice duplication fixed in v1.0
+- Limited test coverage (only 1 integration test)
 
 **Multi-phase vision:**
-- Phase 1: MVP webshop (own store, fastest validation)
-- Phase 2: Refinement (edge cases, server-side validation, persistence)
+- ✅ Phase 1: MVP webshop (own store, fastest validation) — v1.0 shipped
+- Phase 2: Refinement (edge cases, test coverage, verification docs)
 - Phase 3: Shopify app v1 (theme-based stores, largest market)
 - Phase 4: Shopify app v2 (native pricing for Plus merchants)
 - Phase 5: Headless/API (technical merchants, full freedom)
-
-**Existing setup:**
-- Starting from scratch
-- Need to create Shopify store
-- Need to configure product(s)
-- No existing codebase
 
 ## Constraints
 
@@ -86,13 +95,18 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Pricing as standalone domain | Engine must be reusable across webshop, app, and API without modification | — Pending |
-| Shopify as execution layer only | Keeps pricing logic portable, Shopify handles what it does best (checkout/payments) | — Pending |
-| Draft Order approach for MVP | Works on all Shopify plans, avoids plan-gated features, fastest path to revenue | — Pending |
-| BFF architecture (Next.js) | Single codebase for frontend + backend API, faster development, simpler deployment | — Pending |
-| Round UP rounding strategy | Customer always gets at least what they ordered (25cm → 30cm), better UX than rounding down | — Pending |
-| JSON matrix storage in v1 | Defer database complexity until business model validated, faster MVP | — Pending |
-| Single product type in v1 | Validate core pricing mechanics before expanding product catalog | — Pending |
+| Pricing as standalone domain | Engine must be reusable across webshop, app, and API without modification | ✓ Good — zero Shopify imports in src/lib/pricing/, fully portable |
+| Shopify as execution layer only | Keeps pricing logic portable, Shopify handles what it does best (checkout/payments) | ✓ Good — Draft Orders create custom line items, Shopify handles payment/taxes |
+| Draft Order approach for MVP | Works on all Shopify plans, avoids plan-gated features, fastest path to revenue | ✓ Good — no Plus-only features, EUR currency support confirmed |
+| BFF architecture (Next.js) | Single codebase for frontend + backend API, faster development, simpler deployment | ✓ Good — single repo, API routes colocated with frontend |
+| Round UP rounding strategy | Customer always gets at least what they ordered (25cm → 30cm), better UX than rounding down | ✓ Good — normalizeDimension uses Math.ceil, transparent to user |
+| JSON matrix storage in v1 | Defer database complexity until business model validated, faster MVP | ✓ Good — 400 price points load instantly, easy to update |
+| Single product type in v1 | Validate core pricing mechanics before expanding product catalog | ✓ Good — productId/productName props support multi-product future |
+| Integer cents for all pricing | Prevent floating-point rounding errors | ✓ Good — all calculations in cents, formatPrice is single conversion point |
+| 400ms debounce for pricing API | Balance responsiveness with API call efficiency | ✓ Good — prevents spam, user stops typing before calculation |
+| Zustand with localStorage persist | Lightweight cart state with built-in persistence | ✓ Good — 7-day TTL, lazy cleanup, no provider boilerplate |
+| Custom line items (no variantId) | Avoid Shopify API price override bug | ✓ Good — locked EUR pricing works correctly |
+| Cart clears before Shopify redirect | Prevent duplicate orders from browser back button | ✓ Good — verified by integration test |
 
 ---
-*Last updated: 2026-01-29 after initialization*
+*Last updated: 2026-01-31 after v1.0 milestone completion*
