@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { useDebounce } from 'use-debounce'
+import { useCartStore } from '@/lib/cart/store'
 
 interface DimensionConfiguratorProps {
   productId: string
+  productName: string
 }
 
 interface FieldErrors {
@@ -12,7 +14,7 @@ interface FieldErrors {
   height?: string
 }
 
-export default function DimensionConfigurator({ productId }: DimensionConfiguratorProps) {
+export default function DimensionConfigurator({ productId, productName }: DimensionConfiguratorProps) {
   // State management
   const [width, setWidth] = useState('')
   const [height, setHeight] = useState('')
@@ -22,6 +24,10 @@ export default function DimensionConfigurator({ productId }: DimensionConfigurat
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [addedFeedback, setAddedFeedback] = useState(false)
+
+  // Cart store
+  const addItem = useCartStore((state) => state.addItem)
 
   // Client-side validation (immediate, no debounce)
   const validateField = (name: 'width' | 'height', value: string): string | undefined => {
@@ -149,6 +155,30 @@ export default function DimensionConfigurator({ productId }: DimensionConfigurat
     }).format(cents / 100)
   }
 
+  // Handle add to cart
+  const handleAddToCart = () => {
+    if (price === null || loading || Object.keys(fieldErrors).length > 0) return
+
+    addItem({
+      productId,
+      productName,
+      options: {
+        width: parseInt(width, 10),
+        height: parseInt(height, 10),
+      },
+      priceInCents: price,
+    })
+
+    // Show feedback for 2 seconds
+    setAddedFeedback(true)
+    setTimeout(() => {
+      setAddedFeedback(false)
+    }, 2000)
+  }
+
+  // Determine if Add to Cart button should be enabled
+  const canAddToCart = price !== null && !loading && Object.keys(fieldErrors).length === 0 && !addedFeedback
+
   return (
     <div className="space-y-6">
       {/* Input fields */}
@@ -220,6 +250,17 @@ export default function DimensionConfigurator({ productId }: DimensionConfigurat
         ) : (
           <p className="text-sm text-gray-500">Enter dimensions to see price</p>
         )}
+      </div>
+
+      {/* Add to Cart button */}
+      <div className="mt-6">
+        <button
+          onClick={handleAddToCart}
+          disabled={!canAddToCart}
+          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {addedFeedback ? 'Added to Cart!' : 'Add to Cart'}
+        </button>
       </div>
     </div>
   )

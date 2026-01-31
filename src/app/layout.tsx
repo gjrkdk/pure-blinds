@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import CartIcon from "@/components/cart/cart-icon";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +29,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <header className="border-b border-gray-200">
+          <div className="max-w-4xl mx-auto flex justify-between items-center p-4">
+            <Link href="/" className="text-xl font-semibold text-gray-900 hover:text-gray-700 transition-colors">
+              Custom Textiles
+            </Link>
+            <CartIcon />
+          </div>
+        </header>
         {children}
       </body>
     </html>

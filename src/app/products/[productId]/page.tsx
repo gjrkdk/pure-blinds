@@ -19,7 +19,7 @@ export default async function ProductPage({
       <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
       <p className="text-gray-600 mb-8">{product.description}</p>
 
-      <DimensionConfigurator productId={productId} />
+      <DimensionConfigurator productId={productId} productName={product.name} />
     </div>
   )
 }
