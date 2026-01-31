@@ -79,10 +79,11 @@ Plans:
   3. Each cart item shows product name with dimensions and calculated price
   4. Cart persists configuration data (width, height, normalized values)
   5. Cart page is mobile-responsive
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] TBD (to be defined during planning)
+- [ ] 04-01-PLAN.md -- Cart store (Zustand + persist/TTL), add-to-cart on product page, cart icon in header
+- [ ] 04-02-PLAN.md -- Cart page with item display, quantity management, removal dialog, sticky footer
 
 ### Phase 5: Shopify Integration & Checkout
 **Goal**: Customers can checkout via Shopify with custom-priced Draft Orders
@@ -139,7 +140,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
 | 1. Project Setup | 2/2 | Complete | 2026-01-29 |
 | 2. Pricing Engine & Validation | 2/2 | Complete | 2026-01-29 |
 | 3. Product Page & Real-time Pricing | 0/1 | Not started | - |
-| 4. Cart Management | 0/TBD | Not started | - |
+| 4. Cart Management | 0/2 | Not started | - |
 | 5. Shopify Integration & Checkout | 0/TBD | Not started | - |
 | 6. Order Confirmation & Transparency | 0/TBD | Not started | - |
 | 7. Mobile Optimization & Polish | 0/TBD | Not started | - |
