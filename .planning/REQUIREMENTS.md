@@ -69,9 +69,6 @@ Requirements for initial MVP release. Each maps to roadmap phases.
 - [ ] **UX-06**: Active input field is visually highlighted
 - [ ] **UX-07**: Successful input shows visual confirmation (checkmark or color change)
 - [ ] **UX-08**: Price update shows visual feedback
-- [ ] **UX-09**: Order confirmation displays exact dimensions ordered
-- [ ] **UX-10**: Order confirmation displays normalized dimensions received
-- [ ] **UX-11**: Order confirmation displays final price
 
 ## v2 Requirements
 
@@ -172,13 +169,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UX-06 | Phase 3 | Pending |
 | UX-07 | Phase 3 | Pending |
 | UX-08 | Phase 3 | Pending |
-| UX-09 | Phase 6 | Pending |
-| UX-10 | Phase 6 | Pending |
-| UX-11 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 48 total
-- Mapped to phases: 48 (100%)
+- v1 requirements: 45 total
+- Mapped to phases: 45 (100%)
 - Unmapped: 0
 
 **Phase Distribution:**
@@ -187,8 +181,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 - Phase 3 (Product Page): 11 requirements
 - Phase 4 (Cart): 6 requirements
 - Phase 5 (Shopify Integration): 13 requirements
-- Phase 6 (Order Confirmation): 3 requirements
-- Phase 7 (Mobile Polish): 0 requirements (validation phase)
+- Phase 6 (Mobile Polish): 0 requirements (validation phase)
 
 ---
 *Requirements defined: 2026-01-29*
