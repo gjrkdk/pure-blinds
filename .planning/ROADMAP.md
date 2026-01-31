@@ -2,7 +2,7 @@
 
 ## Overview
 
-This roadmap delivers a custom webshop where customers can order textiles with custom dimensions and accurate matrix-based pricing. We start by building the foundation (Next.js setup and Shopify store configuration), then develop the core pricing engine with dimension input validation, integrate frontend product pages with real-time price updates, add cart management for multiple custom items, connect to Shopify for checkout via Draft Orders, and finally optimize for mobile across all touchpoints.
+This roadmap delivers a custom webshop where customers can order textiles with custom dimensions and accurate matrix-based pricing. We start by building the foundation (Next.js setup and Shopify store configuration), then develop the core pricing engine with dimension input validation, integrate frontend product pages with real-time price updates, add cart management for multiple custom items, and finally connect to Shopify for checkout via Draft Orders.
 
 ## Phases
 
@@ -12,12 +12,11 @@ This roadmap delivers a custom webshop where customers can order textiles with c
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Project Setup** - Next.js foundation and Shopify store configuration
-- [ ] **Phase 2: Pricing Engine & Validation** - Core pricing domain with matrix-based calculations
-- [ ] **Phase 3: Product Page & Real-time Pricing** - Frontend dimension configurator with live price updates
-- [ ] **Phase 4: Cart Management** - Session-based cart for multiple custom configurations
-- [ ] **Phase 5: Shopify Integration & Checkout** - Draft Order creation and checkout redirection
-- [ ] **Phase 6: Mobile Optimization & Polish** - Cross-device experience refinement
+- [x] **Phase 1: Project Setup** - Next.js foundation and Shopify store configuration
+- [x] **Phase 2: Pricing Engine & Validation** - Core pricing domain with matrix-based calculations
+- [x] **Phase 3: Product Page & Real-time Pricing** - Frontend dimension configurator with live price updates
+- [x] **Phase 4: Cart Management** - Session-based cart for multiple custom configurations
+- [x] **Phase 5: Shopify Integration & Checkout** - Draft Order creation and checkout redirection
 
 ## Phase Details
 
@@ -101,25 +100,10 @@ Plans:
 - [x] 05-01-PLAN.md -- Backend: env validation, Draft Order creation function, POST /api/checkout route
 - [x] 05-02-PLAN.md -- Frontend: wire checkout button with loading state, error handling, Shopify redirect
 
-### Phase 6: Mobile Optimization & Polish
-**Goal**: Application provides excellent experience on all mobile devices
-**Depends on**: Phase 5
-**Requirements**: None (polish phase validates UX-01 through UX-11 holistically)
-**Success Criteria** (what must be TRUE):
-  1. All input fields work smoothly on mobile (touch, keyboard behavior)
-  2. Price updates provide clear visual feedback on mobile
-  3. Cart interactions work seamlessly on touch devices
-  4. Checkout flow completes reliably on mobile browsers
-  5. Layout adapts correctly to different screen sizes (320px to tablet)
-**Plans**: TBD
-
-Plans:
-- [ ] TBD (to be defined during planning)
-
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -128,4 +112,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Product Page & Real-time Pricing | 1/1 | Complete | 2026-01-31 |
 | 4. Cart Management | 2/2 | Complete | 2026-01-31 |
 | 5. Shopify Integration & Checkout | 2/2 | Complete | 2026-01-31 |
-| 6. Mobile Optimization & Polish | 0/TBD | Not started | - |
+
+**🎉 All phases complete!**

@@ -181,7 +181,6 @@ Which phases cover which requirements. Updated during roadmap creation.
 - Phase 3 (Product Page): 11 requirements
 - Phase 4 (Cart): 6 requirements
 - Phase 5 (Shopify Integration): 13 requirements
-- Phase 6 (Mobile Polish): 0 requirements (validation phase)
 
 ---
 *Requirements defined: 2026-01-29*
