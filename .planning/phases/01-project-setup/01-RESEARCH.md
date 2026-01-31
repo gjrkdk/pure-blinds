@@ -447,7 +447,7 @@ npm run dev
 cat > .env.local << 'EOF'
 # Shopify Admin API
 SHOPIFY_STORE_DOMAIN=textile-shop-dev.myshopify.com
-SHOPIFY_ADMIN_ACCESS_TOKEN=shpat_1234567890abcdef1234567890abcdef
+SHOPIFY_ADMIN_ACCESS_TOKEN=shpat_XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 SHOPIFY_API_VERSION=2026-01
 
 # Next.js
