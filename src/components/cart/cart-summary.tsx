@@ -10,6 +10,7 @@ export function CartSummary() {
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);
   const getItemCount = useCartStore((state) => state.getItemCount);
   const items = useCartStore((state) => state.items);
+  const clearCart = useCartStore((state) => state.clearCart);
 
   useEffect(() => {
     setMounted(true);
@@ -46,6 +47,7 @@ export function CartSummary() {
       if (response.ok && data.invoiceUrl) {
         // Redirect to Shopify checkout in same window
         // Loading state intentionally persists until page unloads
+        clearCart();
         window.location.href = data.invoiceUrl;
       } else {
         setError(data.error || 'Unable to process checkout. Please try again.');
