@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-01-29)
 
 ## Current Position
 
-Phase: 4 of 7 (Cart Management)
-Plan: 02 of 02 (Cart Page UI)
-Status: Phase complete
-Last activity: 2026-01-31 — Completed 04-02-PLAN.md execution
+Phase: 5 of 7 (Shopify Integration & Checkout)
+Plan: 01 of 02 (Checkout Backend)
+Status: In progress
+Last activity: 2026-01-31 — Completed 05-01-PLAN.md execution
 
-Progress: [█████░░░░░] 50%
+Progress: [█████░░░░░] 53%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 4.0 min
-- Total execution time: 0.47 hours
+- Total plans completed: 8
+- Average duration: 3.6 min
+- Total execution time: 0.48 hours
 
 **By Phase:**
 
@@ -31,10 +31,11 @@ Progress: [█████░░░░░] 50%
 | 02-pricing-engine---validation | 2 | 3.1 min | 1.6 min |
 | 03-product-page---real-time-pricing | 1 | 5 min | 5 min |
 | 04-cart-management | 2 | 9.3 min | 4.7 min |
+| 05-shopify-integration---checkout | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (1.3 min), 03-01 (5 min), 04-01 (7 min), 04-02 (2.3 min)
-- Trend: Stable - Phase 4 complete with average 4.7 min per plan
+- Last 5 plans: 03-01 (5 min), 04-01 (7 min), 04-02 (2.3 min), 05-01 (2 min)
+- Trend: Fast execution - Phase 5 started strong with 2 min backend implementation
 
 *Updated after each plan completion*
 
@@ -47,6 +48,11 @@ Recent decisions affecting current work:
 
 | Decision | Phase-Plan | Impact |
 |----------|------------|--------|
+| Use custom line items with title only (no variantId) | 05-01 | Avoids Shopify API price override bug, ensures locked custom pricing |
+| Include dimensions in line item title | 05-01 | Clear order display: "Venetian Blinds 25mm - 100cm x 150cm" |
+| Store dimensions as custom attributes | 05-01 | Fulfillment team can extract width/height programmatically |
+| Use EUR currency code | 05-01 | European textile shop context, matches store's base currency |
+| Check userErrors array separately from GraphQL errors | 05-01 | userErrors = validation, GraphqlQueryError = network/auth |
 | Use native dialog element for remove confirmation | 04-02 | Proper accessibility (focus trap, Escape key, backdrop), simpler than modal libraries |
 | Text input with inputMode=numeric for quantity stepper | 04-02 | Consistent with dimension inputs, avoids React number bugs, mobile numeric keyboard |
 | Sticky footer with pb-40 page padding | 04-02 | Prevents last cart item overlap with fixed bottom footer |
@@ -93,6 +99,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-31
-Stopped at: Completed 04-02-PLAN.md execution (Cart Page UI)
+Stopped at: Completed 05-01-PLAN.md execution (Checkout Backend)
 Resume file: None
-Phase status: Phase 4 complete - 2 of 2 plans complete
+Phase status: Phase 5 in progress - 1 of 2 plans complete
