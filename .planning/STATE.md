@@ -1,61 +1,109 @@
-# Project State
+# Project State: Custom Dimension Textile Webshop
+
+**Last Updated:** 2026-02-01 (Roadmap revision for v1.1)
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-01)
+**Core Value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
 
-**Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing through Shopify checkout on all plan tiers
-**Current focus:** v1.1 — Website Structure & SEO Foundation
+**Current Focus:** Building out multi-page website structure with SEO foundation and content infrastructure (v1.1 milestone). Legal compliance and FAQ content deferred to v1.2.
+
+**Validated from v1.0:** Custom dimension configurator, matrix-based pricing engine, localStorage cart with Zustand, Shopify Draft Order checkout flow, EUR currency support, cart-clear-on-checkout behavior.
+
+---
 
 ## Current Position
 
-Milestone: v1.1
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-01 — Milestone v1.1 started
+**Milestone:** v1.1 - Website Structure & SEO Foundation
+
+**Phase:** 6 - SEO Foundation
+
+**Plan:** Not started
+
+**Status:** Roadmap revised per user feedback, awaiting Phase 6 planning
+
+**Progress:** ░░░░░░░░░░ 0% (0/13 requirements validated)
+
+---
 
 ## Performance Metrics
 
-**Velocity (from v1.0):**
-- Total plans completed: 9
-- Average duration: 4.7 min
-- Total execution time: 0.70 hours
+**Velocity:**
+- v1.0: 5 phases, 9 plans, ~35 tasks in 3 days (Jan 29-31)
+- v1.1: Not started
 
-*Updated after each plan completion*
+**Code Stats (v1.0 shipped):**
+- 1,522 LOC TypeScript/TSX
+- 40+ files created/modified
+- 3 API routes: /api/pricing, /api/checkout, /api/health
+- 1 integration test: cart-clear-on-checkout
+
+**Milestone Progress:**
+- v1.0 MVP: ✓ Shipped (2026-01-31)
+- v1.1 Website Structure: 0% (roadmap revised)
+
+---
 
 ## Accumulated Context
 
-### v1.0 Milestone Summary
+### Decisions Made
 
-**Shipped:** 2026-01-31 (3 days from start)
-**Achievements:** 44/45 requirements, 5 phases, 9 plans, 1,522 LOC TypeScript
-**Archive:** See .planning/MILESTONES.md and .planning/milestones/v1.0-*.md
+**2026-02-01: Phase structure revision**
+- Removed Phase 8 (Legal & Policy Pages) and Phase 10 (FAQ & Support Content)
+- Deferred 5 requirements to v1.2: POLICY-01, POLICY-02, POLICY-03, POLICY-04, PAGE-04
+- Renumbered remaining phases from 6-12 to 6-10 (5 phases total, 13 requirements)
+- Updated dependencies: Phase 8 (Homepage) no longer depends on policy pages
 
-### Decisions
+**2026-02-01: Phase structure for v1.1 (initial)**
+- 5 phases (6-10) derived from 13 requirements across 3 categories
+- Depth = comprehensive, letting natural boundaries stand
+- SEO foundation first (infrastructure before content)
+- Design refresh last (polish after all pages exist)
 
-v1.0 decisions: All validated — see PROJECT.md Key Decisions table.
+**2026-02-01: Coverage strategy**
+- All 13 v1.1 requirements mapped to exactly one phase
+- No orphans, no duplicates
+- LAYOUT requirements split between Phase 7 (structural) and Phase 10 (visual)
+- PAGE requirements distributed across Phases 8-9 by content type
 
-v1.1 decisions pending:
-- Dedicated cart page over sidebar
-- Structure-first for blog/FAQ
-- SEO foundation before content strategy
-- Design refresh with v1.1 pages
+**2026-02-01: Dependency ordering**
+- Phase 6 (SEO) has no dependencies, pure infrastructure
+- Phase 7 (Layout) depends on Phase 6 metadata patterns
+- Phase 8 (Homepage) depends on Phase 7 layout
+- Phase 9 (Blog) depends on Phases 6+8 (sitemap + homepage links)
+- Phase 10 (Design refresh) depends on all pages existing
 
-### Carried Items from v1.0
+### Open Questions
 
-- Phase 3 verification documentation (process gap)
-- Test products in Shopify store
-- Unit tests for pricing calculator and cart store actions
-- ORDER-04: Pricing matrix reference in Draft Order custom attributes
+None currently. Roadmap revised and ready for Phase 6 planning.
 
-### Blockers/Concerns
+### Blockers
 
-None.
+None. Ready to proceed with Phase 6 planning.
+
+---
 
 ## Session Continuity
 
-Last session: 2026-02-01
-Stopped at: Defining v1.1 milestone — PROJECT.md updated, starting requirements
-Resume file: None
-Phase status: Requirements definition in progress
+**What Just Happened:**
+- User provided revision feedback: remove Phases 8 (Legal) and 10 (FAQ), defer requirements to v1.2
+- Updated ROADMAP.md: renumbered phases 6-10, updated dependencies, removed deferred phases
+- Updated STATE.md: reflected new phase structure and deferral decisions
+- Updated REQUIREMENTS.md: moved 5 requirements to v1.2 section, updated traceability table
+
+**What's Next:**
+- User reviews revised roadmap
+- If approved: Orchestrator invokes `/gsd:plan-phase 6` to begin Phase 6 planning
+- If further revision needed: User provides feedback, roadmap updated again
+
+**Context for Next Agent:**
+- Phase numbering is 6-10 (v1.0 ended at Phase 5)
+- Depth = comprehensive (8-12 phases expected, current structure has 5 after revision)
+- Legal compliance and FAQ deferred to v1.2 per user decision
+- Success criteria are observable user behaviors, not implementation tasks
+- All phases have explicit dependencies documented
+
+---
+
+*State initialized: 2026-02-01*
+*Current session: Roadmap revision (v1.1)*

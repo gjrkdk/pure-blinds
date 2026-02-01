@@ -20,16 +20,8 @@ Requirements for milestone v1.1: Website Structure & SEO Foundation. Each maps t
 - [ ] **PAGE-01**: Homepage with hero section, product highlight, value proposition, and trust signals
 - [ ] **PAGE-02**: Dedicated cart page at /cart showing items, quantities, prices, totals, and checkout button
 - [ ] **PAGE-03**: Thank you page displayed after Shopify checkout completion with order confirmation details
-- [ ] **PAGE-04**: FAQ page with accordion UI and placeholder questions organized by category
 - [ ] **PAGE-05**: Blog listing page showing post previews (structure only, no content)
 - [ ] **PAGE-06**: Blog post template page with title, date, content area, and SEO metadata (structure only)
-
-### Policy Pages
-
-- [ ] **POLICY-01**: Privacy Policy page (GDPR-compliant structure with placeholder content)
-- [ ] **POLICY-02**: Terms & Conditions page (placeholder content)
-- [ ] **POLICY-03**: Returns/Refund Policy page (NL 14-day cooling-off period structure)
-- [ ] **POLICY-04**: Shipping Policy page (placeholder content)
 
 ### SEO Foundation
 
@@ -42,6 +34,21 @@ Requirements for milestone v1.1: Website Structure & SEO Foundation. Each maps t
 
 Deferred to next milestone. Tracked but not in current roadmap.
 
+### Policy Pages (deferred from v1.1)
+
+- **POLICY-01**: Privacy Policy page (GDPR-compliant structure with placeholder content)
+- **POLICY-02**: Terms & Conditions page (placeholder content)
+- **POLICY-03**: Returns/Refund Policy page (NL 14-day cooling-off period structure)
+- **POLICY-04**: Shipping Policy page (placeholder content)
+
+### Pages (deferred from v1.1)
+
+- **PAGE-04**: FAQ page with accordion UI and placeholder questions organized by category
+
+### Contact
+
+- **PAGE-07**: Contact page with form, email/phone, and business details (KvK, VAT, hours)
+
 ### SEO Enhancement
 
 - **SEO-05**: JSON-LD structured data — Organization schema on homepage
@@ -49,10 +56,6 @@ Deferred to next milestone. Tracked but not in current roadmap.
 - **SEO-07**: JSON-LD structured data — FAQPage schema on FAQ page
 - **SEO-08**: JSON-LD structured data — BreadcrumbList schema on relevant pages
 - **SEO-09**: Dynamic OG images generated for product configurations
-
-### Pages
-
-- **PAGE-07**: Contact page with form, email/phone, and business details (KvK, VAT, hours)
 
 ### Content
 
@@ -83,31 +86,27 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LAYOUT-01 | — | Pending |
-| LAYOUT-02 | — | Pending |
-| LAYOUT-03 | — | Pending |
-| LAYOUT-04 | — | Pending |
-| LAYOUT-05 | — | Pending |
-| PAGE-01 | — | Pending |
-| PAGE-02 | — | Pending |
-| PAGE-03 | — | Pending |
-| PAGE-04 | — | Pending |
-| PAGE-05 | — | Pending |
-| PAGE-06 | — | Pending |
-| POLICY-01 | — | Pending |
-| POLICY-02 | — | Pending |
-| POLICY-03 | — | Pending |
-| POLICY-04 | — | Pending |
-| SEO-01 | — | Pending |
-| SEO-02 | — | Pending |
-| SEO-03 | — | Pending |
-| SEO-04 | — | Pending |
+| SEO-01 | Phase 6 | Pending |
+| SEO-02 | Phase 6 | Pending |
+| SEO-03 | Phase 6 | Pending |
+| SEO-04 | Phase 6 | Pending |
+| LAYOUT-01 | Phase 7 | Pending |
+| LAYOUT-02 | Phase 7 | Pending |
+| LAYOUT-04 | Phase 7 | Pending |
+| PAGE-01 | Phase 8 | Pending |
+| PAGE-02 | Phase 8 | Pending |
+| PAGE-03 | Phase 8 | Pending |
+| PAGE-05 | Phase 9 | Pending |
+| PAGE-06 | Phase 9 | Pending |
+| LAYOUT-03 | Phase 10 | Pending |
+| LAYOUT-05 | Phase 10 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 18 total
-- Mapped to phases: 0
-- Unmapped: 18 (pending roadmap creation)
+- v1.1 requirements: 13 total
+- Mapped to phases: 13
+- Unmapped: 0
+- Deferred to v1.2: 5 (POLICY-01, POLICY-02, POLICY-03, POLICY-04, PAGE-04)
 
 ---
 *Requirements defined: 2026-02-01*
-*Last updated: 2026-02-01 after initial definition*
+*Last updated: 2026-02-01 after roadmap revision*
