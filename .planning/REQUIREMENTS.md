@@ -86,20 +86,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEO-01 | Phase 6 | Pending |
-| SEO-02 | Phase 6 | Pending |
-| SEO-03 | Phase 6 | Pending |
-| SEO-04 | Phase 6 | Pending |
+| PAGE-01 | Phase 6 | Pending |
+| PAGE-02 | Phase 6 | Pending |
+| PAGE-03 | Phase 6 | Pending |
 | LAYOUT-01 | Phase 7 | Pending |
 | LAYOUT-02 | Phase 7 | Pending |
 | LAYOUT-04 | Phase 7 | Pending |
-| PAGE-01 | Phase 8 | Pending |
-| PAGE-02 | Phase 8 | Pending |
-| PAGE-03 | Phase 8 | Pending |
-| PAGE-05 | Phase 9 | Pending |
-| PAGE-06 | Phase 9 | Pending |
-| LAYOUT-03 | Phase 10 | Pending |
-| LAYOUT-05 | Phase 10 | Pending |
+| PAGE-05 | Phase 8 | Pending |
+| PAGE-06 | Phase 8 | Pending |
+| LAYOUT-03 | Phase 9 | Pending |
+| LAYOUT-05 | Phase 9 | Pending |
+| SEO-01 | Phase 10 | Pending |
+| SEO-02 | Phase 10 | Pending |
+| SEO-03 | Phase 10 | Pending |
+| SEO-04 | Phase 10 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 13 total

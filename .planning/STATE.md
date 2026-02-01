@@ -16,11 +16,11 @@
 
 **Milestone:** v1.1 - Website Structure & SEO Foundation
 
-**Phase:** 6 - SEO Foundation
+**Phase:** 6 - Homepage & Primary Pages
 
 **Plan:** Not started
 
-**Status:** Roadmap revised per user feedback, awaiting Phase 6 planning
+**Status:** Roadmap reordered — pages first, SEO last. Awaiting Phase 6 planning.
 
 **Progress:** ░░░░░░░░░░ 0% (0/13 requirements validated)
 
@@ -66,16 +66,23 @@
 - LAYOUT requirements split between Phase 7 (structural) and Phase 10 (visual)
 - PAGE requirements distributed across Phases 8-9 by content type
 
-**2026-02-01: Dependency ordering**
+**2026-02-01: Dependency ordering (initial)**
 - Phase 6 (SEO) has no dependencies, pure infrastructure
 - Phase 7 (Layout) depends on Phase 6 metadata patterns
 - Phase 8 (Homepage) depends on Phase 7 layout
 - Phase 9 (Blog) depends on Phases 6+8 (sitemap + homepage links)
 - Phase 10 (Design refresh) depends on all pages existing
 
+**2026-02-01: Phase reordering**
+- User prioritized visible pages over SEO infrastructure for MVP
+- New order: Homepage (6) → Layout (7) → Blog (8) → Design (9) → SEO (10)
+- SEO moved last — optimization, not MVP-critical
+- Homepage first — builds on existing route stubs, delivers visible value
+- Linear dependency chain (each phase builds on previous)
+
 ### Open Questions
 
-None currently. Roadmap revised and ready for Phase 6 planning.
+None currently. Roadmap reordered and ready for Phase 6 planning.
 
 ### Blockers
 
@@ -86,22 +93,22 @@ None. Ready to proceed with Phase 6 planning.
 ## Session Continuity
 
 **What Just Happened:**
-- User provided revision feedback: remove Phases 8 (Legal) and 10 (FAQ), defer requirements to v1.2
-- Updated ROADMAP.md: renumbered phases 6-10, updated dependencies, removed deferred phases
-- Updated STATE.md: reflected new phase structure and deferral decisions
-- Updated REQUIREMENTS.md: moved 5 requirements to v1.2 section, updated traceability table
+- User reordered phases: pages first, SEO last (MVP prioritization)
+- Updated ROADMAP.md: Homepage (6) → Layout (7) → Blog (8) → Design (9) → SEO (10)
+- Updated REQUIREMENTS.md: traceability table reflects new phase numbers
+- Updated STATE.md: current phase is now 6 - Homepage & Primary Pages
 
 **What's Next:**
-- User reviews revised roadmap
-- If approved: Orchestrator invokes `/gsd:plan-phase 6` to begin Phase 6 planning
-- If further revision needed: User provides feedback, roadmap updated again
+- `/gsd:discuss-phase 6` to gather context for Homepage & Primary Pages
+- Then `/gsd:plan-phase 6` to create execution plan
 
 **Context for Next Agent:**
 - Phase numbering is 6-10 (v1.0 ended at Phase 5)
-- Depth = comprehensive (8-12 phases expected, current structure has 5 after revision)
+- Phase 6 is now Homepage & Primary Pages (not SEO)
+- Existing route stubs: `/` (placeholder), `/cart` (functional), `/products/[productId]` (functional)
+- Headless Shopify with Next.js 16 App Router, Zustand cart, Draft Order checkout
 - Legal compliance and FAQ deferred to v1.2 per user decision
 - Success criteria are observable user behaviors, not implementation tasks
-- All phases have explicit dependencies documented
 
 ---
 
