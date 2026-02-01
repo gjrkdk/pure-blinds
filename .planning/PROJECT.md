@@ -29,6 +29,31 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 ### Active
 
+#### Website Structure & Pages
+- [ ] Homepage with business introduction, product highlight, and trust signals
+- [ ] Dedicated cart page at /cart replacing current cart UI
+- [ ] Thank you / order confirmation page (post-Shopify checkout redirect)
+- [ ] Blog listing and individual blog post pages (structure only, content later)
+- [ ] FAQ page (structure only, content later)
+- [ ] Contact page with form, email/phone, and business details (address, KvK, VAT, hours)
+- [ ] Privacy Policy page
+- [ ] Terms & Conditions page
+- [ ] Returns/Refund Policy page
+- [ ] Shipping Policy page
+
+#### SEO Foundation
+- [ ] Meta tags and Open Graph tags on all pages
+- [ ] JSON-LD structured data (Organization, Product, FAQ, BreadcrumbList schemas)
+- [ ] XML sitemap generation
+- [ ] robots.txt configuration
+- [ ] Semantic HTML structure across all pages
+
+#### Design Refresh
+- [ ] Improved visual design and consistent styling across all pages
+- [ ] Shared layout with navigation and footer
+- [ ] Mobile-responsive design for all new pages
+
+#### Carried from v1.0
 - [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
 - [ ] Create test products in Shopify store (deferred from Phase 1)
 - [ ] Add unit tests for pricing calculator and cart store actions
@@ -36,14 +61,19 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 ### Out of Scope
 
-- Shopify app version — Phase 3, requires different architecture
-- Theme extensions — Phase 3, app-specific feature
-- Native cart price overrides — Phase 4, requires Shopify Plus
-- Shopify Functions — Phase 4, plan-gated feature
-- Database for matrix storage — Deferred to Phase 2 if needed, v1 uses JSON
+- Category pages — Only one product currently, add when multi-product launches
+- Blog content creation — Structure only in v1.1, content is a separate effort
+- FAQ content creation — Structure only in v1.1, content is a separate effort
+- Advanced SEO (content strategy, keyword research, link building) — Foundation first, strategy later
+- GEO optimization — Deferred until SEO foundation is solid
+- Order status/tracking page — Beyond thank you page, deferred
+- Shopify app version — Requires different architecture
+- Theme extensions — App-specific feature
+- Native cart price overrides — Requires Shopify Plus
+- Shopify Functions — Plan-gated feature
+- Database for matrix storage — v1 uses JSON, defer until needed
 - Variant-per-dimension structures — Explicitly excluded, doesn't scale
-- Real-time theme integration — Phase 3+, not needed for standalone webshop
-- Multi-product support — v1 is single product type, expand later if validated
+- Multi-product support — Single product type, expand later if validated
 
 ## Context
 
@@ -73,13 +103,22 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 - No test products in Shopify store (using mock data)
 - formatPrice duplication fixed in v1.0
 - Limited test coverage (only 1 integration test)
+- Site lacks proper navigation, homepage, and supporting pages
+- No SEO infrastructure (no meta tags, sitemap, structured data)
+
+**Current milestone: v1.1 — Website Structure & SEO Foundation**
+- Build out full website with homepage, cart page, thank you page, blog, FAQ, contact, and policy pages
+- Add SEO foundation (meta tags, Open Graph, JSON-LD, sitemap, robots.txt)
+- Design refresh across all pages with shared layout (nav + footer)
+- Structure-first approach: page shells ready for content
 
 **Multi-phase vision:**
 - ✅ Phase 1: MVP webshop (own store, fastest validation) — v1.0 shipped
-- Phase 2: Refinement (edge cases, test coverage, verification docs)
-- Phase 3: Shopify app v1 (theme-based stores, largest market)
-- Phase 4: Shopify app v2 (native pricing for Plus merchants)
-- Phase 5: Headless/API (technical merchants, full freedom)
+- ◆ Phase 2: Website structure & SEO foundation — v1.1
+- Phase 3: Content & advanced SEO/GEO
+- Phase 4: Shopify app v1 (theme-based stores, largest market)
+- Phase 5: Shopify app v2 (native pricing for Plus merchants)
+- Phase 6: Headless/API (technical merchants, full freedom)
 
 ## Constraints
 
@@ -108,5 +147,10 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 | Custom line items (no variantId) | Avoid Shopify API price override bug | ✓ Good — locked EUR pricing works correctly |
 | Cart clears before Shopify redirect | Prevent duplicate orders from browser back button | ✓ Good — verified by integration test |
 
+| Dedicated cart page over sidebar | Full page gives more room for item details, upsells, and trust signals | — Pending |
+| Structure-first for blog/FAQ | Ship page shells now, fill content separately — avoids blocking on copywriting | — Pending |
+| SEO foundation before content strategy | Technical SEO (meta, schema, sitemap) is prerequisite for content-driven SEO | — Pending |
+| Design refresh with v1.1 pages | New pages need consistent design; refreshing existing pages simultaneously avoids visual mismatch | — Pending |
+
 ---
-*Last updated: 2026-01-31 after v1.0 milestone completion*
+*Last updated: 2026-02-01 after v1.1 milestone start*
