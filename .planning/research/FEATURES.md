@@ -1,300 +1,383 @@
-# Feature Research: Custom-Dimension E-Commerce
+# Feature Research: Website Structure & SEO
 
-**Domain:** Custom-dimension textile products (curtains, flags, banners)
-**Researched:** 2026-01-29
-**Confidence:** MEDIUM-HIGH
+**Domain:** Custom textile e-commerce supporting pages and SEO infrastructure
+**Researched:** 2026-02-01
+**Confidence:** HIGH
 
 ## Feature Landscape
 
 ### Table Stakes (Users Expect These)
 
-Features users assume exist. Missing these = product feels incomplete or prevents purchase completion.
+Features users assume exist. Missing these = product feels incomplete or unprofessional.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| **Dimension Input (Width/Height)** | Core functionality - customers must specify exact dimensions | LOW | Number inputs with unit labels, validation for min/max bounds. Users expect metric or imperial unit options. |
-| **Real-time Price Display** | Customers expect instant feedback as they adjust dimensions | LOW | Price updates without page reload. 94% of customers more loyal to brands with pricing transparency. |
-| **Input Validation** | Prevents invalid orders (negative, zero, or out-of-range dimensions) | LOW | Client-side validation with clear error messages. Must catch common mistakes like decimal entry or unit confusion. |
-| **Rounding Strategy Communication** | Customers need to understand if/how dimensions will be adjusted | MEDIUM | Visual indicator showing "You ordered X, you'll receive Y" for rounding-up strategy. Builds trust. |
-| **Add to Cart** | Standard e-commerce expectation | LOW | Must preserve custom dimensions as line item properties in Shopify. |
-| **Multi-Item Cart Support** | Customers ordering multiple items with different dimensions | MEDIUM | Each configured item is a unique cart line item. Shopify handles via line item properties differentiation. |
-| **Order Confirmation Details** | Custom products require confirmation of exact specifications | LOW | Order confirmation must show width, height, calculated dimensions (after rounding), and price breakdown. |
-| **Mobile-Responsive Design** | 71% of users expect mobile-optimized experiences in 2026 | MEDIUM | Touch-friendly inputs, legible on small screens. Desktop-first design that's retrofitted always fails. |
-| **Basic Visual Feedback** | Users need confirmation their input was accepted | LOW | Show dimensions clearly, highlight active input, confirm price updated. |
-| **Clear Unit Display** | Avoid confusion between cm/inches or m/ft | LOW | Explicitly label units next to inputs. Consider unit selector if supporting multiple markets. |
+| Homepage with value proposition | First impression and entry point for organic traffic | MEDIUM | Must communicate what you sell within seconds; include hero, product highlights, trust signals. For custom products, self-segmentation ("Shop by Room", "Shop by Size") is critical. |
+| Dedicated cart page | Conversion best practice for reviewing full order | LOW | Despite cart overlay existing, dedicated page provides space for upsells, trust elements, and is standard in European e-commerce. Better for complex/custom products. |
+| Order confirmation/thank you page | Expected post-checkout; legal requirement in NL | MEDIUM | Must show order number, items, total, ETA, next steps. Opportunity for post-purchase engagement (social share, account creation, related products). |
+| Privacy policy | GDPR requirement for EU | LOW | Must detail data collection, usage, retention, third-party sharing, customer rights. Non-compliance = up to €20M or 4% global revenue. Template-based but must be accurate. |
+| Terms & conditions | Legal protection and user expectations | LOW | Standard for e-commerce; defines usage rights, liabilities, dispute resolution. |
+| Shipping & returns policy | Legally required in NL (14-day cooling-off period) | LOW | Must explicitly state 14-day return window, evaluation vs usage rules, exceptions (custom/personalized items). Information must be in confirmation email, not just website. |
+| Contact page with form | Trust signal and support access | LOW | Email, phone (if offered), business address, form with name/email/message. Spam protection via reCAPTCHA. |
+| FAQ page | Self-service support; reduces tickets 30-40% | MEDIUM | Organized by category, uses real customer questions, implements FAQ schema for rich snippets. Major SEO benefit for long-tail keywords. |
+| Basic SEO foundation (meta, OG) | Expected for shareability and search visibility | MEDIUM | Title tags (50-60 chars), meta descriptions (120-160 chars), OG tags for social sharing. Next.js Metadata API handles this cleanly. |
+| XML sitemap | Standard for search engine discoverability | LOW | Next.js can generate programmatically. Submit to Google Search Console. Include all commercial pages (product, cart, policies). |
+| Robots.txt | Search engine crawling guidance | LOW | Standard file; defines what bots can/cannot crawl. |
 
 ### Differentiators (Competitive Advantage)
 
-Features that set the product apart. Not required, but valued. These align with the "transparency and trust" positioning.
+Features that set the product apart. Not required, but valuable for conversion or SEO.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| **Price Calculation Breakdown** | Shows exactly how price is determined (material cost, dimensions, markup) | MEDIUM | Research shows 94% customer loyalty boost with transparent pricing. Example: "10cm × 20cm = 0.02m² × €50/m² = €1.00 base + €0.50 finishing = €1.50 total". Major differentiator vs competitors who just show final price. |
-| **Visual Size Preview** | Dynamic visualization that scales product image based on entered dimensions | HIGH | 40% increase in conversion rates for configurators with visual preview. Shows relative size or scales product mockup. For MVP: simple dimensional diagram. Future: actual product render. |
-| **Dimension Rounding Preview** | Shows before/after rounding with visual indicator | MEDIUM | "You ordered 165cm, you'll receive 170cm (rounded up to next 10cm)" with green checkmark. Builds confidence that customer gets at least what they ordered. |
-| **Smart Dimension Suggestions** | Suggest standard/popular sizes based on product type | MEDIUM | "Common curtain sizes: 140×240, 160×260" as quick-select options. Reduces input friction. |
-| **Instant Cart Preview** | Show configured item preview in mini-cart without leaving page | LOW-MEDIUM | Confirms item added with custom dimensions visible. Reduces "did it work?" anxiety. |
-| **Dimension Comparison Tool** | Help customers compare multiple configurations side-by-side | MEDIUM | Useful for B2B or customers ordering multiple rooms. Deferred to post-MVP. |
-| **Saved Configurations** | Allow customers to save dimension configurations for later | HIGH | Requires user accounts or browser storage. Good for repeat customers. Post-MVP feature. |
-| **Bulk Order Entry** | CSV upload or table entry for ordering many different sizes at once | HIGH | Strong B2B differentiator. Example: contractor ordering 20 curtains for apartment building. Deferred to Shopify app phase. |
+| Blog with SEO-optimized content | 43% of e-commerce traffic from organic search; blog drives long-tail keywords | HIGH | Articles about curtain care, room design, measuring guides. Build topical authority. E-E-A-T (Experience, Expertise, Authority, Trust) is critical in 2026 - real experience beats corporate content. |
+| JSON-LD structured data | Rich snippets in search results; AI overview inclusion | MEDIUM | Product schema (price, availability), FAQ schema, BreadcrumbList, Organization. Not auto-generated by Next.js - manual implementation required. |
+| Dynamic OG images | Better social media engagement when shared | MEDIUM | Next.js ImageResponse for dynamic product pages. 1200x630px recommended. Increases click-through from social shares. |
+| Post-purchase upsells on thank you page | Average cart value increase; utilizes high-intent moment | MEDIUM | Order-aware recommendations, next-order coupon, account creation prompt. Track with UTMs for measurement. |
+| Multi-language support (EN + NL) | Broader European market reach | HIGH | Not essential for MVP but valuable for Netherlands market serving both Dutch natives and expats/tourists. Consider for v1.x. |
+| Live chat or chatbot | 88% more likely to repurchase after positive service experience | MEDIUM | Handles FAQs, pre-purchase questions about custom sizing. AI can reduce support costs 30-45% in 2026. Consider for post-MVP. |
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
-Features that seem good but create problems. Deliberately NOT building these.
+Features that seem good but create problems or are premature for current stage.
 
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| **Arbitrary Precision (1mm or 1cm increments)** | "More customization is better" | Creates 2000+ price points instead of 400. Complicates inventory, production, and pricing matrix. Most customers don't need mm precision for curtains/flags. | Stick to 10cm rounding strategy. Communicate this clearly: "Rounded to nearest 10cm for optimal production." |
-| **Real-time 3D Product Rendering** | Looks impressive in demos | Performance impact, expensive implementation ($10k+ for quality solution), diminishing returns for simple products like flat textiles. Most textile products look identical at different sizes. | Simple dimensional diagram or scaled 2D preview. Save 3D for complex products (furniture, etc.). |
-| **Complex Multi-Product Bundling** | "Let customers configure curtain + rod + tiebacks together" | Interdependent configurations create exponential complexity. Pricing becomes opaque. | Sell products separately. Suggest complementary products after main purchase. Keep configurator focused. |
-| **Free-form Design Upload** | "Let customers upload custom graphics" | Different feature entirely (personalization vs dimension customization). Requires design review, approval workflow, different pricing model. | Focus on dimension calculator first. Add design upload as separate feature later if validated. |
-| **Unlimited Size Range** | "Support any dimension customer wants" | Production constraints exist. Extremely large items have shipping, material, and handling complexities. | Set practical limits (200cm max per project requirements). Communicate max size clearly. Offer "contact us for custom sizes" for outliers. |
-| **Showing All Possible Options Always** | "More choices = better UX" | Overwhelming. Poor conditional logic makes customers figure out what's compatible. | Progressive disclosure: show relevant options based on previous choices. Validate combinations. |
-| **Price After Add-to-Cart** | Some configurators hide price until cart | Pricing surprises kill sales instantly. Erodes trust. | Always show price in real-time before add-to-cart. Non-negotiable for trust-based positioning. |
+| User accounts and login | "Professional" e-commerce sites have them | Adds complexity, friction, GDPR obligations without value for custom one-off purchases. GDPR 2026 guidance emphasizes not requiring accounts unnecessarily. | Guest checkout only for now. Add accounts later if repeat purchase data justifies it. Offer account creation on thank you page (opt-in). |
+| Real-time inventory sync | Seems "modern" and prevents overselling | Irrelevant for custom-made products. Adds unnecessary complexity. | Display production lead time instead (e.g., "Ships in 5-7 business days"). |
+| Complex filtering/search | Expected on large product catalogs | You have ONE product type (custom textiles). Over-engineering. | Simple category navigation or room-based segmentation on homepage is sufficient. |
+| Newsletter signup modal/popup | List building for marketing | Annoying for first-time visitors; damages conversion. GDPR requires clear consent. | Footer signup form is sufficient. Consider post-purchase signup (already have email, can add to list with consent). |
+| Product comparison feature | Helps users decide between options | Only useful with multiple distinct products. Current focus is custom configurations of single product type. | N/A - not applicable yet. |
+| Wishlist functionality | "Standard" e-commerce feature | Low value for custom products (configurations not saved SKUs). Adds auth complexity. | Defer until multiple standard products exist. |
 
 ## Feature Dependencies
 
 ```
-[Dimension Input]
-    └──requires──> [Input Validation]
-                       └──enables──> [Real-time Price Display]
-                                        └──enables──> [Add to Cart]
-                                                         └──enables──> [Multi-Item Cart]
+SEO Foundation
+    ├── Meta tags (title, description)
+    ├── Open Graph tags
+    ├── XML Sitemap
+    └── Robots.txt
 
-[Rounding Strategy Communication]
-    ├──requires──> [Dimension Input]
-    └──enhances──> [Real-time Price Display]
+Homepage
+    ├── Requires: Product data (existing)
+    └── Links to: Product page, FAQ, About
 
-[Price Calculation Breakdown] ──enhances──> [Real-time Price Display]
-[Visual Size Preview] ──enhances──> [Dimension Input]
-[Dimension Rounding Preview] ──enhances──> [Rounding Strategy Communication]
+Cart Page
+    ├── Requires: Cart state (existing Zustand)
+    └── Enhances: Cart overlay (provides alternate path)
 
-[Saved Configurations] ──requires──> [User Accounts]
-[Bulk Order Entry] ──requires──> [CSV Parsing] + [Complex Validation]
+Thank You Page
+    ├── Requires: Checkout completion (existing Shopify flow)
+    └── Opportunity for: Upsells, account creation, social share
 
-[Real-time 3D Rendering] ──conflicts──> [Mobile Performance]
-[Complex Multi-Product Bundling] ──conflicts──> [Price Transparency]
+Policy Pages (Privacy, Terms, Shipping/Returns)
+    ├── Required by: GDPR + NL consumer law
+    └── Linked from: Footer (site-wide), checkout flow
+
+FAQ Page
+    ├── Reduces: Contact form submissions
+    ├── Enhances: SEO (long-tail keywords, FAQ schema)
+    └── Links to: Relevant product pages, policies
+
+Contact Page
+    ├── Alternative to: FAQ when self-service fails
+    └── May require: Email service (Resend, SendGrid)
+
+Blog
+    ├── Requires: CMS or MDX setup
+    ├── Depends on: SEO foundation
+    └── Drives: Organic traffic to product pages
+
+JSON-LD Structured Data
+    ├── Enhances: SEO foundation
+    ├── Applies to: Product pages, FAQ, homepage, blog posts
+    └── Requires: Schema.org research per page type
 ```
 
 ### Dependency Notes
 
-- **Dimension Input requires Input Validation:** Can't accept dimensions without validating they're within production constraints (10cm-200cm, positive numbers, etc.)
-- **Input Validation enables Real-time Price Display:** Price calculation depends on validated dimensions being within matrix bounds
-- **Price Calculation Breakdown enhances Real-time Price Display:** Transparency feature builds on basic price display
-- **Multi-Item Cart requires Line Item Properties:** Shopify's line item properties differentiate cart items with same product but different dimensions
-- **Saved Configurations requires User Accounts:** Can't persist configurations without user identity (or complex cookie/localStorage strategy)
-- **Real-time 3D Rendering conflicts with Mobile Performance:** Heavy 3D rendering kills mobile experience, contradicts table stakes requirement
+- **SEO Foundation is foundational**: Meta tags, OG, sitemap must be in place before expecting organic traffic benefit from blog or other content pages.
+- **Policy pages block launch**: Cannot legally operate EU e-commerce without Privacy Policy and proper returns information.
+- **FAQ reduces contact volume**: Implement before or alongside contact form to deflect common questions.
+- **Blog is high-effort**: Requires content creation workflow. Defer until core pages are complete and generating traffic.
+- **Thank you page depends on checkout**: Shopify checkout flow must redirect to custom thank you page (not Shopify default).
 
 ## MVP Definition
 
-### Launch With (v1)
+### Launch With (This Milestone - v1.1)
 
-Minimum viable product — what's needed to validate the core dimension-based pricing concept.
+Minimum to credibly operate and be discovered organically.
 
-- [x] **Dimension Input (Width/Height)** — Core value proposition. Without this, there's no product.
-- [x] **Automatic Rounding (10cm increments)** — Required by pricing matrix structure (20×20 grid).
-- [x] **Real-time Price Display** — Table stakes for e-commerce. Customers won't add to cart without knowing price.
-- [x] **Input Validation** — Prevents invalid orders that can't be fulfilled (out of range, negative, zero).
-- [x] **Rounding Strategy Communication** — Critical for trust. Customers must understand they get ≥ what they ordered.
-- [x] **Add to Cart** — Required to complete purchase flow.
-- [x] **Multi-Item Cart Support** — Users will order multiple items (e.g., curtains for multiple windows). Blocking this blocks common use case.
-- [x] **Shopify Integration** — Checkout handled by Shopify per requirements. Line item properties carry dimension data.
-- [x] **Mobile-Responsive Design** — Non-negotiable in 2026. 50%+ of e-commerce is mobile.
-- [x] **Order Confirmation Details** — Custom products require confirmation of exact specifications to avoid disputes.
+- [x] Homepage with value proposition, product highlights, trust signals
+- [x] Dedicated cart page (complement to existing overlay)
+- [x] Order confirmation/thank you page (basic - order details + next steps)
+- [x] Privacy policy (GDPR-compliant)
+- [x] Terms & conditions
+- [x] Shipping & returns policy (Netherlands 14-day law)
+- [x] Contact page with form
+- [x] FAQ page (structure + 10-15 common questions)
+- [x] SEO meta tags (title, description, OG) on all pages
+- [x] XML sitemap generation
+- [x] Robots.txt
 
-### Add After Validation (v1.x)
+**Rationale**: These are non-negotiable for legal compliance (GDPR, NL consumer law), organic discoverability (SEO basics), and user trust (policies, contact, FAQ). Without these, site appears incomplete and risks regulatory penalties.
 
-Features to add once core dimension calculator is working and validated with real customers.
+### Add After Core Pages Live (v1.2-1.3)
 
-- [ ] **Price Calculation Breakdown** — Trigger: After 50+ orders, if customers ask "how is this priced?" Add transparency as differentiator.
-- [ ] **Visual Size Preview** — Trigger: If analytics show high bounce rate on dimension input page. May indicate customers unsure about size.
-- [ ] **Dimension Rounding Preview** — Trigger: If customer service gets questions about rounding. Proactive clarity feature.
-- [ ] **Smart Dimension Suggestions** — Trigger: After analyzing order data to identify common size patterns. Don't assume standard sizes without data.
-- [ ] **Instant Cart Preview** — Trigger: If cart abandonment is high. Reduces "did it work?" friction.
+Features to add once foundation is validated.
+
+- [ ] Blog structure (listing + post template) - Priority after monitoring organic traffic gaps
+- [ ] JSON-LD structured data for product pages - Enhances existing product page SEO
+- [ ] Dynamic OG images for product configurations - Improves social sharing
+- [ ] Enhanced thank you page with upsells/account creation - Conversion optimization
+- [ ] FAQ schema markup - Targets rich snippets
+
+**Trigger for adding**:
+- Blog: When keyword research shows content opportunities or organic traffic plateaus
+- JSON-LD: After 2-4 weeks of basic SEO to measure baseline
+- Dynamic OG: When social media becomes traffic source
+- Thank you enhancements: After 50+ orders to validate patterns
 
 ### Future Consideration (v2+)
 
-Features to defer until product-market fit is established and transitioning to Shopify app.
+Features to defer until product-market fit and traffic validate need.
 
-- [ ] **Saved Configurations** — Defer: Requires user accounts. Wait until repeat customer rate justifies investment.
-- [ ] **Dimension Comparison Tool** — Defer: Niche feature for customers ordering multiple items. Validate demand first.
-- [ ] **Bulk Order Entry (CSV upload)** — Defer: B2B feature. Build when transitioning to Shopify app for broader market.
-- [ ] **Visual 3D Rendering** — Defer: Expensive, limited value for flat textiles. Only consider if moving to complex products (furniture, etc.).
-- [ ] **Design Upload/Personalization** — Defer: Different feature set entirely. Validate dimension calculator first.
+- [ ] Multi-language (EN/NL) - Wait for market data on language preference
+- [ ] Live chat/chatbot - Needs support ticket volume to justify
+- [ ] User accounts - Only if repeat purchase rate justifies complexity
+- [ ] Blog content calendar and regular publishing - Resource-intensive, needs content strategy
+- [ ] Advanced SEO (technical audits, backlink strategy) - After core content is indexed
+
+**Why defer**: These require ongoing effort (blog content), significant development (multi-language, accounts), or solve problems that may not exist yet (chat for low support volume).
 
 ## Feature Prioritization Matrix
 
-| Feature | User Value | Implementation Cost | Priority |
-|---------|------------|---------------------|----------|
-| Dimension Input (Width/Height) | HIGH | LOW | P1 |
-| Real-time Price Display | HIGH | LOW | P1 |
-| Input Validation | HIGH | LOW | P1 |
-| Rounding Strategy Communication | HIGH | MEDIUM | P1 |
-| Add to Cart | HIGH | LOW | P1 |
-| Multi-Item Cart Support | HIGH | MEDIUM | P1 |
-| Mobile-Responsive Design | HIGH | MEDIUM | P1 |
-| Order Confirmation Details | HIGH | LOW | P1 |
-| Shopify Integration | HIGH | MEDIUM | P1 |
-| Price Calculation Breakdown | MEDIUM | MEDIUM | P2 |
-| Dimension Rounding Preview | MEDIUM | MEDIUM | P2 |
-| Visual Size Preview (Simple) | MEDIUM | MEDIUM-HIGH | P2 |
-| Smart Dimension Suggestions | LOW | MEDIUM | P2 |
-| Instant Cart Preview | LOW | LOW-MEDIUM | P2 |
-| Saved Configurations | LOW | HIGH | P3 |
-| Dimension Comparison Tool | LOW | MEDIUM | P3 |
-| Bulk Order Entry (CSV) | MEDIUM | HIGH | P3 |
-| Visual 3D Rendering | LOW | HIGH | P3 |
+| Feature | User Value | Implementation Cost | Priority | Notes |
+|---------|------------|---------------------|----------|-------|
+| Privacy policy | HIGH | LOW | P1 | Legal requirement, template-based |
+| Shipping/returns policy | HIGH | LOW | P1 | Legal requirement (NL 14-day law) |
+| Terms & conditions | HIGH | LOW | P1 | Legal protection |
+| SEO meta tags | HIGH | LOW | P1 | Next.js Metadata API makes this straightforward |
+| XML sitemap | HIGH | LOW | P1 | Next.js generates; submit to Search Console |
+| Homepage | HIGH | MEDIUM | P1 | Primary entry point for organic traffic |
+| FAQ page | HIGH | MEDIUM | P1 | Reduces support load, SEO benefit |
+| Cart page | MEDIUM | LOW | P1 | Table stakes; complements overlay |
+| Thank you page | MEDIUM | MEDIUM | P1 | Post-checkout expectation |
+| Contact page | MEDIUM | LOW | P1 | Trust signal, support access |
+| Robots.txt | MEDIUM | LOW | P1 | Standard SEO practice |
+| Blog structure | MEDIUM | HIGH | P2 | Content investment required |
+| JSON-LD structured data | MEDIUM | MEDIUM | P2 | Manual per page type |
+| Dynamic OG images | LOW | MEDIUM | P2 | Nice-to-have for sharing |
+| Thank you page upsells | MEDIUM | MEDIUM | P2 | Conversion optimization |
+| FAQ schema markup | LOW | LOW | P2 | Incremental SEO boost |
+| Multi-language | LOW | HIGH | P3 | Wait for market validation |
+| Live chat | LOW | MEDIUM | P3 | Premature without support volume |
+| User accounts | LOW | HIGH | P3 | Unnecessary for custom one-off purchases |
 
 **Priority key:**
-- P1: Must have for launch — without these, product is not functional or trustworthy
-- P2: Should have, add after validation — enhances core experience but not blocking
-- P3: Nice to have, future consideration — validate demand before building
+- **P1**: Must have for this milestone - legal, trust, or core SEO
+- **P2**: Should have soon - enhances SEO or conversion
+- **P3**: Nice to have - future optimization or unvalidated assumptions
+
+## European/Dutch Market Considerations
+
+### Legal Compliance (Non-Negotiable)
+
+1. **GDPR Requirements (EU-wide)**
+   - Privacy policy must detail: data collected, purposes, retention, third-party sharing, user rights
+   - Consent must be freely given, specific, informed, unambiguous (no pre-checked boxes)
+   - Reject button must be as prominent as Accept
+   - Penalties: Up to €20M or 4% global revenue
+   - Contact form must include data usage policy
+
+2. **Netherlands Distance Selling Act**
+   - 14-day cooling-off period for online purchases (starts day after delivery)
+   - Customers can evaluate but not use products during this period
+   - Exceptions: Custom/personalized items (seal broken), hygiene products, tickets
+   - Must inform customers of exceptions BEFORE purchase
+   - Order confirmation must be sent via email/letter (not just on-site)
+   - Penalties: Up to €900,000 from ACM (Dutch consumer authority)
+
+3. **Upcoming Changes**
+   - "Empowerment of consumers in green transition" Directive adopted June 2024
+   - National law deadline: July 31, 2026 (monitor for updates)
+
+### Cultural/Market Preferences
+
+1. **Trust Signals**: Dutch consumers value transparency. Clear policies, visible contact info, and professional design are critical.
+
+2. **Language**: While many Dutch speak English, native-language content builds trust. Consider NL translations for policies and FAQ in v1.x if data shows Dutch-language search traffic.
+
+3. **Payment Methods**: Shopify checkout likely handles this, but verify iDEAL support (dominant in NL).
+
+4. **VAT Display**: Prices must include VAT for consumers (already handled in existing pricing).
+
+## Content Requirements (Structure vs. Copy)
+
+This milestone focuses on **structure-first**: page shells, data flow, SEO foundation. Content writing is separate.
+
+| Feature | Structure Needed | Content Needed | Source |
+|---------|------------------|----------------|--------|
+| Homepage | Hero section, product highlights, trust badges, CTA layout | Headlines, product descriptions, value prop copy | Content writer / stakeholder |
+| Cart page | Item list, summary, upsell slot, trust elements (return policy link) | Trust messaging, CTA copy | Minimal - mostly UI labels |
+| Thank you page | Order summary, next steps, optional upsell/account creation | Thank you message, next steps copy, upsell offer | Content writer |
+| Privacy policy | Sections: data collected, usage, retention, sharing, rights | Full legal copy | Legal template + customization |
+| Terms & conditions | Sections: usage rights, liabilities, disputes, jurisdiction | Full legal copy | Legal template + customization |
+| Shipping/returns | NL 14-day law, exceptions, process, costs | Policy details, timelines, costs | Stakeholder (business rules) |
+| Contact page | Form fields, business info display, hours | Contact methods, hours of operation | Stakeholder |
+| FAQ | Category structure, Q&A template, schema markup | 10-15 Q&A pairs based on real customer questions | Stakeholder + customer service data |
+| Blog listing | Post card layout, pagination/filtering | N/A (no posts yet) | N/A |
+| Blog post | MDX/CMS template, SEO meta, related posts | Individual articles | Content writer (post-launch) |
+| SEO meta | Metadata API integration, templates | Title + description per page type | SEO copywriter or templates |
+
+**For this milestone**: Implement structure and placeholder copy. Stakeholder provides final policy/FAQ copy before launch. Blog posts are post-milestone.
 
 ## Competitor Feature Analysis
 
-Based on research of custom textile product configurators:
+Based on research of small European custom product e-commerce sites:
 
-| Feature | Industry Standard | Our Approach | Differentiation |
-|---------|-------------------|--------------|-----------------|
-| **Dimension Input** | Number inputs or dropdowns with preset sizes | Free-form width/height inputs with validation | More flexible than dropdowns, clearer than "select size" |
-| **Price Display** | Final price only, no breakdown | Real-time price WITH breakdown (v1.x) | Transparency differentiator — 94% loyalty boost |
-| **Rounding Strategy** | Hidden or unclear | Explicit "you ordered X, receiving Y" messaging | Trust builder — customers know exactly what they're getting |
-| **Visual Preview** | High-end: 3D renders; Budget: static images | Start simple (dimensional diagram), add scaled preview in v1.x | Pragmatic progression vs expensive 3D |
-| **Mobile Experience** | Often poor — desktop-retrofitted | Mobile-first responsive design | Table stakes in 2026 — 50%+ traffic |
-| **Cart for Custom Items** | Single configuration, or awkward "save quote" flows | Native Shopify cart with line item properties | Standard e-commerce experience, no special "quote" friction |
-| **Size Options** | Either dropdown presets OR free-form any size | Constrained to 10cm increments within 10-200cm range | Balances flexibility with production constraints |
+| Feature | Common Implementation | Our Approach |
+|---------|----------------------|--------------|
+| Homepage | Product imagery, self-segmentation (by room/use), trust badges, clear CTA | Same - hero with value prop, product highlights, self-segmentation if multiple categories emerge |
+| Cart | Mix of overlay-only and dedicated page. Upsells common. | Both overlay (existing) + dedicated page for review/upsells |
+| Thank you | Order details + account creation prompt or discount for next order | Order details + next steps. Defer upsells to v1.2. |
+| Policies | Footer links to dedicated pages. Often templated. | Footer links. Use GDPR/NL templates with customization. |
+| FAQ | Accordion UI, category-organized, FAQ schema | Same. 10-15 questions covering sizing, shipping, returns, care. |
+| Blog | Mix of educational (how-to) and product-related content | Structure now, content later. Focus on custom textile topics (measuring, care, design ideas). |
+| SEO | Basic meta tags common. JSON-LD less common for small sites. | Start with meta/OG (P1), add JSON-LD for product pages (P2). |
+| Contact | Form + email. Some add phone, live chat. | Form + email. No phone/chat yet (low volume expected). |
 
-## Domain-Specific UX Patterns
+## SEO Implementation Details (Next.js 15 Specific)
 
-### Dimension Input Best Practices (Custom Textiles)
+### Metadata API Usage
 
-**Input Style:**
-- Separate width and height fields (not single "size" field)
-- Unit labels directly in/next to input (e.g., "cm" suffix)
-- Clear labels: "Width (cm)" and "Height (cm)" not just "Dimensions"
-- Number input type on mobile (triggers numeric keyboard)
-
-**Validation Timing:**
-- Validate on blur (when user leaves field), not on every keystroke (annoying)
-- Show validation errors inline below field, not in popup/alert
-- Use positive reinforcement: green checkmark for valid input
-
-**Common Customer Mistakes:**
-- Entering dimensions in wrong unit (confusion between cm/m or cm/inches)
-- Decimal entry when only integers accepted (e.g., "1.5" instead of "150")
-- Reversing width/height
-- Forgetting to account for mounting hardware
-
-**Prevention:**
-- Clear unit labels
-- Input masks or step increments (e.g., step="10" for 10cm increments)
-- Visual diagram showing which measurement is width vs height
-- Hint text: "Measure window width from left to right"
-
-### Rounding Communication Patterns
-
-**Effective Approaches:**
-- Show calculation: "165cm → 170cm (rounded up)"
-- Use color coding: green for rounded-up values (customer benefit)
-- Explain why: "Rounded to nearest 10cm for optimal production"
-- Show area impact: "Ordered: 165×235cm → Receiving: 170×240cm (+5% larger)"
-
-**Ineffective Approaches:**
-- Hiding rounding completely (erodes trust when product arrives)
-- Rounding without explanation ("why is my price different?")
-- Inconsistent rounding (sometimes up, sometimes down confuses customers)
-
-### Price Transparency Patterns (High-Value for Custom Products)
-
-**Full Breakdown Example:**
-```
-Dimensions: 170cm × 240cm = 4.08m²
-Base fabric: 4.08m² × €12/m² = €48.96
-Finishing (hem + grommets): €8.00
----
-Total: €56.96
+**Static pages** (policies, contact, FAQ):
+```typescript
+// app/privacy/page.tsx
+export const metadata: Metadata = {
+  title: 'Privacy Policy | [Brand]',
+  description: 'How we collect and protect your data...',
+  openGraph: {
+    title: 'Privacy Policy | [Brand]',
+    description: 'How we collect and protect your data...',
+  }
+}
 ```
 
-**Benefits:**
-- Customers understand price logic
-- Enables comparison shopping (customers can calculate price for different sizes)
-- Builds trust (nothing hidden)
-- Reduces "why is this so expensive?" friction
+**Dynamic pages** (blog posts, product variants if implemented):
+```typescript
+// app/blog/[slug]/page.tsx
+export async function generateMetadata({ params }): Promise<Metadata> {
+  const post = await getPost(params.slug)
+  return {
+    title: `${post.title} | [Brand] Blog`,
+    description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      images: [{ url: post.ogImage }],
+    }
+  }
+}
+```
 
-**Implementation Note:**
-- Start with simple price display in MVP
-- Add breakdown in v1.x after validating whether customers actually care
-- Don't over-engineer before proving value
+### Sitemap Generation
 
-### Cart Management for Custom Configured Items
+Next.js can generate programmatically:
+```typescript
+// app/sitemap.ts
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    { url: 'https://[domain]', lastModified: new Date() },
+    { url: 'https://[domain]/cart', lastModified: new Date() },
+    { url: 'https://[domain]/faq', lastModified: new Date() },
+    // ... all static pages
+    // ... dynamic blog posts fetched from CMS
+  ]
+}
+```
 
-**Shopify Line Item Properties Pattern:**
-- Each unique configuration = separate line item (not quantity increase)
-- Store custom data as line item properties: `{ "width": "170cm", "height": "240cm", "rounded_from": "165cm × 235cm" }`
-- Display custom properties in cart: "Custom size: 170×240cm"
-- Carry properties through to order confirmation and merchant view
+### JSON-LD Implementation (P2 - Post-launch)
 
-**Anti-Pattern:**
-- Treating all size variations as one product with quantity (loses dimension data)
-- Storing configuration in cart note instead of line item properties (doesn't scale to multi-item)
+Manual component approach:
+```typescript
+// components/structured-data.tsx
+export function ProductSchema({ product }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "description": product.description,
+    "offers": {
+      "@type": "Offer",
+      "price": product.price,
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+  )
+}
+```
+
+Include in page:
+```typescript
+// app/product/page.tsx
+export default function ProductPage() {
+  return (
+    <>
+      <ProductSchema product={productData} />
+      {/* rest of page */}
+    </>
+  )
+}
+```
+
+### Performance Notes
+
+- Use React `cache()` to memoize data fetches for metadata and page rendering (avoid duplicate queries)
+- Server Components automatically server-render metadata (SEO-friendly)
+- OG image generation with `ImageResponse` supports flexbox only (no Grid)
 
 ## Sources
 
-### General Custom Product Configurators & Best Practices
-- [What is a product configurator—complete guide [2026] PART 1](https://dotinum.com/blog/what-is-a-product-configurator-complete-guide-2026-part-1/)
-- [PC Price Calculator by Formula - Shopify App Store](https://apps.shopify.com/price-by-formula)
-- [Apippa‑Custom Price Calculator - Shopify App Store](https://apps.shopify.com/custom-price-calculator)
-- [eCommerce Product Page Best Practices in 2026](https://vwo.com/blog/ecommerce-product-page-design/)
-- [Top 10 Best 3D Product Configurator Features for 2026](https://blog.prototechsolutions.com/top-10-best-product-configurator-features-2026/)
+### E-commerce Structure & Best Practices
+- [Ecommerce Website Architecture: Full Guide (2026)](https://www.resultfirst.com/blog/ecommerce-seo/ecommerce-website-architecture/)
+- [25 Must-Have Pages for Your Ecommerce Website | Barrel](https://www.barrelny.com/posts/25-must-have-pages-for-your-ecommerce-website)
+- [Ecommerce Homepage Design Best Practices for 2026](https://decodeup.com/blog/ecommerce-homepage-design-best-practices)
+- [9 Best E-Commerce Homepage Practices [2026] - Luigi's Box](https://www.luigisbox.com/blog/ecommerce-homepage-best-practices/)
 
-### Price Transparency
-- [What is Pricing Transparency? | DealHub](https://dealhub.io/glossary/pricing-transparency/)
-- [Building Consumer Trust: The Power of Transparent Pricing in E-Commerce](https://www.omniaretail.com/blog/how-e-commerce-brands-and-retailers-are-building-trust-with-transparent-pricing)
-- [Should a Company Reveal Its Cost Structure to Customers? - UCLA Anderson Review](https://anderson-review.ucla.edu/cost-transparency/)
+### SEO & Technical Implementation
+- [Comprehensive Ecommerce SEO Guide for 2026](https://seoprofy.com/blog/ecommerce-seo/)
+- [Ecommerce SEO: The Beginner's Guide for 2026](https://wisepops.com/blog/ecommerce-seo)
+- [16-point Crucial Ecommerce SEO Checklist for 2026](https://meetanshi.com/blog/ecommerce-seo/)
+- [Next.js 15 SEO: Complete Guide to Metadata & Optimization](https://www.digitalapplied.com/blog/nextjs-seo-guide)
+- [Getting Started: Metadata and OG images | Next.js](https://nextjs.org/docs/app/getting-started/metadata-and-og-images)
 
-### Custom Curtain Calculators (Domain-Specific)
-- [2026 Curtain Guide: Fix 7 Mistakes | Ready vs Custom](https://www.kapissh.com/blogs/kapissh-blog/2026-curtain-guide-avoid-mistakes-ready-made-custom)
-- [Curtain Size Calculator | Pepper Home](https://pepper-home.com/pages/curtain-calculator)
-- [12 UI/UX Design Trends That Will Dominate 2026](https://www.index.dev/blog/ui-ux-design-trends)
+### Cart & Conversion
+- [Drawer Cart vs Cart Page: Which is Better for Your E-commerce Store?](https://www.mhtmedia.com/post/drawer-cart-vs-traditional-cart-page-which-is-better-for-your-e-commerce-store)
+- [Top 29 Cart Page Designs For 2026 (Examples)](https://www.convertcart.com/blog/cart-page-designs)
+- [Order Confirmation Page: 25 Best Practices (+ Great examples)](https://www.convertcart.com/blog/order-confirmation-page)
 
-### Shopify Cart Management for Custom Products
-- [Cart - Shopify Storefront API](https://shopify.dev/docs/storefronts/headless/building-with-the-storefront-api/cart)
-- [How To Create Shopify Cart Attributes?](https://ecomposer.io/blogs/shopify-knowledge/shopify-cart-attributes)
-- [How to Customize Shopify Line Item Properties](https://ecomposer.io/blogs/shopify-knowledge/custom-shopify-line-item-properties)
-- [Using JavaScript to manage a Shopify cart | Nozzlegear](https://nozzlegear.com/shopify/using-javascript-to-manage-a-shopify-cart)
+### FAQ & Content
+- [20 Best FAQ Pages (+ How To Create Your Own) (2026) - Shopify](https://www.shopify.com/blog/120928069-how-to-create-faq-page)
+- [How FAQs Affect SEO and Best Practices for Optimizing Your FAQ Page | Clearscope](https://www.clearscope.io/blog/faq-seo)
+- [eCommerce Content Marketing in 2026: Benefits, Strategy](https://www.helloroketto.com/articles/ecommerce-content-marketing)
+- [Ecommerce SEO: The Beginner's Guide for 2026](https://wisepops.com/blog/ecommerce-seo)
 
-### Validation & Error Prevention
-- [Essential Guide to Fixing BigCommerce Product Errors](https://catsy.com/blog/bigcommerce-product-errors/)
-- [Fixing metafield validation errors - Shopify](https://help.shopify.com/en/manual/custom-data/metafields/fixing-metafield-validation-errors)
+### Legal & Compliance (GDPR, Netherlands)
+- [GDPR for E-commerce: In-Depth Guide to Compliance](https://usercentrics.com/knowledge-hub/gdpr-for-ecommerce/)
+- [Legal Regulations for eCommerce Businesses in the EU](https://www.bezos.ai/resources/ecommerce-legal-requirements-eu)
+- [Online sales and purchases (web shop) | Business.gov.nl](https://business.gov.nl/regulation/long-distance-sales-and-purchases/)
+- [Consumer rights: purchases and warranty in the Netherlands](https://www.iamexpat.nl/expat-info/consumer-rights-netherlands/purchases-warranty)
+- [Cancellation period in case of a sale | Business.gov.nl](https://business.gov.nl/regulations/cancellation-period-sale/)
 
-### Textile Industry Context (MOQ, Custom Orders)
-- [MOQ in Clothing Manufacturing: Complete 2026 Guide](https://argusapparel.com/blog/moq-in-clothing-manufacturing/)
-- [What are MOQs? True MOQ meaning](https://prototype.fashion/what-is-moq-meaning/)
-
-### Visual Preview & Product Visualization
-- [What is Ecommerce Product Configurator?](https://wpconfigurator.com/blog/ecommerce-product-configurator/)
-- [Product visualization software for ecommerce - Kickflip](https://gokickflip.com/product-visualization-software)
-- [3D Product Configurator for eCommerce | Zolak](https://zolak.tech/blog/ecommerce-product-configurator)
-
-### Order Confirmation & Custom Product Expectations
-- [Driving Customer Satisfaction: Customization Strategies in Manufacturing](https://praxie.com/customization-strategies-in-manufacturing/)
-- [Order Confirmation: The Art of Order Confirmation](https://www.fastercapital.com/content/Order-Confirmation--The-Art-of-Order-Confirmation-in-an-Open-Order-System.html)
-- [What is Made-to-Order? | DealHub](https://dealhub.io/glossary/made-to-order/)
-- [Top 28 Best Order Confirmation Email Templates (2025)](https://seo.ai/blog/order-confirmation-email-templates)
-
-### Custom Flags & Banners (Direct Competitors)
-- [Custom Flags & Banners - Custom Flag Company](https://www.customflagcompany.com/)
-- [Custom Flags - Lush Banners](https://lushbanners.com/custom-flags/)
-- [Custom Flags | Banners On The Cheap](https://www.bannersonthecheap.com/custom-flags)
-- [Custom Printed Flags | Vispronet](https://www.vispronet.com/custom-printed-flags)
-
-### Common Mistakes & Pitfalls
-- [Top 10 Product Customization Mistakes You Should Avoid](https://www.smartcustomizer.com/blog/product-customization-mistakes)
-- [10 Hidden Pitfalls of 3D Configurator Implementation](https://blog.salsita.ai/hidden-pitfalls-of-3d-product-configurator-implementation-dont-ignore-3/)
-- [7 Common WordPress Product Configurator Problems](https://wpconfigurator.com/blog/wordpress-product-configurator-problems-kill-sales/)
-- [Choosing a Product Configurator | 5 Mistakes to Avoid](https://configurepricequote365.com/choosing-a-product-configurator/)
+### Customer Service & Contact
+- [The Ultimate Guide to Ecommerce Customer Service in 2026 - Help Scout](https://www.helpscout.com/blog/ecommerce-customer-service/)
+- [Contact Form Design Tips and Best Practices | Mailchimp](https://mailchimp.com/resources/contact-form-design/)
 
 ---
-*Feature research for: Custom-dimension textile e-commerce (curtains, flags, banners)*
-*Researched: 2026-01-29*
-*Confidence: MEDIUM-HIGH (verified with multiple industry sources, direct competitor analysis, and Shopify technical documentation)*
+*Feature research for: Custom textile e-commerce website structure & SEO*
+*Researched: 2026-02-01*

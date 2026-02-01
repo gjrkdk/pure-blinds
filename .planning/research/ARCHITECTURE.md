@@ -1,7 +1,7 @@
 # Architecture Research
 
-**Domain:** Custom-dimension e-commerce with Shopify checkout
-**Researched:** 2026-01-29
+**Domain:** Multi-page website structure and SEO for Next.js 15 e-commerce
+**Researched:** 2026-02-01
 **Confidence:** HIGH
 
 ## Standard Architecture
@@ -9,692 +9,930 @@
 ### System Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         FRONTEND LAYER                               │
-│  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐        │
-│  │  Product Page  │  │   Cart UI      │  │ Configurator   │        │
-│  │  (dimension    │  │   (session     │  │ (dimension     │        │
-│  │   inputs)      │  │    mgmt)       │  │  preview)      │        │
-│  └───────┬────────┘  └───────┬────────┘  └───────┬────────┘        │
-│          │                   │                   │                  │
-├──────────┴───────────────────┴───────────────────┴──────────────────┤
-│                      BFF LAYER (Next.js API Routes)                 │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │  API Route: /api/pricing           (pricing calculations)    │   │
-│  │  API Route: /api/cart              (cart management)         │   │
-│  │  API Route: /api/checkout          (Draft Order creation)    │   │
-│  └──────────────────────────────────────────────────────────────┘   │
-│          │                   │                   │                  │
-├──────────┴───────────────────┴───────────────────┴──────────────────┤
-│                         DOMAIN LAYER                                │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌─────────────────┐   │
-│  │ Pricing Engine   │  │  Cart Service    │  │ Shopify Client  │   │
-│  │ - Matrix lookup  │  │  - Session mgmt  │  │ - Draft Orders  │   │
-│  │ - Rounding rules │  │  - Validation    │  │ - Auth          │   │
-│  │ - Price calc     │  │  - Persistence   │  │                 │   │
-│  └────────┬─────────┘  └────────┬─────────┘  └────────┬────────┘   │
-│           │                     │                      │            │
-├───────────┴─────────────────────┴──────────────────────┴────────────┤
-│                        DATA LAYER                                   │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌─────────────────┐   │
-│  │ Pricing Matrix   │  │  Cart Sessions   │  │ Shopify Store   │   │
-│  │ (Database)       │  │  (Database)      │  │ (External API)  │   │
-│  └──────────────────┘  └──────────────────┘  └─────────────────┘   │
-└─────────────────────────────────────────────────────────────────────┘
-
-                            DATA FLOW
-
-User Input (dimensions)
-         ↓
-Frontend → BFF /api/pricing → Pricing Engine → Matrix DB
-         ↓                         ↓
-    Display Price            Calculate Price
-         ↓
-Add to Cart
-         ↓
-Frontend → BFF /api/cart → Cart Service → Session DB
-         ↓
-    Cart Updated
-         ↓
-Checkout Click
-         ↓
-Frontend → BFF /api/checkout → Shopify Client → Draft Order API
-         ↓                                            ↓
-  Checkout URL ←────────────────────────────  Invoice URL Created
-         ↓
-Redirect to Shopify
-         ↓
-Customer Pays → Shopify Checkout → Order Complete
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         Client Layer (Browser)                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐        │
+│  │  Homepage  │  │   Product  │  │    Cart    │  │   Static   │        │
+│  │    Page    │  │    Page    │  │    Page    │  │   Pages    │        │
+│  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘        │
+│        │               │               │               │                │
+├────────┴───────────────┴───────────────┴───────────────┴────────────────┤
+│                    Root Layout (Nav + Footer)                            │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │  Navigation  │  Children Content (varies)  │  Footer             │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────────────────────┤
+│                         Server Components                                │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐      │
+│  │   Metadata API   │  │    SEO Layer     │  │  Structured Data │      │
+│  │  (generateMetadata)│  │  (sitemap/robots)│  │    (JSON-LD)     │      │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘      │
+├─────────────────────────────────────────────────────────────────────────┤
+│                         API Routes Layer                                 │
+│  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐        │
+│  │  /api/     │  │  /api/     │  │  /api/     │  │  /api/     │        │
+│  │  pricing   │  │  checkout  │  │  contact   │  │  health    │        │
+│  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘        │
+│        │               │               │               │                │
+├────────┴───────────────┴───────────────┴───────────────┴────────────────┤
+│                         State Management                                 │
+│  ┌──────────────────┐  ┌──────────────────────────────────────┐        │
+│  │  Zustand Store   │  │  localStorage Persistence            │        │
+│  │  (cart state)    │  │  (cart data)                         │        │
+│  └──────────────────┘  └──────────────────────────────────────┘        │
+├─────────────────────────────────────────────────────────────────────────┤
+│                         External Services                                │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐      │
+│  │  Shopify Admin   │  │  Email Service   │  │  Vercel Edge     │      │
+│  │      API         │  │  (Nodemailer)    │  │   Functions      │      │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘      │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Component Responsibilities
 
-| Component | Responsibility | Typical Implementation |
-|-----------|----------------|------------------------|
-| **Pricing Engine** | Calculate prices from dimension inputs using matrix lookup + rounding rules | Pure TypeScript module with matrix query logic |
-| **Cart Service** | Manage cart sessions, validate items, persist state | Service class with session management (DB or memory) |
-| **Shopify Client** | Create Draft Orders, handle authentication, manage API communication | SDK wrapper or custom HTTP client with admin token |
-| **Product Configurator** | Capture dimension inputs, validate constraints, show preview | React components with form validation |
-| **BFF API Routes** | Aggregate backend services, secure sensitive operations, transform data | Next.js Route Handlers in /app/api |
-| **Matrix Storage** | Store pricing matrix data with dimension ranges and pricing tiers | Database table with indexed lookups |
-| **Session Storage** | Persist cart state between page loads | Database sessions or encrypted cookies |
+| Component | Responsibility | Integration with Existing |
+|-----------|----------------|---------------------------|
+| **Root Layout** | Global navigation, footer, HTML structure | **MODIFY EXISTING** `src/app/layout.tsx` to add footer, improve nav |
+| **Navigation** | Site-wide nav with cart icon | **EXTRACT** from existing header in `layout.tsx`, enhance with new routes |
+| **Footer** | Global footer with links to policies, contact | **NEW COMPONENT** `src/components/layout/footer.tsx` |
+| **Page Routes** | Homepage, cart, thank-you, static pages | **NEW PAGES** + **MODIFY** existing cart page |
+| **Metadata Layer** | SEO tags, Open Graph, Twitter cards | **NEW** `generateMetadata` exports in each page |
+| **Sitemap Generator** | Dynamic sitemap.xml for all routes | **NEW** `src/app/sitemap.ts` |
+| **Robots Generator** | robots.txt with crawl rules | **NEW** `src/app/robots.ts` |
+| **JSON-LD Components** | Structured data injection | **NEW** inline `<script>` tags in pages |
+| **Contact Form** | Form + email API route | **NEW** `src/app/contact/page.tsx` + `src/app/api/contact/route.ts` |
+| **Blog/FAQ Pages** | Content pages from markdown | **NEW** markdown-based pages or MDX integration |
 
 ## Recommended Project Structure
 
+### Current Structure (v1.0)
 ```
 src/
-├── app/                          # Next.js App Router
-│   ├── products/                 # Product pages
-│   │   └── [slug]/
-│   │       └── page.tsx          # Product detail with dimension inputs
-│   ├── cart/
-│   │   └── page.tsx              # Cart review page
-│   ├── api/                      # BFF API Routes
-│   │   ├── pricing/
-│   │   │   └── route.ts          # POST /api/pricing
-│   │   ├── cart/
-│   │   │   └── route.ts          # GET/POST/DELETE /api/cart
-│   │   └── checkout/
-│   │       └── route.ts          # POST /api/checkout
-│   └── layout.tsx
-│
-├── domains/                      # Domain Layer (isolated, reusable)
-│   ├── pricing/                  # Pricing Engine (reusable for Shopify app)
-│   │   ├── engine.ts             # Core pricing calculation logic
-│   │   ├── matrix.ts             # Matrix lookup + interpolation
-│   │   ├── rounding.ts           # Rounding rules
-│   │   ├── types.ts              # Domain types (Dimensions, Price, Matrix)
-│   │   └── index.ts              # Public API exports
-│   │
-│   ├── cart/                     # Cart Domain
-│   │   ├── service.ts            # Cart business logic
-│   │   ├── session.ts            # Session management
-│   │   ├── types.ts              # Cart types
-│   │   └── index.ts
-│   │
-│   └── shopify/                  # Shopify Integration Domain
-│       ├── client.ts             # Shopify Admin API client
-│       ├── draft-orders.ts       # Draft Order operations
-│       ├── types.ts              # Shopify types
-│       └── index.ts
-│
-├── components/                   # React components
-│   ├── product/
-│   │   ├── DimensionInput.tsx    # Dimension input fields
-│   │   └── PriceDisplay.tsx      # Calculated price display
-│   ├── cart/
-│   │   └── CartItem.tsx          # Cart line item
-│   └── ui/                       # Shared UI components
-│
-├── lib/                          # Infrastructure utilities
-│   ├── db.ts                     # Database client (Prisma singleton)
-│   ├── env.ts                    # Environment variable validation
-│   └── utils.ts                  # General utilities
-│
-└── prisma/
-    ├── schema.prisma             # Database schema
-    └── migrations/               # Database migrations
+├── app/
+│   ├── layout.tsx                    # Root layout (minimal header)
+│   ├── page.tsx                      # Homepage placeholder
+│   ├── products/[productId]/page.tsx # Product configurator
+│   ├── cart/page.tsx                 # Cart page
+│   └── api/
+│       ├── pricing/route.ts
+│       ├── checkout/route.ts
+│       └── health/route.ts
+├── components/
+│   ├── dimension-configurator.tsx
+│   └── cart/
+│       ├── cart-icon.tsx
+│       ├── cart-item.tsx
+│       ├── cart-summary.tsx
+│       ├── quantity-input.tsx
+│       └── remove-dialog.tsx
+└── lib/
+    ├── cart/
+    │   ├── store.ts                  # Zustand cart state
+    │   ├── types.ts
+    │   └── utils.ts
+    ├── pricing/
+    │   ├── calculator.ts
+    │   ├── types.ts
+    │   └── validator.ts
+    ├── shopify/
+    │   ├── client.ts
+    │   ├── draft-order.ts
+    │   └── types.ts
+    └── env.ts
+```
+
+### Proposed Structure (v1.1 - Adding Pages + SEO)
+```
+src/
+├── app/
+│   ├── layout.tsx                    # MODIFY: Add footer, improve nav structure
+│   ├── page.tsx                      # MODIFY: Build real homepage
+│   ├── sitemap.ts                    # NEW: Generate sitemap.xml
+│   ├── robots.ts                     # NEW: Generate robots.txt
+│   ├── products/[productId]/page.tsx # EXISTING: Add generateMetadata
+│   ├── cart/page.tsx                 # MODIFY: Add metadata, improve layout
+│   ├── thank-you/page.tsx            # NEW: Post-checkout confirmation
+│   ├── contact/page.tsx              # NEW: Contact form
+│   ├── blog/                         # NEW: Blog section
+│   │   ├── page.tsx                  # Blog index
+│   │   └── [slug]/page.tsx           # Individual posts (from markdown)
+│   ├── faq/page.tsx                  # NEW: FAQ page
+│   └── (policies)/                   # NEW: Route group for policy pages
+│       ├── privacy/page.tsx
+│       ├── terms/page.tsx
+│       ├── shipping/page.tsx
+│       └── returns/page.tsx
+│   └── api/
+│       ├── pricing/route.ts          # EXISTING
+│       ├── checkout/route.ts         # EXISTING
+│       ├── contact/route.ts          # NEW: Handle contact form submission
+│       └── health/route.ts           # EXISTING
+├── components/
+│   ├── layout/                       # NEW: Layout components
+│   │   ├── header.tsx                # NEW: Extract from layout.tsx
+│   │   ├── navigation.tsx            # NEW: Main nav component
+│   │   ├── footer.tsx                # NEW: Site footer
+│   │   └── structured-data.tsx       # NEW: JSON-LD wrapper component
+│   ├── forms/                        # NEW: Form components
+│   │   ├── contact-form.tsx          # NEW: Contact form UI
+│   │   └── form-field.tsx            # NEW: Reusable form field
+│   ├── ui/                           # NEW: Design system components
+│   │   ├── button.tsx                # NEW: Button variants
+│   │   ├── card.tsx                  # NEW: Card component
+│   │   └── input.tsx                 # NEW: Input component
+│   ├── dimension-configurator.tsx    # EXISTING
+│   └── cart/                         # EXISTING: Cart components
+│       ├── cart-icon.tsx
+│       ├── cart-item.tsx
+│       ├── cart-summary.tsx
+│       ├── quantity-input.tsx
+│       └── remove-dialog.tsx
+├── content/                          # NEW: Content directory
+│   ├── blog/                         # NEW: Blog posts (markdown/MDX)
+│   │   ├── post-1.md
+│   │   └── post-2.md
+│   └── faq.ts                        # NEW: FAQ data structure
+└── lib/
+    ├── cart/                         # EXISTING
+    │   ├── store.ts
+    │   ├── types.ts
+    │   └── utils.ts
+    ├── pricing/                      # EXISTING
+    │   ├── calculator.ts
+    │   ├── types.ts
+    │   └── validator.ts
+    ├── shopify/                      # EXISTING
+    │   ├── client.ts
+    │   ├── draft-order.ts
+    │   └── types.ts
+    ├── email/                        # NEW: Email utilities
+    │   ├── transport.ts              # Nodemailer setup
+    │   └── templates.ts              # Email templates
+    ├── metadata/                     # NEW: SEO utilities
+    │   ├── defaults.ts               # Default metadata values
+    │   ├── schemas.ts                # JSON-LD schema generators
+    │   └── seo.ts                    # Helper functions
+    ├── content/                      # NEW: Content utilities
+    │   └── markdown.ts               # Markdown processing
+    └── env.ts                        # EXISTING
 ```
 
 ### Structure Rationale
 
-- **domains/:** Isolated, framework-agnostic business logic. Each domain can be extracted to a separate package or Shopify app with minimal changes. No direct imports of Next.js, React, or app-specific code.
-- **domains/pricing/:** Pricing engine is completely self-contained. No knowledge of Next.js, Shopify, or cart logic. Can be copied to a Shopify app unchanged.
-- **app/api/:** BFF layer orchestrates domains. API routes are thin controllers that call domain services and transform responses.
-- **components/:** Presentation layer. No business logic, only UI concerns and client-side state.
-- **lib/:** Infrastructure that domains depend on (database access), but domains access via interfaces/abstractions.
+- **Route groups `(policies)`:** Groups related policy pages without adding `/policies/` to URLs (e.g., `/privacy` not `/policies/privacy`)
+- **`/content` directory:** Separates content (markdown blog posts, FAQ data) from code, making it easy for non-developers to edit
+- **`/components/layout`:** Centralizes layout components used across all pages
+- **`/components/ui`:** Design system components for consistent styling (shadcn/ui pattern)
+- **`/lib/metadata`:** Reusable SEO utilities reduce duplication across pages
+- **Colocation:** Route-specific components stay close to their routes (planned for future expansion)
 
 ## Architectural Patterns
 
-### Pattern 1: Domain Isolation with Public API Exports
+### Pattern 1: Root Layout with Nested Navigation
 
-**What:** Each domain exports a clean public API through index.ts, hiding implementation details. Domains never import from each other directly - only through public exports.
+**What:** Single root layout wraps all pages with navigation and footer, maintaining state across route transitions.
 
-**When to use:** Essential for reusability requirements. The pricing engine must be extractable to a Shopify app without modifications.
+**When to use:** For consistent site-wide UI that never unmounts (current app needs this).
 
 **Trade-offs:**
-- ✅ Enforces decoupling, makes refactoring safer, enables future extraction to monorepo packages
-- ❌ Requires discipline to not create circular dependencies
+- **Pro:** Navigation and footer components only mount once, preserving state (e.g., cart icon badge)
+- **Pro:** Reduces client-side bundle size by not duplicating layout code
+- **Con:** Cannot have different layouts without route groups or nested layouts
 
 **Example:**
 ```typescript
-// domains/pricing/index.ts (Public API)
-export { calculatePrice } from './engine'
-export { loadMatrix } from './matrix'
-export type { Dimensions, Price, PricingMatrix } from './types'
-// Implementation files (engine.ts, matrix.ts) are NOT exported
+// src/app/layout.tsx
+import Navigation from '@/components/layout/navigation'
+import Footer from '@/components/layout/footer'
 
-// app/api/pricing/route.ts (Consumer)
-import { calculatePrice, type Dimensions } from '@/domains/pricing'
-// ✅ Can only access public API
-// ❌ Cannot import from '@/domains/pricing/engine' directly
-```
-
-### Pattern 2: BFF with Server-Side Aggregation
-
-**What:** Next.js API Routes act as Backend-for-Frontend, aggregating multiple domain calls, securing secrets, and shaping responses for frontend needs.
-
-**When to use:** Always in headless commerce. Frontend should never call Shopify Admin API directly (exposes tokens). BFF handles auth, retries, error transformation.
-
-**Trade-offs:**
-- ✅ Security (no API keys in browser), simplified frontend, can combine multiple domain calls in single request
-- ❌ Extra network hop for client-side calls, requires backend deployment
-
-**Example:**
-```typescript
-// app/api/checkout/route.ts
-import { getCartSession } from '@/domains/cart'
-import { createDraftOrder } from '@/domains/shopify'
-
-export async function POST(req: Request) {
-  const session = await getCartSession(req)
-  const cart = session.cart
-
-  // Aggregate: validate cart + create Draft Order
-  if (!cart.items.length) {
-    return Response.json({ error: 'Cart empty' }, { status: 400 })
-  }
-
-  const draftOrder = await createDraftOrder({
-    lineItems: cart.items,
-    email: session.email,
-  })
-
-  // Transform response for frontend
-  return Response.json({
-    checkoutUrl: draftOrder.invoiceUrl
-  })
-}
-```
-
-### Pattern 3: Matrix-Based Pricing with Interpolation
-
-**What:** Store pricing as multi-dimensional matrix (dimension ranges → price), calculate prices via lookup + interpolation for exact dimensions.
-
-**When to use:** Custom-dimension products (cut-to-size, made-to-measure). Standard SKU-based pricing won't work.
-
-**Trade-offs:**
-- ✅ Handles infinite dimension combinations, business users can update matrix without code changes
-- ❌ Requires interpolation logic, matrix design complexity, careful indexing for performance
-
-**Example:**
-```typescript
-// domains/pricing/matrix.ts
-export type PricingMatrix = {
-  dimensions: ['width', 'height']
-  data: Array<{
-    width: [min: number, max: number]
-    height: [min: number, max: number]
-    pricePerUnit: number
-  }>
-}
-
-export function lookupPrice(
-  matrix: PricingMatrix,
-  dimensions: { width: number; height: number }
-): number {
-  // Find matching range
-  const match = matrix.data.find(row =>
-    dimensions.width >= row.width[0] && dimensions.width <= row.width[1] &&
-    dimensions.height >= row.height[0] && dimensions.height <= row.height[1]
-  )
-
-  if (!match) throw new Error('Dimensions outside matrix range')
-
-  // Calculate area-based price
-  return dimensions.width * dimensions.height * match.pricePerUnit
-}
-```
-
-### Pattern 4: Prisma Singleton with Connection Pooling
-
-**What:** Single PrismaClient instance reused across Next.js hot reloads in development, with appropriate connection pool limits.
-
-**When to use:** Required in Next.js with Prisma to prevent "too many connections" errors during development.
-
-**Trade-offs:**
-- ✅ Prevents connection exhaustion, safe for serverless, improves cold start time
-- ❌ Requires globalThis pattern (looks unusual but necessary)
-
-**Example:**
-```typescript
-// lib/db.ts
-import { PrismaClient } from '@prisma/client'
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
-}
-
-export const db = globalForPrisma.prisma ?? new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL
-    }
-  },
-  // For serverless: limit connections
-  // connection_limit=1 for edge, increase if needed
-})
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = db
-}
-```
-
-### Pattern 5: Draft Order Checkout Flow
-
-**What:** Create Draft Order via Admin API, redirect customer to invoice URL for Shopify-hosted checkout and payment.
-
-**When to use:** Headless commerce on any Shopify plan (Plus not required). Offloads payment/tax/shipping calculation to Shopify.
-
-**Trade-offs:**
-- ✅ Works on all plans, no PCI compliance burden, automatic tax calculation, supports all payment methods
-- ❌ Customer leaves your site, limited checkout customization (Plus only), asynchronous order creation
-
-**Example:**
-```typescript
-// domains/shopify/draft-orders.ts
-export async function createDraftOrder(params: {
-  lineItems: Array<{ variantId: string; quantity: number; customAttributes?: any }>
-  email?: string
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
 }) {
-  const response = await shopifyClient.post('/admin/api/2026-01/draft_orders.json', {
-    draft_order: {
-      line_items: params.lineItems.map(item => ({
-        variant_id: item.variantId,
-        quantity: item.quantity,
-        custom_attributes: item.customAttributes, // Store custom dimensions
-      })),
-      email: params.email,
-      use_customer_default_address: true,
-    }
-  })
+  return (
+    <html lang="en">
+      <body>
+        <Navigation />
+        <main className="min-h-screen">{children}</main>
+        <Footer />
+      </body>
+    </html>
+  )
+}
+```
 
-  // Response includes invoice_url for checkout redirect
+### Pattern 2: File-Based Metadata API (Static + Dynamic)
+
+**What:** Export `metadata` object or `generateMetadata` function from page/layout files for SEO.
+
+**When to use:**
+- Static metadata: Pages with fixed titles/descriptions (e.g., `/privacy`, `/faq`)
+- Dynamic metadata: Pages with content-based SEO (e.g., `/products/[productId]`, `/blog/[slug]`)
+
+**Trade-offs:**
+- **Pro:** Next.js automatically merges metadata from nested layouts (DRY principle)
+- **Pro:** Type-safe with TypeScript, preventing SEO mistakes
+- **Pro:** Server-rendered in initial HTML (critical for SEO)
+- **Con:** Requires understanding metadata precedence rules (page overrides layout)
+
+**Example:**
+```typescript
+// src/app/products/[productId]/page.tsx
+import type { Metadata } from 'next'
+
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ productId: string }>
+}): Promise<Metadata> {
+  const { productId } = await params
+  const product = await getProduct(productId)
+
   return {
-    id: response.data.draft_order.id,
-    invoiceUrl: response.data.draft_order.invoice_url,
+    title: `${product.name} - Custom Textiles`,
+    description: product.description,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [{ url: product.image }],
+    },
   }
+}
+```
+
+### Pattern 3: JSON-LD Structured Data Injection
+
+**What:** Inject `<script type="application/ld+json">` tags directly in page components for schema.org structured data.
+
+**When to use:** Every page that benefits from rich search results (products, blog posts, organization info, breadcrumbs).
+
+**Trade-offs:**
+- **Pro:** Search engines understand page context, enabling rich results
+- **Pro:** Server-rendered, included in initial HTML
+- **Con:** Requires manual escaping of `<` characters to prevent XSS
+- **Con:** Must validate with Google Rich Results Test to avoid errors
+
+**Example:**
+```typescript
+// src/app/products/[productId]/page.tsx
+export default async function ProductPage({ params }) {
+  const { productId } = await params
+  const product = await getProduct(productId)
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description,
+    offers: {
+      '@type': 'Offer',
+      price: product.basePrice,
+      priceCurrency: 'EUR',
+    },
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
+      {/* Rest of page UI */}
+    </>
+  )
+}
+```
+
+### Pattern 4: Sitemap and Robots Generation (File-Based)
+
+**What:** Create `sitemap.ts` and `robots.ts` in app directory to auto-generate SEO files.
+
+**When to use:** Always for multi-page sites (enables search engine discovery).
+
+**Trade-offs:**
+- **Pro:** Next.js handles generation and caching automatically
+- **Pro:** Dynamic sitemaps update when content changes
+- **Con:** Must manually list all static routes (or use `generateSitemaps` for dynamic content)
+
+**Example:**
+```typescript
+// src/app/sitemap.ts
+import type { MetadataRoute } from 'next'
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://your-domain.com'
+
+  return [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/products/custom-textile`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/cart`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.5,
+    },
+    // ... all other routes
+  ]
+}
+```
+
+### Pattern 5: Contact Form with API Route + Email Service
+
+**What:** Client component form POSTs to API route, which sends email via Nodemailer.
+
+**When to use:** Contact forms, newsletter signups, any form requiring server-side processing.
+
+**Trade-offs:**
+- **Pro:** Keeps SMTP credentials server-side (secure)
+- **Pro:** Can validate, sanitize, rate-limit before sending
+- **Con:** Requires email service configuration (SMTP or API-based like Mailgun)
+
+**Example:**
+```typescript
+// src/app/api/contact/route.ts
+import { NextResponse } from 'next/server'
+import { sendContactEmail } from '@/lib/email/transport'
+
+export async function POST(request: Request) {
+  const { name, email, message } = await request.json()
+
+  // Validate
+  if (!name || !email || !message) {
+    return NextResponse.json(
+      { error: 'All fields required' },
+      { status: 400 }
+    )
+  }
+
+  // Send email
+  try {
+    await sendContactEmail({ name, email, message })
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to send email' },
+      { status: 500 }
+    )
+  }
+}
+```
+
+### Pattern 6: Markdown Content for Blog/FAQ
+
+**What:** Store blog posts as `.md` or `.mdx` files, process with `gray-matter` + `remark`/`next-mdx-remote`.
+
+**When to use:**
+- **Markdown:** Simple content with frontmatter (blog posts, docs)
+- **MDX:** Content needing React components embedded (interactive tutorials)
+
+**Trade-offs:**
+- **Pro:** Version-controlled content, no database needed
+- **Pro:** Non-developers can edit markdown easily
+- **Pro:** Free (vs. CMS pricing), fast (static generation)
+- **Con:** No admin UI (use CMS if non-technical team needs web editing)
+- **Con:** Requires build for content updates (vs. CMS instant updates)
+
+**Recommendation for this project:**
+- **Blog:** Markdown files (simple posts, infrequent updates, developer-controlled)
+- **FAQ:** TypeScript data structure (highly structured, small dataset)
+
+**Example:**
+```typescript
+// content/blog/welcome.md
+---
+title: "Welcome to Our Textile Shop"
+date: "2026-01-15"
+author: "Team"
+---
+
+# Welcome
+
+We're excited to launch our custom textile configurator...
+```
+
+```typescript
+// src/app/blog/[slug]/page.tsx
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
+import { remark } from 'remark'
+import html from 'remark-html'
+
+export async function generateStaticParams() {
+  const files = fs.readdirSync('content/blog')
+  return files.map((filename) => ({
+    slug: filename.replace('.md', ''),
+  }))
+}
+
+export default async function BlogPost({ params }) {
+  const { slug } = await params
+  const filePath = path.join('content/blog', `${slug}.md`)
+  const fileContents = fs.readFileSync(filePath, 'utf8')
+  const { data, content } = matter(fileContents)
+  const processedContent = await remark().use(html).process(content)
+
+  return (
+    <article>
+      <h1>{data.title}</h1>
+      <time>{data.date}</time>
+      <div dangerouslySetInnerHTML={{ __html: processedContent.toString() }} />
+    </article>
+  )
+}
+```
+
+### Pattern 7: Design System with Tailwind + Component Library
+
+**What:** Create `/components/ui` directory with reusable primitives (Button, Card, Input) styled with Tailwind CSS utility classes.
+
+**When to use:** Always for multi-page sites requiring consistent design.
+
+**Trade-offs:**
+- **Pro:** Consistency across pages without duplication
+- **Pro:** Easy to refactor styles globally (change button, all buttons update)
+- **Pro:** Can use shadcn/ui for pre-built accessible components
+- **Con:** Initial setup overhead vs. inline styles
+
+**Recommendation:** Use **shadcn/ui** pattern (copy components into codebase, customize as needed).
+
+**Example:**
+```typescript
+// src/components/ui/button.tsx
+import { cva, type VariantProps } from 'class-variance-authority'
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md font-medium transition-colors',
+  {
+    variants: {
+      variant: {
+        default: 'bg-blue-600 text-white hover:bg-blue-700',
+        outline: 'border border-gray-300 bg-white hover:bg-gray-50',
+        ghost: 'hover:bg-gray-100',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-8 px-3 text-sm',
+        lg: 'h-12 px-8',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
+
+export function Button({ variant, size, className, ...props }: ButtonProps) {
+  return (
+    <button
+      className={buttonVariants({ variant, size, className })}
+      {...props}
+    />
+  )
 }
 ```
 
 ## Data Flow
 
-### Request Flow: Dimension Input → Price Display
+### Request Flow for New Pages
 
 ```
-1. User enters dimensions (width: 120, height: 80)
-      ↓
-2. Frontend debounces input, sends POST /api/pricing
-      ↓
-3. BFF validates request, calls Pricing Engine
-      ↓
-4. Pricing Engine queries Matrix DB for matching range
-      ↓
-5. Pricing Engine calculates price (interpolation + rounding)
-      ↓
-6. BFF returns { price: 45.99, currency: 'EUR' }
-      ↓
-7. Frontend displays calculated price
+User visits /contact
+    ↓
+Next.js matches route → app/contact/page.tsx
+    ↓
+Server Component renders (RSC)
+    ↓
+├─ generateMetadata() runs → <head> tags
+├─ JSON-LD script generated → structured data
+└─ ContactForm component rendered → Client Component
+    ↓
+HTML sent to browser
+    ↓
+ContactForm hydrates → interactive
+    ↓
+User submits form
+    ↓
+POST /api/contact
+    ↓
+API route validates → sends email via Nodemailer
+    ↓
+Success response → UI shows confirmation
 ```
 
-### Request Flow: Add to Cart
+### Metadata Inheritance Flow
 
 ```
-1. User clicks "Add to Cart" with dimensions + price
-      ↓
-2. Frontend sends POST /api/cart with { productId, dimensions, price }
-      ↓
-3. BFF validates price (re-calculates to prevent tampering)
-      ↓
-4. Cart Service adds item to session
-      ↓
-5. Cart Service persists session to DB
-      ↓
-6. BFF returns updated cart
-      ↓
-7. Frontend updates cart UI
+Root Layout (app/layout.tsx)
+├─ metadata: { title: { template: '%s | Custom Textiles' } }
+    ↓
+Blog Layout (app/blog/layout.tsx)
+├─ metadata: { description: 'Read our latest updates' }
+    ↓
+Blog Post Page (app/blog/[slug]/page.tsx)
+└─ generateMetadata: { title: 'Post Title' }
+
+Final merged metadata:
+{
+  title: 'Post Title | Custom Textiles',  // From template + page
+  description: 'Read our latest updates',  // From layout
+  // + all other inherited/merged metadata
+}
 ```
 
-### Request Flow: Checkout → Shopify
+### State Management Flow (Existing - No Changes)
 
 ```
-1. User clicks "Checkout"
-      ↓
-2. Frontend sends POST /api/checkout
-      ↓
-3. BFF loads cart session from DB
-      ↓
-4. BFF validates cart (items exist, prices current)
-      ↓
-5. Shopify Client creates Draft Order via Admin API
-      ↓
-6. Shopify returns Draft Order with invoice_url
-      ↓
-7. BFF returns { checkoutUrl: invoice_url }
-      ↓
-8. Frontend redirects to checkoutUrl (window.location.href)
-      ↓
-9. Customer completes payment on Shopify checkout
-      ↓
-10. Shopify processes payment → creates Order
-      ↓
-11. (Optional) Webhook notifies your system of order completion
+User adds to cart
+    ↓
+DimensionConfigurator → addItem() action
+    ↓
+Zustand store updates
+    ↓
+├─ State persisted to localStorage
+└─ CartIcon re-renders (badge count updates)
 ```
-
-### State Management
-
-```
-Client State (React)
-   ↓
-[Dimension Inputs] → Local state (useState)
-[Price Display]    → Optimistic UI (shows loading, then price from API)
-[Cart Count]       → Global state (Context/Zustand) synced with backend
-
-Server State (Database)
-   ↓
-[Cart Sessions]    → Database with session ID cookie
-[Pricing Matrix]   → Database with indexed dimension ranges
-[Orders]           → Shopify (external system of record)
-```
-
-### Key Data Flows
-
-1. **Real-time pricing:** User types dimensions → debounced API call → matrix lookup → price display (200-500ms latency)
-2. **Cart persistence:** Add to cart → validate price backend → save to DB → return updated cart → sync frontend state
-3. **Checkout handoff:** Load cart → create Draft Order → receive invoice URL → redirect → Shopify owns flow
-4. **Configuration storage:** Store dimension values as Draft Order line item custom attributes for fulfillment visibility
-
-## Scaling Considerations
-
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| 0-1k users | Single Next.js instance with Postgres, no caching, synchronous Draft Order creation |
-| 1k-10k users | Add Redis for session storage (faster than DB), cache pricing matrix in memory (revalidate hourly), connection pooling tuned |
-| 10k-100k users | Edge caching for product pages (ISR), Prisma Accelerate for connection pooling, consider queue for Draft Order creation (async) |
-| 100k+ users | Extract pricing engine to separate service (horizontal scaling), CDN for static assets, Shopify Plus for checkout customization |
-
-### Scaling Priorities
-
-1. **First bottleneck: Database connections** - Prisma with serverless can exhaust connections quickly. Fix: Prisma Accelerate (connection pooling) or PgBouncer. Occurs around 5k-10k concurrent users.
-
-2. **Second bottleneck: Shopify Admin API rate limits** - 2 requests/second on REST API, 1000 points/second on GraphQL. Fix: Queue Draft Order creation, batch operations, cache product data. Occurs around 50-100 checkouts/minute.
-
-3. **Third bottleneck: Matrix lookup performance** - Linear scan for large matrices (1000+ rows) becomes slow. Fix: Add database indexes on dimension ranges, denormalize for common lookups, cache in Redis. Occurs with complex matrices + 10k+ pricing requests/minute.
-
-## Anti-Patterns
-
-### Anti-Pattern 1: Pricing Logic in Frontend
-
-**What people do:** Calculate prices in React components using hardcoded formulas or client-side matrix data.
-
-**Why it's wrong:** Customers can manipulate prices via browser DevTools, pricing logic can't be reused in Shopify app, matrix updates require frontend deployment.
-
-**Do this instead:** Always calculate prices server-side in Pricing Engine. Frontend displays API responses only. Validate cart prices backend before Draft Order creation.
-
-### Anti-Pattern 2: Tight Coupling Between Domains
-
-**What people do:** Import Shopify client directly in pricing engine, or import pricing logic in cart service via relative paths like `../pricing/engine`.
-
-**Why it's wrong:** Creates circular dependencies, prevents extracting pricing engine to Shopify app, makes testing difficult (need to mock Shopify even for pricing tests).
-
-**Do this instead:** Domains communicate only through BFF orchestration. Pricing engine has zero dependencies on Shopify or cart. BFF calls `calculatePrice()` then `createDraftOrder()` separately.
-
-### Anti-Pattern 3: Storing Cart in Frontend-Only State
-
-**What people do:** Use React state or localStorage for cart, send entire cart to backend only at checkout.
-
-**Why it's wrong:** Cart lost on page refresh (if localStorage fails), no server-side validation until checkout (security risk), difficult to implement cart abandonment features.
-
-**Do this instead:** Backend session storage with cookie-based session ID. Every cart mutation goes through `/api/cart`. Frontend syncs with backend state. Adds resilience and enables future features (cart abandonment emails).
-
-### Anti-Pattern 4: Mixing Draft Order and Storefront API Checkout
-
-**What people do:** Use Storefront API for product browsing, then switch to Draft Orders for checkout, creating complexity in tracking cart state.
-
-**Why it's wrong:** Storefront API has its own cart/checkout flow (checkoutCreate). Mixing patterns requires maintaining two cart systems. Draft Orders are Admin API only.
-
-**Do this instead:** Choose one pattern: **Draft Orders** (this project - custom pricing needs Admin API) or **Storefront API checkout** (standard products only). Don't mix unless you have specific Plus-tier requirements.
-
-### Anti-Pattern 5: Premature Extraction to Microservices
-
-**What people do:** Build separate services for pricing, cart, Shopify integration from day one because "we might need to scale later."
-
-**Why it's wrong:** Adds operational complexity (deployment, monitoring, service mesh), slows development (cross-service debugging), overkill for <100k users. Monolith scales far with proper architecture.
-
-**Do this instead:** Start with domain-isolated monolith (this architecture). Domains are separated in code but deployed together. Extract to services only when scaling bottlenecks proven by metrics, not speculation.
 
 ## Integration Points
 
-### External Services
+### Integrations with Existing Architecture
 
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| **Shopify Admin API** | HTTP client with OAuth token | Requires `draft_orders` scope, 2 req/sec rate limit (REST), use GraphQL for higher limits |
-| **Shopify Storefront API** | Not used in this architecture | Only needed if building custom product browsing (optional enhancement) |
-| **Database (Postgres)** | Prisma ORM with singleton pattern | Required for pricing matrix + cart sessions, must configure connection pooling |
-| **Session Storage** | Database or Redis | Database sufficient for <10k users, Redis recommended beyond that |
-| **Payment Processing** | Fully delegated to Shopify | Draft Order checkout handles all payment methods configured in Shopify admin |
+| New Feature | Existing Component | Integration Approach |
+|-------------|-------------------|----------------------|
+| **Navigation component** | Header in `layout.tsx` | Extract existing header code into `src/components/layout/navigation.tsx`, enhance with links to new pages |
+| **Footer component** | None (new) | Add below `{children}` in root layout, import from `src/components/layout/footer.tsx` |
+| **Homepage** | Placeholder `page.tsx` | Replace with real content, link to `/products/custom-textile`, add hero section |
+| **Cart page metadata** | Existing `cart/page.tsx` | Add `export const metadata = { title: 'Cart', description: '...' }` |
+| **Product page SEO** | Existing `products/[productId]/page.tsx` | Add `generateMetadata` function, add JSON-LD Product schema |
+| **Sitemap generation** | None | New `app/sitemap.ts` includes all existing routes (`/`, `/cart`, `/products/*`) + new routes |
+| **Contact form email** | None | New API route `/api/contact` follows same pattern as `/api/pricing` and `/api/checkout` |
+| **Design system components** | None (using inline Tailwind) | Gradually extract common patterns (buttons, cards) into `src/components/ui` for reuse |
 
-### Internal Boundaries
+### External Service Integration
 
-| Boundary | Communication | Notes |
-|----------|---------------|-------|
-| **Frontend ↔ BFF** | HTTP JSON APIs | Always use POST for mutations, GET for reads, include session cookie |
-| **BFF ↔ Pricing Engine** | Direct function calls | `import { calculatePrice } from '@/domains/pricing'` - synchronous, type-safe |
-| **BFF ↔ Cart Service** | Direct function calls | Pass session ID from cookie, Cart Service loads from DB |
-| **BFF ↔ Shopify Client** | Direct function calls | Shopify Client handles auth/retries, returns typed responses |
-| **Domains ↔ Database** | Via abstraction (Prisma) | Domains import `db` from `@/lib/db`, but don't know it's Prisma |
-| **Pricing Engine ↔ Other Domains** | NO direct communication | Pricing Engine is pure function, no side effects, no external calls |
+| Service | Purpose | Integration Point | Configuration |
+|---------|---------|-------------------|---------------|
+| **Shopify Admin API** | Existing checkout | `src/lib/shopify/client.ts` | Already configured (env vars) |
+| **Nodemailer** | Contact form emails | `src/lib/email/transport.ts` (new) | Add SMTP env vars (`SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`) |
+| **Vercel Edge Functions** | API routes | Auto-deployed | No config needed |
+| **Google Search Console** | Sitemap submission | Submit `https://domain.com/sitemap.xml` after deployment | Manual submission post-launch |
 
-## Build Order Implications
+### Component Dependencies
 
-### Phase 1: Pricing Engine (Isolated)
-Build pricing engine first as standalone domain. Can develop and test completely independently without Next.js, Shopify, or cart logic.
+```
+Root Layout
+├─ Navigation
+│  └─ CartIcon (existing)
+├─ Children (pages)
+│  ├─ Homepage
+│  ├─ Product Page
+│  │  └─ DimensionConfigurator (existing)
+│  ├─ Cart Page
+│  │  ├─ CartItem (existing)
+│  │  └─ CartSummary (existing)
+│  ├─ Contact Page
+│  │  └─ ContactForm (new)
+│  ├─ Blog Pages
+│  │  └─ (markdown content)
+│  └─ Static Pages
+│     └─ (simple HTML/React)
+└─ Footer (new)
+   └─ (links to pages)
+```
 
-**Dependencies:** None (pure TypeScript)
-**Deliverable:** `domains/pricing/` with tests
-**Validation:** Unit tests with sample matrix data
+## Suggested Build Order
 
-### Phase 2: Database + Matrix Storage
-Add Prisma schema for pricing matrix storage, create migration, seed with initial matrix data.
+### Phase 1: Layout Foundation
+**Goal:** Establish shared layout structure before adding pages.
 
-**Dependencies:** Phase 1 complete (have pricing types)
-**Deliverable:** `prisma/schema.prisma`, migration, seed script
-**Validation:** Can query matrix from database
+1. **Extract Navigation component** from `layout.tsx`
+   - Dependencies: None
+   - Why first: Foundation for all pages, simple refactor
 
-### Phase 3: BFF Pricing API
-Build Next.js API route that calls pricing engine with matrix from database.
+2. **Create Footer component**
+   - Dependencies: None
+   - Why now: Completes layout frame, links can point to `/` initially
 
-**Dependencies:** Phase 1 + 2 complete
-**Deliverable:** `app/api/pricing/route.ts`
-**Validation:** `curl POST /api/pricing` returns calculated price
+3. **Update root layout** to use Navigation + Footer
+   - Dependencies: Steps 1-2
+   - Why now: Test layout on existing pages before adding new routes
 
-### Phase 4: Frontend Dimension Input
-Build product page with dimension inputs and price display calling BFF API.
+**Validation:** Existing pages (product, cart) should render with new nav/footer.
 
-**Dependencies:** Phase 3 complete
-**Deliverable:** `app/products/[slug]/page.tsx`, `components/product/`
-**Validation:** Can enter dimensions and see price update
+### Phase 2: SEO Infrastructure
+**Goal:** Set up metadata and crawlability before content pages.
 
-### Phase 5: Cart Domain + Sessions
-Build cart service, session management, database schema for cart storage.
+4. **Create metadata utilities** (`src/lib/metadata/defaults.ts`)
+   - Dependencies: None
+   - Why now: DRY metadata across pages
 
-**Dependencies:** Phase 2 complete (database setup), Phase 1 optional (if validating prices)
-**Deliverable:** `domains/cart/`, cart schema in Prisma
-**Validation:** Unit tests for cart operations
+5. **Add sitemap generator** (`app/sitemap.ts`)
+   - Dependencies: None (initially list only existing routes)
+   - Why now: Enables indexing of new pages as they're added
 
-### Phase 6: BFF Cart API
-Build cart API routes (add/remove/get) using cart service.
+6. **Add robots.txt generator** (`app/robots.ts`)
+   - Dependencies: Step 5 (references sitemap)
+   - Why now: Controls crawling from day one
 
-**Dependencies:** Phase 5 complete
-**Deliverable:** `app/api/cart/route.ts`
-**Validation:** `curl POST /api/cart` adds item, `GET /api/cart` returns items
+**Validation:** Verify `localhost:3000/sitemap.xml` and `localhost:3000/robots.txt` work.
 
-### Phase 7: Cart UI
-Build cart page displaying items from cart API.
+### Phase 3: Static Content Pages
+**Goal:** Add simple pages without complex logic.
 
-**Dependencies:** Phase 6 complete
-**Deliverable:** `app/cart/page.tsx`, `components/cart/`
-**Validation:** Can add items to cart and view them
+7. **Create policy pages** (privacy, terms, shipping, returns)
+   - Dependencies: Phase 1 (nav/footer with links)
+   - Why now: Simple pages, test metadata inheritance
 
-### Phase 8: Shopify Integration Domain
-Build Shopify client and Draft Order creation logic.
+8. **Build FAQ page**
+   - Dependencies: Phase 1
+   - Why now: Structured data opportunity, tests design system
 
-**Dependencies:** None (isolated domain, but needs Shopify store for testing)
-**Deliverable:** `domains/shopify/`
-**Validation:** Can create Draft Order via API (manual test or integration test)
+9. **Add JSON-LD schemas** to existing product page
+   - Dependencies: Phase 2 (metadata utilities)
+   - Why now: Improves SEO on existing critical page
 
-### Phase 9: BFF Checkout API
-Build checkout API that loads cart and creates Draft Order.
+**Validation:** All pages render, metadata appears in `<head>`, JSON-LD validates in Rich Results Test.
 
-**Dependencies:** Phase 6 + 8 complete
-**Deliverable:** `app/api/checkout/route.ts`
-**Validation:** `curl POST /api/checkout` returns Shopify invoice URL
+### Phase 4: Homepage
+**Goal:** Create landing page that ties everything together.
 
-### Phase 10: Checkout Flow Integration
-Connect cart page to checkout API, handle redirect to Shopify.
+10. **Design homepage** with hero, product CTA, feature highlights
+    - Dependencies: Phase 1 (layout), Phase 3 (links to FAQ/policies)
+    - Why now: Requires understanding of site structure (built in Phases 1-3)
 
-**Dependencies:** Phase 7 + 9 complete
-**Deliverable:** Checkout button in cart UI
-**Validation:** End-to-end test from dimension input → add to cart → checkout → Shopify payment
+**Validation:** Homepage links to all major sections, good Core Web Vitals.
+
+### Phase 5: Contact Form
+**Goal:** Add interactive feature with server-side processing.
+
+11. **Create contact form UI** (`src/app/contact/page.tsx`)
+    - Dependencies: Design system (Phase 3 optional)
+    - Why now: Can build without backend first
+
+12. **Set up email transport** (`src/lib/email/transport.ts`)
+    - Dependencies: None
+    - Why now: Requires env var config (blocking for next step)
+
+13. **Build contact API route** (`src/app/api/contact/route.ts`)
+    - Dependencies: Steps 11-12
+    - Why now: Connects form to email sending
+
+**Validation:** Form submission sends email, shows success/error states.
+
+### Phase 6: Blog (Optional for MVP)
+**Goal:** Add content marketing capability.
+
+14. **Set up markdown processing** utilities
+    - Dependencies: None
+    - Why now: Blog infrastructure before content
+
+15. **Create blog index and post pages**
+    - Dependencies: Step 14
+    - Why now: Can add content iteratively after launch
+
+16. **Write initial blog posts** (markdown files)
+    - Dependencies: Step 15
+    - Why last: Content can be added post-deployment
+
+**Validation:** Blog index lists posts, individual posts render markdown correctly.
 
 ### Dependency Graph
 
 ```
-Phase 1: Pricing Engine (isolated)
-    ↓
-Phase 2: Database Setup (needs Pricing types)
-    ↓                           ↓
-Phase 3: BFF Pricing API    Phase 5: Cart Domain
-    ↓                           ↓
-Phase 4: Frontend Input     Phase 6: BFF Cart API
-                                ↓
-                            Phase 7: Cart UI
-                                ↓
-Phase 8: Shopify Domain (parallel with 5-7)
-                ↓               ↓
-            Phase 9: BFF Checkout API
-                        ↓
-                Phase 10: Full Flow
+Phase 1 (Layout)
+├─ Phase 2 (SEO Infrastructure)
+│  └─ Phase 3 (Static Pages)
+│     └─ Phase 4 (Homepage)
+└─ Phase 5 (Contact Form)
+└─ Phase 6 (Blog) [Optional]
 ```
 
-**Critical path:** 1 → 2 → 3 → 4 (can demo pricing)
-**Parallel work:** Phases 5-7 (cart) and Phase 8 (Shopify) can develop simultaneously after Phase 2
+**Critical Path:** Phase 1 → 2 → 3 → 4 (for MVP)
+**Optional Extension:** Phase 5 (adds interactivity), Phase 6 (adds content marketing)
 
-## Reusability Strategy for Pricing Engine
+## Anti-Patterns
 
-### Maintaining Reusability
+### Anti-Pattern 1: Mixing next-seo with Metadata API
 
-To ensure the pricing engine can be extracted to a Shopify app in the future:
+**What people do:** Install `next-seo` package in Next.js 15 App Router projects.
 
-**1. Zero Framework Dependencies**
+**Why it's wrong:**
+- `next-seo` was designed for Pages Router (pre-Next.js 13)
+- App Router's Metadata API is built-in, type-safe, and automatically optimized
+- Using both causes duplicate `<meta>` tags and potential conflicts
+
+**Do this instead:**
+Use only the built-in Metadata API:
 ```typescript
-// ✅ GOOD: Pure TypeScript, no imports
-export function calculatePrice(dimensions: Dimensions, matrix: Matrix): number {
-  // Pure calculation logic
+// ✅ Correct
+export const metadata: Metadata = {
+  title: 'My Page',
+  description: 'Page description',
 }
 
-// ❌ BAD: Imports Next.js or React
-import { cookies } from 'next/headers'
-export function calculatePrice(dimensions: Dimensions): number {
-  const session = cookies().get('session') // Coupled to Next.js
-}
+// ❌ Wrong
+import { NextSeo } from 'next-seo'
 ```
 
-**2. No Side Effects**
+### Anti-Pattern 2: Client-Side Rendering for SEO Content
+
+**What people do:** Fetch content in `useEffect` and render on client.
+
+**Why it's wrong:**
+- Search engines see empty page before JavaScript loads
+- Worse Core Web Vitals (LCP delay)
+- Metadata cannot be dynamic (already rendered in `<head>`)
+
+**Do this instead:**
+Use Server Components (default in App Router):
 ```typescript
-// ✅ GOOD: Returns value, no side effects
-export function calculatePrice(dimensions: Dimensions, matrix: Matrix): Price {
-  const result = lookupMatrix(dimensions, matrix)
-  return applyRounding(result)
+// ✅ Correct
+export default async function Page() {
+  const data = await fetchData() // Server-side
+  return <div>{data.content}</div>
 }
 
-// ❌ BAD: Writes to database, makes HTTP calls
-export async function calculatePrice(dimensions: Dimensions): Promise<Price> {
-  const matrix = await db.pricingMatrix.findFirst() // Side effect
-  return calculate(dimensions, matrix)
+// ❌ Wrong
+'use client'
+export default function Page() {
+  const [data, setData] = useState(null)
+  useEffect(() => { fetchData().then(setData) }, [])
+  return <div>{data?.content}</div>
 }
 ```
 
-**3. Interface-Based Database Access**
+### Anti-Pattern 3: Hardcoding Metadata in Every Page
+
+**What people do:** Copy-paste full metadata object in every page file.
+
+**Why it's wrong:**
+- Violates DRY principle
+- Hard to maintain (changing site name = editing 20 files)
+- Misses metadata inheritance benefits
+
+**Do this instead:**
+Use default metadata in root layout + title templates:
 ```typescript
-// domains/pricing/types.ts
-export interface MatrixRepository {
-  findByDimensions(dimensions: Dimensions): Promise<Matrix | null>
+// ✅ Correct
+// app/layout.tsx
+export const metadata = {
+  title: {
+    template: '%s | Custom Textiles',
+    default: 'Custom Textiles',
+  },
+  description: 'Default site description',
 }
 
-// domains/pricing/engine.ts
-export async function calculatePrice(
-  dimensions: Dimensions,
-  repo: MatrixRepository // Injected dependency
-): Promise<Price> {
-  const matrix = await repo.findByDimensions(dimensions)
-  return calculate(dimensions, matrix)
+// app/about/page.tsx
+export const metadata = {
+  title: 'About', // Becomes "About | Custom Textiles"
 }
 
-// app/api/pricing/route.ts (Next.js implementation)
-import { calculatePrice } from '@/domains/pricing'
-import { PrismaMatrixRepository } from '@/lib/repositories'
-
-const price = await calculatePrice(dimensions, new PrismaMatrixRepository(db))
-
-// Future Shopify app implementation - just provide different repository
-const price = await calculatePrice(dimensions, new ShopifyMetafieldRepository(shopify))
+// ❌ Wrong
+// app/about/page.tsx
+export const metadata = {
+  title: 'About | Custom Textiles',
+  description: 'Default site description',
+  // ... repeating all fields
+}
 ```
 
-**4. Configuration via Parameters, Not Environment**
+### Anti-Pattern 4: Not Escaping JSON-LD
+
+**What people do:** Use `JSON.stringify(jsonLd)` without escaping `<` characters.
+
+**Why it's wrong:**
+- XSS vulnerability if user-generated content in JSON-LD
+- Can break HTML parsing if content contains `</script>`
+
+**Do this instead:**
+Always escape:
 ```typescript
-// ✅ GOOD: Configuration passed in
-export function calculatePrice(
-  dimensions: Dimensions,
-  matrix: Matrix,
-  config: PricingConfig // Rounding rules, currency, etc.
-): Price {
-  // Uses config parameter
+// ✅ Correct
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+  }}
+/>
+
+// ❌ Wrong
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+/>
+```
+
+### Anti-Pattern 5: Blocking Static Pages with Unnecessary Dynamic Code
+
+**What people do:** Add `const params = await params` or `useSearchParams()` in static pages.
+
+**Why it's wrong:**
+- Forces page to be dynamically rendered (slower, more expensive on Vercel)
+- Loses static generation benefits (instant page loads)
+
+**Do this instead:**
+Keep static pages fully static:
+```typescript
+// ✅ Correct (static)
+export const metadata = { title: 'Privacy Policy' }
+export default function PrivacyPage() {
+  return <article>...</article>
 }
 
-// ❌ BAD: Reads environment variables directly
-export function calculatePrice(dimensions: Dimensions): Price {
-  const roundingMode = process.env.ROUNDING_MODE // Coupled to Node.js
+// ❌ Wrong (forces dynamic)
+export default async function PrivacyPage({ params }) {
+  const p = await params // Unnecessary
+  return <article>...</article>
 }
 ```
 
-**5. Extraction Checklist**
+### Anti-Pattern 6: Missing Canonical URLs
 
-When ready to extract to Shopify app:
+**What people do:** Forget to add canonical URLs to pages.
 
-- [ ] Copy `domains/pricing/` folder unchanged (should have zero modifications needed)
-- [ ] Implement `MatrixRepository` interface using Shopify Metafields or external DB
-- [ ] Implement configuration loading from Shopify app settings
-- [ ] Wrap in Shopify App Bridge UI (but pricing logic stays identical)
-- [ ] Unit tests copy over unchanged and pass immediately
+**Why it's wrong:**
+- Search engines may index duplicate content (www vs non-www, trailing slash vs no slash)
+- Dilutes page authority across multiple URLs
+
+**Do this instead:**
+Add canonical to metadata:
+```typescript
+// ✅ Correct
+export const metadata = {
+  title: 'Product Page',
+  alternates: {
+    canonical: 'https://domain.com/products/custom-textile',
+  },
+}
+```
+
+## Scalability Considerations
+
+| Concern | Current (v1.1 - 10 pages) | Future (50+ pages) | Large Scale (1000+ pages) |
+|---------|---------------------------|--------------------|-----------------------------|
+| **Sitemap generation** | Hardcode all routes in `sitemap.ts` | Use `generateSitemaps` for dynamic content (blog posts from DB) | Multiple sitemaps split by category |
+| **Metadata management** | Default metadata in root layout + per-page overrides | Centralize in `lib/metadata/defaults.ts` with helpers | Dynamic metadata from CMS |
+| **Component organization** | `/components/ui` + `/components/layout` flat structure | Group by feature (`/components/blog`, `/components/product`) | Monorepo with shared component library |
+| **Content management** | Markdown files in `/content` | Consider MDX for interactive content | Migrate to headless CMS (Sanity, Contentful) for non-dev editing |
+| **Build times** | Fast (all static) | Still fast with ISR for blog | Use ISR + dynamic routes to avoid rebuilding all pages |
+| **Image optimization** | Manual Next.js `<Image>` | Centralized image component with CDN | Image service (Cloudinary) with automatic optimization |
+
+### Scaling Recommendations
+
+**If blog grows beyond 50 posts:**
+- Use `generateStaticParams` with pagination
+- Implement ISR (Incremental Static Regeneration) with `revalidate`
+
+**If adding user-generated content:**
+- Migrate from Zustand to server-side session (Next-Auth + database)
+- Add authentication layer to API routes
+
+**If traffic exceeds 10K users/day:**
+- Add Redis caching layer for API routes
+- Use Vercel Edge Functions for geo-distributed responses
+- Implement CDN for static assets
 
 ## Sources
 
-### Architecture Patterns
-- [Building a Secure & Scalable BFF Architecture with Next.js](https://vishal-vishal-gupta48.medium.com/building-a-secure-scalable-bff-backend-for-frontend-architecture-with-next-js-api-routes-cbc8c101bff0)
-- [Next.js Backend-for-Frontend Guide](https://nextjs.org/docs/app/guides/backend-for-frontend)
-- [Scaling a Real-Time Pricing Engine](https://mitchellkember.com/blog/pricing-engine)
-- [Domain-Driven Design In Practice](https://www.infoq.com/articles/ddd-in-practice/)
-- [Bounded Context Pattern - Martin Fowler](https://martinfowler.com/bliki/BoundedContext.html)
+### Official Documentation (HIGH confidence)
+- [Next.js Metadata API](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)
+- [Next.js Sitemap Generation](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap)
+- [Next.js Robots.txt](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots)
+- [Next.js JSON-LD Guide](https://nextjs.org/docs/app/guides/json-ld)
+- [Next.js Project Structure](https://nextjs.org/docs/app/getting-started/project-structure)
+- [Next.js Routing Fundamentals](https://nextjs.org/docs/app/building-your-application/routing)
 
-### Shopify Integration
-- [Shopify Draft Orders API - GraphQL](https://shopify.dev/docs/api/admin-graphql/latest/mutations/draftordercreate)
-- [Shopify Draft Orders API - REST](https://shopify.dev/docs/api/admin-rest/latest/resources/draftorder)
-- [Shopify Headless Commerce Guide 2026](https://litextension.com/blog/shopify-headless/)
-- [Shopify Checkout Documentation](https://shopify.dev/docs/agents/checkout)
-
-### Product Configurators & E-commerce
-- [Product Configurator Complete Guide 2026](https://dotinum.com/blog/what-is-a-product-configurator-complete-guide-2026-part-1/)
-- [Top Product Configurator Features 2026](https://blog.prototechsolutions.com/top-10-best-product-configurator-features-2026/)
-- [Logik.io eCommerce Product Configurator](https://www.logik.io/product-configurator-ecommerce)
-
-### Next.js & Database Patterns
-- [Prisma ORM Production Guide - Next.js Setup 2025](https://www.digitalapplied.com/blog/prisma-orm-production-guide-nextjs)
-- [Next.js with Prisma - Official Guide](https://www.prisma.io/nextjs)
-- [Next.js Monorepo Structure Guide](https://medium.com/@omar.shiriniani/mastering-next-js-monorepos-a-comprehensive-guide-15f59f5ef615)
-- [Scalable Next.js Project Structure](https://giancarlobuomprisco.com/next/a-scalable-nextjs-project-structure)
+### Best Practices (MEDIUM confidence - recent 2025-2026 sources)
+- [Next.js 15 SEO Guide](https://www.digitalapplied.com/blog/nextjs-seo-guide)
+- [Maximizing SEO with Meta Data in Next.js 15](https://dev.to/joodi/maximizing-seo-with-meta-data-in-nextjs-15-a-comprehensive-guide-4pa7)
+- [Next.js Contact Form App Router](https://maxschmitt.me/posts/nextjs-contact-form-app-router)
+- [Next.js Send Email Tutorial 2026](https://mailtrap.io/blog/nextjs-send-email/)
+- [JSON-LD in Next.js 15 App Router](https://medium.com/@sureshdotariya/json-ld-in-next-js-15-app-router-product-blog-and-breadcrumb-schemas-f752b7422c4f)
+- [Next.js Folder Structure Best Practices 2026](https://www.codebydeep.com/blog/next-js-folder-structure-best-practices-for-scalable-applications-2026-guide)
+- [Markdown and MDX in Next.js](https://staticmania.com/blog/markdown-and-mdx-in-next.js-a-powerful-combination-for-content-management)
+- [shadcn/ui Documentation](https://www.shadcn.io/)
 
 ---
-*Architecture research for: Custom-dimension e-commerce with Shopify checkout*
-*Researched: 2026-01-29*
+*Architecture research for: Multi-page website + SEO integration with Next.js 15 e-commerce*
+*Researched: 2026-02-01*

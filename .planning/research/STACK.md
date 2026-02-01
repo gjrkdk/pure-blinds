@@ -1,242 +1,640 @@
-# Stack Research
+# Stack Research: v1.1 - Multi-Page Website with SEO Foundation
 
-**Domain:** Custom-dimension e-commerce with Shopify integration
-**Researched:** 2026-01-29
+**Domain:** E-commerce website expansion (SEO, content pages, contact forms)
+**Milestone:** v1.1 (subsequent milestone, building on validated v1.0 stack)
+**Researched:** 2026-02-01
 **Confidence:** HIGH
 
-## Recommended Stack
+## Executive Summary
 
-### Core Technologies
+For v1.1's multi-page website structure with SEO foundation, **leverage Next.js 15+ built-in features first**, then add minimal external packages only where necessary. Next.js 15+ App Router provides native support for metadata, sitemaps, robots.txt, and Open Graph images—no external SEO libraries needed. Add Resend for contact forms, schema-dts for type-safe structured data, and optionally @next/mdx for blog content (only if truly needed).
 
-| Technology | Version | Purpose | Why Recommended |
-|------------|---------|---------|-----------------|
-| Next.js | 15.5+ | Full-stack React framework with App Router | Industry standard for React apps in 2025. App Router is stable, provides Server Components and Server Actions for type-safe mutations. Next.js 15.5 includes Turbopack (beta), stable Node.js middleware, and React 19 support. Perfect for BFF architecture where frontend and backend live in one codebase. |
-| TypeScript | 5.5+ | Type safety across stack | Required for Zod compatibility and modern Next.js features. Provides compile-time safety for pricing calculations and API contracts. |
-| React | 19 (stable) | UI library | React 19 is now stable in Next.js 15.1+. Required for Next.js App Router. Server Components reduce client bundle size. |
-| Vercel | Latest | Hosting platform | First-party Next.js deployment with zero config. Automatic environment variable management, edge functions, and preview deployments. Native integration with Next.js features. |
+**Critical insight:** Avoid over-engineering. Next.js 15+ eliminated the need for packages like `next-seo` and `next-sitemap`. Use built-in capabilities, add libraries only for email sending and optional structured data typing.
 
-### Shopify Integration
+## Existing v1.0 Stack (VALIDATED - DO NOT CHANGE)
 
-| Library | Version | Purpose | Why Recommended |
-|---------|---------|---------|-----------------|
-| @shopify/shopify-api | 12.3.0+ | Admin API client (Node.js) | Official Shopify library for Admin API. Supports GraphQL mutations for Draft Orders. Version 12.3.0 (Jan 2025) includes support for API version 2025-10. Use for server-side Draft Order creation. **HIGH confidence** |
-| @shopify/storefront-api-client | Latest | Storefront API client | Official lightweight client for reading products/variants. Use for fetching product catalog and displaying to customers. Supports privacy compliance features (visitorConsent directive post-2025-10). **HIGH confidence** |
+From v1.0 research (2026-01-29), the following stack is already validated and in production:
 
-**API Version Strategy:**
-- Use API version `2025-10` or later (latest stable as of Jan 2025)
-- Draft Orders with custom pricing are fully supported
-- **Known issue:** There's a reported bug in 2025-01 where `variant_id + price` doesn't override variant default price. Verify fix in 2025-10 or use workarounds.
+| Technology | Version | Status |
+|------------|---------|--------|
+| Next.js | 16.1.6 (installed) | ✅ Production |
+| React | 19.2.3 | ✅ Production |
+| TypeScript | 5.x | ✅ Production |
+| Tailwind CSS | 4.x | ✅ Production |
+| Zustand | 5.0.10 | ✅ Production (cart state) |
+| Zod | 4.3.6 | ✅ Production (validation) |
+| @shopify/shopify-api | 12.3.0 | ✅ Production (Draft Orders) |
+| Vitest | 4.0.18 | ✅ Dev/Test |
 
-### Supporting Libraries
+**Do NOT re-research or change these.** Focus ONLY on NEW capabilities for v1.1.
 
-| Library | Version | Purpose | When to Use |
-|---------|---------|---------|-------------|
-| Zod | 4.x | Runtime validation + TypeScript inference | **Always**. Use for validating dimension inputs, pricing matrix structure, and API payloads. Zod 4 is 14x faster than v3 with 57% smaller bundle. @zod/mini (1.9KB) available for client-side validation. **HIGH confidence** |
-| React Hook Form | 7.x | Form state management | **Always**. Use for dimension input forms. 8KB bundle, zero dependencies, uncontrolled components = fewer re-renders. Integrates with Zod via @hookform/resolvers. Outperforms Formik in 2025 benchmarks. **HIGH confidence** |
-| @hookform/resolvers | Latest | Zod + React Hook Form bridge | **Always when using Zod + RHF**. Provides zodResolver for seamless schema validation in forms. |
-| Zustand | 5.x | Client state management | **Recommended for cart state**. Lightweight (minimal bundle), better performance than Context API for frequently updated state. Use for shopping cart, current product configuration. Overkill for simple theme/auth state (use Context for those). **MEDIUM confidence** |
-| Tailwind CSS | 4.x | Utility-first styling | **Recommended**. Tailwind v4 is latest in 2025. Fully compatible with Next.js App Router and Server Components (static classes). Faster than v3, zero-config with PostCSS. Alternative: v3 still supported. **HIGH confidence** |
+## v1.1 Stack Additions
 
-### Development Tools
+### Built-in Next.js SEO Features (NO NEW PACKAGES)
 
-| Tool | Purpose | Notes |
-|------|---------|-------|
-| Vitest | Unit/integration testing | 10-20x faster than Jest in watch mode. 95% Jest-compatible API. Use for pricing engine tests, API route tests. Recommended over Jest for new Vite-based projects. **MEDIUM confidence** |
-| ESLint | Code linting | Next.js includes built-in ESLint config. Extend with TypeScript rules. |
-| Prettier | Code formatting | Standard for consistent formatting. Integrates with Tailwind CSS plugin for class sorting. |
-| Shopify CLI | Development tooling | Use GraphiQL explorer (tap 'g' in dev mode) to test queries. Not required but helpful for API exploration. |
+| Feature | Implementation | Available Since | Why Built-in |
+|---------|---------------|-----------------|--------------|
+| Metadata API | `generateMetadata()` function | Next.js 13+ | Type-safe metadata (title, description, Open Graph, Twitter) without external libraries |
+| Sitemap | `app/sitemap.ts` file | Next.js 13+ | Dynamic sitemap generation at `/sitemap.xml`, supports `generateSitemaps()` for 50k+ URLs |
+| Robots.txt | `app/robots.ts` file | Next.js 13+ | Dynamic robots.txt at `/robots.txt`, per-bot rules, sitemap links, crawl delays |
+| Open Graph Images | `opengraph-image.tsx` file | Next.js 13+ | Dynamic OG image generation using React components |
+| JSON-LD | `<script type="application/ld+json">` | Next.js any | Structured data via script tags in layout/page components |
+| Canonical URLs | `metadata.alternates.canonical` | Next.js 13+ | Prevents duplicate content, set per page or via root `metadataBase` |
+| Viewport | `viewport` export | Next.js 14+ | Replaces deprecated `metadata.viewport` (removed in Next.js 14) |
 
-## Installation
+**Confidence:** HIGH — Verified via [official Next.js documentation](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
 
-```bash
-# Core Next.js project (if not already initialized)
-npx create-next-app@latest --typescript --tailwind --app --use-npm
+**Implementation example:**
 
-# Shopify clients
-npm install @shopify/shopify-api @shopify/storefront-api-client
+```typescript
+// app/page.tsx - Metadata API
+import type { Metadata } from 'next'
 
-# Validation & forms
-npm install zod react-hook-form @hookform/resolvers
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Custom Curtains & Flags',
+    description: 'Dimension-based pricing for custom textiles',
+    metadataBase: new URL('https://yoursite.com'),
+    openGraph: {
+      title: 'Custom Curtains & Flags',
+      description: 'Dimension-based pricing for custom textiles',
+      images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+    },
+    alternates: {
+      canonical: 'https://yoursite.com',
+    },
+  }
+}
 
-# State management
-npm install zustand
+// app/sitemap.ts - Sitemap generation
+import type { MetadataRoute } from 'next'
 
-# Dev dependencies
-npm install -D vitest @vitejs/plugin-react eslint prettier
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
+    { url: 'https://yoursite.com', lastModified: new Date(), priority: 1 },
+    { url: 'https://yoursite.com/cart', lastModified: new Date(), priority: 0.8 },
+    { url: 'https://yoursite.com/faq', lastModified: new Date(), priority: 0.5 },
+  ]
+}
 
-# Optional: Tailwind v4 (if not included in create-next-app)
-npm install -D tailwindcss@next postcss autoprefixer
+// app/robots.ts - Robots.txt generation
+import type { MetadataRoute } from 'next'
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: { userAgent: '*', allow: '/', disallow: ['/api/'] },
+    sitemap: 'https://yoursite.com/sitemap.xml',
+  }
+}
 ```
 
-## Alternatives Considered
+### Contact Form: Email Service (NEW PACKAGES REQUIRED)
 
-| Recommended | Alternative | When to Use Alternative |
-|-------------|-------------|-------------------------|
-| Next.js App Router | Remix, Astro | Use Remix if you need nested routing with granular loading states. Use Astro for content-heavy sites with minimal interactivity. Next.js is right choice for this project. |
-| @shopify/shopify-api | shopify-api-node | **Don't use shopify-api-node** - it's a community library. Official @shopify/shopify-api is better maintained and supports latest API versions. |
-| Server Actions | API Routes | Use API Routes if you need public endpoints or webhooks. For internal mutations (Draft Order creation), Server Actions provide type safety and less boilerplate. Can use both together. |
-| Zustand | React Context, Redux | Use Context for simple global state (theme, auth). Use Redux if team already invested in Redux ecosystem. Zustand is sweet spot for cart state. |
-| Zod | Yup, Joi | Zod's TypeScript inference is unmatched. Yup/Joi require separate type definitions. Zod v4 performance improvements make it clear winner. |
-| React Hook Form | Formik | Formik is feature-rich but heavier (15KB vs 8KB) and slower due to controlled components. RHF is modern standard. |
-| Vitest | Jest | Jest if you have existing Jest setup or need React Native testing. Vitest for new projects with better performance. |
+| Package | Version | Purpose | Why Recommended |
+|---------|---------|---------|-----------------|
+| **Resend** | ^6.7.0 | Email delivery service | Modern developer-focused API, Next.js Server Actions native, 10-minute integration, free tier sufficient |
+| **react-email** | ^5.2.5 (optional) | Email template components | Type-safe React-based templates with Tailwind support, pairs with Resend |
+
+**Why Resend over alternatives:**
+- **vs SendGrid:** Simpler API, better DX, modern Next.js integration (Server Actions), less complex pricing
+- **vs Nodemailer:** No SMTP server management, higher deliverability, serverless-friendly (Vercel)
+- **vs FormSubmit/Formspree:** Full control over email design, no vendor lock-in, professional branding
+
+**Installation:**
+```bash
+npm install resend
+npm install react-email  # Optional, for templated emails
+```
+
+**Confidence:** HIGH — Verified via [Resend Next.js docs](https://resend.com/nextjs) and [comparison research](https://dev.to/ethanleetech/5-best-email-services-for-nextjs-1fa2)
+
+**Implementation pattern with Server Actions:**
+
+```typescript
+// app/actions/contact.ts
+'use server'
+
+import { Resend } from 'resend'
+import { z } from 'zod'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+const contactSchema = z.object({
+  email: z.string().email(),
+  message: z.string().min(10),
+})
+
+export async function sendContactEmail(formData: FormData) {
+  const validated = contactSchema.parse({
+    email: formData.get('email'),
+    message: formData.get('message'),
+  })
+
+  const { data, error } = await resend.emails.send({
+    from: 'noreply@yourdomain.com',
+    to: 'support@yourdomain.com',
+    subject: 'Contact Form Submission',
+    replyTo: validated.email,
+    text: validated.message,
+  })
+
+  if (error) throw error
+  return { success: true }
+}
+```
+
+### Structured Data Typing (OPTIONAL BUT RECOMMENDED)
+
+| Package | Version | Purpose | When to Use |
+|---------|---------|---------|-------------|
+| **schema-dts** | ^1.x | TypeScript types for Schema.org JSON-LD | Type-safe structured data (Product, Organization, FAQPage, etc.) |
+
+**Not required** but highly recommended for avoiding typos in JSON-LD structured data.
+
+**Installation:**
+```bash
+npm install -D schema-dts
+```
+
+**Usage:**
+```typescript
+import type { WithContext, Organization } from 'schema-dts'
+
+const jsonLd: WithContext<Organization> = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Your Business',
+  url: 'https://yoursite.com',
+  // TypeScript autocomplete + validation
+}
+```
+
+**Confidence:** HIGH — Verified via [schema-dts npm](https://www.npmjs.com/package/schema-dts) and [Next.js JSON-LD guide](https://nextjs.org/docs/app/guides/json-ld)
+
+### Content/Blog System (ONLY IF NEEDED)
+
+**CRITICAL:** For v1.1's simple content pages (homepage, FAQ, policies, thank you), **DO NOT use MDX**. Use plain TSX components.
+
+**Use MDX only if:**
+- You need markdown-based authoring workflow
+- You want to mix markdown with interactive React components
+- You have external content contributors who prefer markdown
+
+**MDX packages (install ONLY if truly needed):**
+
+| Package | Version | Purpose | Notes |
+|---------|---------|---------|-------|
+| @next/mdx | Match Next.js version (^16.1.6 for this project) | MDX support in App Router | Must match Next.js major version |
+| @mdx-js/loader | Latest | MDX compilation | Required by @next/mdx |
+| @mdx-js/react | Latest | React integration | Required by @next/mdx |
+| @types/mdx | Latest | TypeScript support | Required by @next/mdx |
+| gray-matter | ^4.x | Frontmatter parsing | @next/mdx doesn't support frontmatter by default |
+| remark-gfm | Latest | GitHub Flavored Markdown | Only if you need tables, strikethrough, task lists |
+
+**Installation (only if using MDX):**
+```bash
+npm install @next/mdx @mdx-js/loader @mdx-js/react
+npm install -D @types/mdx
+npm install gray-matter  # If you need frontmatter
+npm install remark-gfm   # If you need GFM features
+```
+
+**Configuration (`next.config.ts`):**
+```typescript
+import createMDX from '@next/mdx'
+
+const nextConfig = {
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+}
+
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+})
+
+export default withMDX(nextConfig)
+```
+
+**Required file (`mdx-components.tsx` at project root):**
+```typescript
+import type { MDXComponents } from 'mdx/types'
+
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return { ...components }
+}
+```
+
+**Confidence:** HIGH — Verified via [Next.js MDX guide](https://nextjs.org/docs/app/guides/mdx)
+
+**Recommendation for v1.1:** **Skip MDX**. Use TSX components for FAQ, policies, homepage. Add MDX later only if you launch a real blog with regular content updates.
+
+### Styling Enhancement (OPTIONAL)
+
+| Package | Version | Purpose | When to Use |
+|---------|---------|---------|-------------|
+| @tailwindcss/typography | ^0.5.x | Prose styling plugin | Long-form content styling (blog posts, policies, FAQ) |
+
+**Note:** May need v1.x when released for Tailwind CSS 4. Check compatibility.
+
+**Installation:**
+```bash
+npm install -D @tailwindcss/typography
+```
+
+**Usage in `tailwind.config.ts`:**
+```typescript
+import type { Config } from 'tailwindcss'
+
+export default {
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
+} satisfies Config
+```
+
+**Then use in components:**
+```tsx
+<article className="prose lg:prose-xl">
+  <h1>Your content</h1>
+  <p>Styled automatically</p>
+</article>
+```
+
+**Confidence:** MEDIUM — Tailwind CSS 4 compatibility needs verification (may need plugin update)
+
+## Installation Summary
+
+### Minimal v1.1 Setup (No Blog)
+
+**Recommended for v1.1 milestone:**
+
+```bash
+# Email service (required for contact form)
+npm install resend
+
+# Optional: Email templates
+npm install react-email
+
+# Optional: Type-safe JSON-LD
+npm install -D schema-dts
+
+# Optional: Prose styling
+npm install -D @tailwindcss/typography
+```
+
+**Total new production dependencies: 1-2** (Resend required, react-email optional)
+
+### Full Setup (With MDX Blog - NOT RECOMMENDED FOR v1.1)
+
+Only if you absolutely need MDX:
+
+```bash
+# Email service
+npm install resend react-email
+
+# MDX support
+npm install @next/mdx @mdx-js/loader @mdx-js/react
+npm install -D @types/mdx
+
+# Frontmatter + enhanced markdown
+npm install gray-matter remark-gfm
+
+# Type-safe JSON-LD
+npm install -D schema-dts
+
+# Prose styling
+npm install -D @tailwindcss/typography
+```
+
+**Not recommended.** Save MDX for future milestone when blog content is validated need.
 
 ## What NOT to Use
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| Shopify Checkout Extensibility | Requires Shopify Plus plan. Project constraint: "no plan-gated features". | Draft Orders API (works on all plans) |
-| Shopify Functions | Requires Shopify Plus. Would be ideal for pricing logic but gated. | Custom pricing engine + Draft Orders |
-| Pages Router | Legacy routing system in Next.js. App Router is stable and recommended for new projects. | App Router (already chosen) |
-| REST Admin API | Deprecated as of Oct 1, 2024. GraphQL is required for new apps as of April 2025. | GraphQL Admin API |
-| Client-side Draft Order creation | Admin API requires private credentials. Cannot expose in browser. | Server Actions or API Routes |
-| Database for v1 | Over-engineering for matrix storage. Adds deployment complexity. | JSON file storage (already chosen, correct for v1) |
+| **next-seo** | Deprecated, Next.js 15+ native Metadata API is superior | Built-in `generateMetadata()` |
+| **next-sitemap** | Not needed, Next.js 15+ has native `sitemap.ts` | Built-in `app/sitemap.ts` |
+| **@vercel/og** | Complex setup, limited use cases for this project | Static OG images or built-in `opengraph-image.tsx` |
+| **SendGrid** (for small sites) | Overkill for simple contact form, complex API, higher cost | Resend (simpler, modern, free tier) |
+| **Nodemailer** | SMTP management overhead, deliverability issues, not serverless-friendly | Resend (managed service) |
+| **Contentlayer** | Over-engineering for 4-5 static pages, adds build complexity | Plain TSX components |
+| **Sanity/Strapi CMS** | Unnecessary for static content, adds hosting/maintenance burden | Filesystem-based content (TSX or MDX) |
+| **MDX** (for v1.1) | Premature for unvalidated blog need, adds complexity | TSX components for static pages |
 
-## Stack Patterns by Variant
+## Integration with Existing v1.0 Stack
 
-**If building Shopify app (future state):**
-- Extract pricing engine to shared library
-- Use @shopify/shopify-app-express for OAuth flow
-- Consider Shopify Functions if targeting Plus merchants
-- Database becomes necessary for multi-merchant state
+### No Breaking Changes
 
-**If scaling beyond JSON matrix:**
-- Add Vercel Postgres or Supabase for matrix storage
-- Keep pricing calculation logic separate (pure functions)
-- Consider edge functions for pricing calculations (low latency)
+All v1.1 additions are **additive only**, no changes to existing v1.0 functionality:
 
-**If exposing public API:**
-- Use API Routes alongside Server Actions
-- Implement Data Access Layer pattern (shared logic)
-- Add rate limiting and authentication middleware
+| v1.0 Feature | v1.1 Impact | Integration |
+|-------------|-------------|-------------|
+| Product page with pricing | ✅ No change | Add `generateMetadata()` for SEO |
+| Cart overlay (Zustand) | ✅ No change | Works with new `/cart` page |
+| Shopify checkout flow | ✅ No change | Add thank you page after redirect |
+| API routes (/api/pricing, /api/checkout, /api/health) | ✅ No change | Continue using for existing functionality |
+| Tailwind CSS styling | ✅ Enhanced | Add @tailwindcss/typography for content pages |
+| Zod validation | ✅ Extended | Reuse for contact form validation |
 
-## Version Compatibility
+### New Integration Points
 
-| Package A | Compatible With | Notes |
-|-----------|-----------------|-------|
-| Next.js 15.5+ | React 19 | React 19 is stable in Next.js 15.1+. Breaking change: no default caching for fetch/GET routes. |
-| Zod 4.x | TypeScript 5.5+ | Zod 4 requires TS 5.5+. Use @zod/mini for client-side tree-shaking. |
-| @shopify/shopify-api 12.x | Node.js 18+ | Verify Node version in Vercel settings (18.x or 20.x). |
-| Vitest 3.x | Next.js 15+ | Vitest 3 released Jan 2025. Check Next.js compatibility in Vitest config. |
-| Tailwind CSS 4.x | PostCSS 8+ | Tailwind v4 requires PostCSS plugin config. Next.js includes PostCSS. |
+1. **Metadata API** — Add `generateMetadata()` to all pages (existing + new)
+2. **Sitemap** — Create `app/sitemap.ts` listing all routes
+3. **Robots.txt** — Create `app/robots.ts` allowing all except `/api/`
+4. **Contact Form** — New Server Action using existing Zod pattern + Resend
+5. **JSON-LD** — Add structured data to homepage (Organization), product (Product), FAQ (FAQPage)
+6. **Design System** — Extend Tailwind config with typography plugin for content pages
 
-## Stack Validation: Chosen vs Recommended
+### File Structure Changes
 
-**Validation of project's chosen stack:**
+```
+app/
+├── page.tsx                 # Homepage (NEW) + metadata
+├── cart/
+│   └── page.tsx            # Dedicated cart page (NEW, replaces overlay)
+├── contact/
+│   └── page.tsx            # Contact page (NEW) with form
+├── faq/
+│   └── page.tsx            # FAQ page (NEW)
+├── blog/
+│   ├── page.tsx            # Blog listing (NEW, optional)
+│   └── [slug]/
+│       └── page.tsx        # Blog post (NEW, optional)
+├── policies/
+│   ├── privacy/
+│   │   └── page.tsx        # Privacy policy (NEW)
+│   ├── terms/
+│   │   └── page.tsx        # Terms (NEW)
+│   ├── shipping/
+│   │   └── page.tsx        # Shipping policy (NEW)
+│   └── returns/
+│       └── page.tsx        # Returns policy (NEW)
+├── thank-you/
+│   └── page.tsx            # Thank you page (NEW)
+├── sitemap.ts              # Sitemap generation (NEW)
+├── robots.ts               # Robots.txt generation (NEW)
+├── actions/
+│   └── contact.ts          # Contact form Server Action (NEW)
+└── api/                     # Existing API routes (NO CHANGE)
+    ├── pricing/
+    ├── checkout/
+    └── health/
+```
 
-| Chosen | Verdict | Notes |
-|--------|---------|-------|
-| Next.js App Router | ✅ Validated | Correct choice. Stable, performant, supports BFF architecture. |
-| TypeScript | ✅ Validated | Required for type-safe pricing logic and API contracts. |
-| Shopify Storefront API | ✅ Validated | Correct for reading products. Use official @shopify/storefront-api-client. |
-| Shopify Admin API GraphQL | ✅ Validated | Correct for Draft Orders. GraphQL is required standard as of 2025. Use @shopify/shopify-api v12+. |
-| Draft Orders approach | ✅ Validated with caveat | Works on all plans (constraint satisfied). **Caveat:** Custom pricing in Draft Orders has known issues in API 2025-01. Use version 2025-10 or later. |
-| Vercel hosting | ✅ Validated | First-class Next.js support, zero-config deployment. |
-| JSON matrix storage | ✅ Validated for v1 | Appropriate for MVP. Migrate to database when scaling or building multi-merchant app. |
-| BFF architecture | ✅ Validated | Next.js Server Actions provide type-safe mutations without separate backend. |
+**Key changes:**
+- Add 9+ new page routes
+- Add `sitemap.ts` and `robots.ts` at app root
+- Add `actions/contact.ts` for email sending
+- NO changes to existing `/api/` routes
 
-**Missing from chosen stack (add these):**
-- **Zod** - Required for runtime validation of dimensions and matrix structure
-- **React Hook Form** - Standard for form handling in 2025
-- **Zustand** - Recommended for cart state management (better than Context for cart)
-- **Testing framework** - Add Vitest for pricing engine tests
+## Critical Stack Decisions for v1.1
 
-## Critical Stack Decisions
+### Decision 1: MDX vs TSX for Content Pages
 
-### Decision 1: Server Actions vs API Routes
+**Question:** Use MDX for FAQ, policies, and other content pages?
 
-**Recommendation:** Use **both**
-- **Server Actions** for Draft Order creation (internal mutation, type-safe)
-- **API Routes** if you need webhooks later (Shopify order status callbacks)
-
-**Rationale:** Server Actions eliminate boilerplate and provide end-to-end type safety when calling from client components. API Routes needed only for external integrations.
-
-### Decision 2: Client State Management
-
-**Recommendation:** Use **Zustand for cart, Context for theme/settings**
+**Recommendation:** **Use TSX components**
 
 **Rationale:**
-- Cart state updates frequently (add item, change dimensions, recalculate price)
-- Context causes unnecessary re-renders across component tree
-- Zustand's selective subscription prevents performance issues
-- Context is fine for infrequent updates (theme, locale)
+- v1.1 has 9 content pages (homepage, /cart, /thank-you, FAQ, 4 policies, contact)
+- All are static, rarely updated content
+- MDX adds build complexity, bundle size, and requires configuration
+- TSX provides full type safety, easier refactoring, simpler deployment
+- Add MDX later only if blog becomes regular content stream
 
-### Decision 3: Validation Strategy
+**When to reconsider:** If blog launches and gets 1+ posts/week, evaluate MDX in future milestone.
 
-**Recommendation:** **Zod everywhere** (forms, API payloads, matrix structure)
+### Decision 2: Resend vs Other Email Services
+
+**Question:** Which email service for contact form?
+
+**Recommendation:** **Resend**
 
 **Rationale:**
-- Single source of truth for validation rules
-- TypeScript types automatically inferred from schemas
-- Runtime validation catches bad data from external sources (Shopify API)
-- Pricing matrix structure validation prevents runtime errors
+- Modern API designed for Next.js Server Actions
+- Simple integration (10 minutes per docs)
+- Free tier: 100 emails/day, 3,000/month (sufficient for contact form)
+- Better DX than SendGrid (less configuration)
+- More reliable than Nodemailer (no SMTP management)
+- Vercel-optimized (serverless-friendly)
 
-### Decision 4: Draft Order Custom Pricing Implementation
+**Cost:** Free tier covers MVP. Paid: $20/month for 50k emails (only upgrade if contact form gets heavy usage).
 
-**Critical finding:** Draft Orders API has known issues with custom pricing in version 2025-01.
+### Decision 3: Static vs Dynamic OG Images
 
-**Recommendation:**
-1. Use API version **2025-10** (latest stable)
-2. Test custom pricing thoroughly in development store
-3. Implement fallback: if price override fails, create line item with custom product variant
-4. Monitor Shopify changelog for pricing API fixes
+**Question:** Generate OG images dynamically or use static images?
 
-**Alternative approach if pricing issues persist:**
-- Create temporary "custom product" variants with calculated prices
-- Add to Draft Order using these variants
-- Delete temporary variants after order completion
+**Recommendation:** **Start with static OG images**
 
-## Environment Variables Strategy
+**Rationale:**
+- v1.1 has ~10 pages, all known at build time
+- Create 1-2 static OG images in Figma/Canva
+- Use `metadata.openGraph.images` to reference static files
+- Add dynamic `opengraph-image.tsx` later only if product count grows (multi-product future)
 
-**Required for Vercel deployment:**
+**When to reconsider:** If launching 50+ products, dynamic OG image generation becomes worthwhile.
+
+### Decision 4: Structured Data Scope
+
+**Question:** Which Schema.org types to implement?
+
+**Recommendation:** **3 schemas initially**
+
+1. **Organization** (homepage) — Business info, logo, contact
+2. **Product** (product page) — Product name, image, price, availability
+3. **FAQPage** (FAQ page) — Q&A pairs for rich snippets
+
+**Skip for v1.1:**
+- BreadcrumbList (wait for multi-product navigation)
+- Review/Rating (no reviews yet)
+- BlogPosting (no blog yet)
+
+**Implementation order:**
+1. Organization (highest SEO value, easiest)
+2. FAQPage (enables rich snippets in search)
+3. Product (enables product rich snippets)
+
+## Environment Variables
+
+**New variables for v1.1:**
 
 ```bash
-# Shopify API (use Vercel dashboard or .env.local)
+# Resend (for contact form)
+RESEND_API_KEY=re_xxxxxxxxxxxx       # Private, server-only
+
+# Optional: Contact form recipient
+CONTACT_EMAIL=support@yourdomain.com  # Can hardcode in Server Action instead
+```
+
+**Existing v1.0 variables (no change):**
+```bash
 SHOPIFY_STORE_DOMAIN=yourstore.myshopify.com
-SHOPIFY_STOREFRONT_ACCESS_TOKEN=xxx  # Public token (client-safe)
-SHOPIFY_ADMIN_ACCESS_TOKEN=xxx       # Private token (server-only)
-
-# Next.js public variables (prefix required for client access)
+SHOPIFY_STOREFRONT_ACCESS_TOKEN=xxx
+SHOPIFY_ADMIN_ACCESS_TOKEN=xxx
 NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION=2025-10
-NEXT_PUBLIC_STORE_URL=yourstore.com
-
-# Vercel auto-populates these (enable in settings)
-VERCEL_ENV                           # development/preview/production
-NEXT_PUBLIC_VERCEL_ENV               # client-accessible version
 ```
 
 **Security:**
-- Never expose `SHOPIFY_ADMIN_ACCESS_TOKEN` to client
-- Use Server Actions/API Routes to call Admin API
-- Storefront token can be public (read-only product access)
-- Enable "Automatically expose System Environment Variables" in Vercel
+- `RESEND_API_KEY` must be server-only (no `NEXT_PUBLIC_` prefix)
+- Call Resend only from Server Actions or API Routes, never client components
+- Add to Vercel environment variables (production, preview, development)
+
+## Alternatives Considered
+
+### Email Service Alternatives
+
+| Service | Pros | Cons | Verdict |
+|---------|------|------|---------|
+| **Resend** | Modern API, Server Actions native, simple, free tier | Newer service (less track record) | ✅ Recommended |
+| SendGrid | Established, reliable, high volume support | Complex API, expensive for small sites, overkill | ❌ Not for MVP |
+| Nodemailer | Free, full control | SMTP management, deliverability issues, not serverless | ❌ Not for Vercel |
+| FormSubmit | No code, free | No template control, vendor lock-in, not professional | ❌ Too basic |
+
+### Content Management Alternatives
+
+| Approach | Pros | Cons | Verdict |
+|----------|------|------|---------|
+| **TSX components** | Type-safe, simple, no build config | Manual HTML/JSX authoring | ✅ Recommended for v1.1 |
+| MDX | Markdown authoring, mix React components | Build complexity, bundle size, requires config | ⚠️ Wait for validated blog need |
+| Contentlayer | Build-time validation, type generation | Overkill for 10 pages, adds dependency | ❌ Over-engineering |
+| Headless CMS | Non-technical editing, preview, workflows | Hosting cost, maintenance, complexity | ❌ Not needed for static content |
+
+### SEO Library Alternatives
+
+| Tool | Status | Verdict |
+|------|--------|---------|
+| **Next.js built-in Metadata API** | ✅ Native, maintained, type-safe | ✅ Use this |
+| next-seo | ⚠️ Deprecated (Next.js 13+ has native support) | ❌ Don't use |
+| next-sitemap | ⚠️ Not needed (Next.js 13+ has native sitemap.ts) | ❌ Don't use |
+
+## Version Compatibility
+
+| Package | Version | Compatible With | Notes |
+|---------|---------|-----------------|-------|
+| Next.js | 16.1.6 (installed) | - | All built-in SEO features available |
+| Resend | ^6.7.0 | Next.js 15+ | Server Actions support, latest release Jan 2026 |
+| react-email | ^5.2.5 | React 19+ | Compatible with Next.js 15+, latest release Jan 2026 |
+| @next/mdx | ^16.1.6 (if used) | Next.js 16.1.6 | Must match Next.js version exactly |
+| schema-dts | ^1.x | TypeScript 5+ | Dev-only, no runtime dependency |
+| @tailwindcss/typography | ^0.5.x | Tailwind CSS 3.x | May need v1.x for Tailwind 4 (verify) |
+
+**Critical:** Match `@next/mdx` version to Next.js version (both should be 16.1.6 for this project).
+
+## Performance Considerations
+
+### SEO Features (Built-in)
+- **Static generation:** Metadata, sitemap, robots.txt generated at build time (no runtime cost)
+- **Edge-compatible:** All Next.js metadata features work with Edge Runtime
+- **Caching:** Sitemap/robots cached by default unless using dynamic functions
+
+### Email Service (Resend)
+- **Server-side only:** Never call Resend from client components (API key exposure)
+- **Timeout:** Set 5-10 second timeout for email sending
+- **Error handling:** Don't block user flow if email fails (show success message, log error)
+
+### Content Pages (TSX)
+- **Static generation:** All content pages should use static generation (no data fetching)
+- **Bundle size:** TSX pages smaller than MDX (no markdown runtime)
+- **Performance:** TSX = instant build, MDX = compilation overhead
+
+## Security Considerations
+
+### Email (Resend)
+- **API Key:** Store in environment variable, never commit to git
+- **Rate limiting:** Implement rate limiting on contact form (prevent spam)
+- **Validation:** Use Zod to validate email format and message length
+- **Spam protection:** Consider honeypot field or hCaptcha for public form
+
+### JSON-LD
+- **XSS prevention:** Always sanitize JSON-LD: `.replace(/</g, '\\u003c')`
+- **Trusted data only:** Only use trusted data sources (no user input in structured data)
+
+### MDX (if used)
+- **File source:** Only load MDX from trusted filesystem (never user uploads)
+- **Component scope:** Whitelist allowed components in `mdx-components.tsx`
+
+## Success Metrics for v1.1 Stack
+
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+| New production dependencies | ≤ 2 packages | Resend + optional react-email only |
+| Build time increase | < 10 seconds | Compare v1.0 vs v1.1 Vercel builds |
+| Bundle size increase | < 50KB | Client bundle analysis |
+| Contact form email delivery | > 95% success rate | Resend dashboard analytics |
+| SEO metadata coverage | 100% of pages | All pages have generateMetadata() |
+| Structured data validation | 0 errors | Google Rich Results Test |
+
+## Roadmap Implications
+
+Based on this stack research, v1.1 roadmap should:
+
+1. **Phase 1: SEO Foundation** — Implement built-in features (no packages)
+   - Add `generateMetadata()` to existing pages
+   - Create `sitemap.ts` and `robots.ts`
+   - Set `metadataBase` in root layout
+
+2. **Phase 2: Content Pages** — Use TSX components
+   - Build homepage, FAQ, policies, thank you pages
+   - Skip MDX setup (defer to future milestone)
+   - Add @tailwindcss/typography for long-form styling
+
+3. **Phase 3: Contact Form** — Add Resend
+   - Install Resend package
+   - Create Server Action with Zod validation
+   - Build contact page with form
+
+4. **Phase 4: Structured Data** — Add JSON-LD
+   - Optionally install schema-dts for typing
+   - Add Organization schema to homepage
+   - Add FAQPage schema to FAQ
+   - Add Product schema to product page
+
+5. **Phase 5: Design Refresh** — Extend Tailwind
+   - Customize Tailwind theme for brand
+   - Build reusable components
+   - Apply consistent styling across all pages
+
+**No "MDX setup" phase needed for v1.1.** Defer blog infrastructure to v1.2 or later.
 
 ## Sources
 
-### High Confidence Sources (Official Documentation)
+### Official Documentation (HIGH Confidence)
 
-- [Next.js 15.5 Release](https://nextjs.org/blog/next-15-5) - Official Next.js blog
-- [GraphQL Admin API reference](https://shopify.dev/docs/api/admin-graphql/latest) - Official Shopify docs
-- [@shopify/shopify-api npm](https://www.npmjs.com/package/@shopify/shopify-api) - Official package registry
-- [@shopify/storefront-api-client npm](https://www.npmjs.com/package/@shopify/storefront-api-client) - Official package
-- [Zod v4 Release](https://www.infoq.com/news/2025/08/zod-v4-available/) - InfoQ coverage of Zod 4
-- [React Hook Form Official Docs](https://react-hook-form.com/) - Official documentation
+- [Next.js Metadata API](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) — Metadata, Open Graph, Twitter cards
+- [Next.js Sitemap API](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) — Sitemap generation
+- [Next.js Robots API](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) — Robots.txt generation
+- [Next.js JSON-LD Guide](https://nextjs.org/docs/app/guides/json-ld) — Structured data implementation
+- [Next.js MDX Guide](https://nextjs.org/docs/app/guides/mdx) — MDX setup (optional)
+- [Next.js Forms & Server Actions](https://nextjs.org/docs/app/guides/forms) — Form handling best practices
+- [Resend Next.js Integration](https://resend.com/nextjs) — Official Resend setup guide
 
-### Medium Confidence Sources (Best Practices, 2025 Articles)
+### Package Documentation (HIGH Confidence)
 
-- [GraphQL Admin API Best Practices](https://shopify.dev/docs/apps/build/graphql) - Shopify official docs
-- [Shopify Draft Orders Custom Pricing](https://shopify.dev/changelog/set-custom-prices-in-draft-orders) - Shopify changelog
-- [React Hook Form vs Formik 2025](https://refine.dev/blog/react-hook-form-vs-formik/) - Community comparison
-- [Next.js Server Actions vs API Routes 2025](https://dev.to/myogeshchavan97/nextjs-server-actions-vs-api-routes-dont-build-your-app-until-you-read-this-4kb9) - DEV Community
-- [Zustand vs React Context 2025](https://dev.to/cristiansifuentes/react-state-management-in-2025-context-api-vs-zustand-385m) - DEV Community
-- [Vitest vs Jest 2025](https://medium.com/@ruverd/jest-vs-vitest-which-test-runner-should-you-use-in-2025-5c85e4f2bda9) - Medium article
-- [Tailwind CSS v4 with Next.js 2025](https://codeparrot.ai/blogs/nextjs-and-tailwind-css-2025-guide-setup-tips-and-best-practices) - Setup guide
-- [Vercel Environment Variables](https://vercel.com/docs/environment-variables) - Official Vercel docs
+- [Resend npm](https://www.npmjs.com/package/resend) — Latest version 6.7.0 (Jan 2026)
+- [react-email npm](https://www.npmjs.com/package/react-email) — Latest version 5.2.5 (Jan 2026)
+- [schema-dts npm](https://www.npmjs.com/package/schema-dts) — TypeScript types for Schema.org
+- [@next/mdx npm](https://www.npmjs.com/package/@next/mdx) — Official MDX plugin
+- [gray-matter npm](https://www.npmjs.com/package/gray-matter) — Frontmatter parser
 
-### Low Confidence / Requires Verification
+### Community Best Practices (MEDIUM Confidence)
 
-- Draft Order custom pricing bug in API version 2025-01 - reported in [community forums](https://community.shopify.dev/t/draft-order-api-not-overriding-variant-default-price-with-custom-price/10698), not verified in official docs. **Test thoroughly in development.**
+- [Next.js 15 SEO Best Practices 2026](https://www.digitalapplied.com/blog/nextjs-seo-guide) — Comprehensive SEO guide
+- [Next.js SEO Complete Guide](https://www.adeelhere.com/blog/2025-12-09-complete-nextjs-seo-guide-from-zero-to-hero) — Metadata, canonical URLs, viewport
+- [Resend vs SendGrid vs Nodemailer Comparison](https://dev.to/ethanleetech/5-best-email-services-for-nextjs-1fa2) — Email service comparison for Next.js
+- [Next.js Server Actions Best Practices 2026](https://dev.to/marufrahmanlive/nextjs-server-actions-complete-guide-with-examples-for-2026-2do0) — Form handling patterns
+- [MDX with Next.js Best Practices](https://staticmania.com/blog/markdown-and-mdx-in-next.js-a-powerful-combination-for-content-management) — MDX setup guide
+- [Next.js Sitemap Built-in vs next-sitemap](https://techolyze.com/open/blog/nextjs-15-sitemap-guide-built-in-vs-xml/) — Native sitemap comparison
+- [Schema.org with Next.js](https://mikebifulco.com/posts/structured-data-json-ld-for-next-js-sites) — JSON-LD implementation guide
 
 ---
-*Stack research for: Custom-dimension e-commerce with Shopify integration*
-*Researched: 2026-01-29*
-*Confidence: HIGH (core stack), MEDIUM (some library versions pending official verification)*
+
+**Research completed:** 2026-02-01
+**Milestone:** v1.1 - Multi-page website with SEO foundation
+**Stack focus:** SEO (built-in Next.js features), contact forms (Resend), optional content (MDX), structured data (schema-dts)
+**Recommendation:** Minimal new dependencies (1-2 packages), leverage Next.js built-in capabilities, defer MDX to future milestone

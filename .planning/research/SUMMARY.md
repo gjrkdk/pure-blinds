@@ -1,343 +1,350 @@
 # Project Research Summary
 
-**Project:** Custom-dimension textile e-commerce
-**Domain:** Headless e-commerce with custom product configuration
-**Researched:** 2026-01-29
+**Project:** v1.1 - Multi-Page Website with SEO Foundation
+**Domain:** E-commerce website expansion for custom textile configurator
+**Researched:** 2026-02-01
 **Confidence:** HIGH
 
 ## Executive Summary
 
-This project builds a custom-dimension textile e-commerce platform (curtains, flags, banners) that integrates with Shopify for checkout and order management. The core challenge is calculating dynamic prices based on user-specified dimensions (width/height) within a 20x20 pricing matrix, then seamlessly handing off to Shopify's Draft Orders API for payment processing. Industry best practices show this requires a backend-driven pricing engine (never frontend-only), integer-based price calculations to avoid floating-point errors, and careful architectural separation to enable future extraction to a Shopify app.
+The v1.1 milestone extends the existing Next.js 15 custom textile e-commerce application with multi-page website structure, SEO foundation, and legal compliance pages. Research reveals a clear path: **leverage Next.js 15+ built-in features first** (Metadata API, sitemap generation, robots.txt), add minimal external dependencies (Resend for contact forms), and avoid over-engineering with premature blog infrastructure or MDX. The validated v1.0 stack (Next.js 16.1.6, React 19, Zustand, Shopify integration) remains untouched.
 
-The recommended approach uses Next.js 15.5+ App Router as a Backend-for-Frontend (BFF), with isolated domain logic for pricing calculation, Shopify Admin API GraphQL for Draft Order creation, and Zod + React Hook Form for bulletproof validation. The architecture must prevent tight coupling between the pricing engine and Shopify integration — the pricing engine should be pure TypeScript with zero framework dependencies, enabling future reuse in a Shopify app without modifications. This architectural discipline is non-negotiable.
+The recommended approach is incremental and additive. Start with SEO infrastructure (metadata, sitemap, robots.txt) before adding content pages. This allows each new page to launch with proper SEO from day one. Build simple TSX-based content pages (homepage, FAQ, policies) rather than investing in MDX or CMS solutions—these are 5-10 static pages that change infrequently. Add Resend for the contact form with layered spam protection (honeypot, CAPTCHA, rate limiting). Defer blog content to post-MVP validation of content marketing need.
 
-Key risks center on security (price manipulation via frontend tampering), precision (floating-point arithmetic causing penny discrepancies), and integration complexity (Shopify API rate limits, Draft Order 1-year auto-deletion, webhook idempotency). All three can be mitigated with backend-enforced validation, integer-based pricing (store prices in cents), and proper API client design with rate limiting and retry logic. The roadmap must front-load foundational work (pricing engine isolation, backend validation) to avoid expensive rewrites later.
+Key risks center on **legal compliance** (GDPR cookie consent, Dutch DPA enforcement, missing KVK/VAT display) and **integration breaking existing pages** (new shared layout conflicting with v1.0 product configurator). Mitigation: implement GDPR-compliant cookie consent before any analytics, test existing pages after every layout change, and use Dutch e-commerce legal templates with 14-day return policy. The research identified 10 critical pitfalls with specific prevention strategies mapped to implementation phases.
 
 ## Key Findings
 
 ### Recommended Stack
 
-Next.js 15.5+ with App Router provides the ideal foundation for this BFF architecture, offering Server Components for reduced client bundles and Server Actions for type-safe mutations. React 19 is now stable in Next.js 15.1+, and Vercel hosting provides zero-config deployment with first-class Next.js support. TypeScript 5.5+ is required for Zod compatibility and compile-time safety on pricing calculations.
+Next.js 15+ eliminated the need for external SEO packages. The App Router provides native support for metadata (Metadata API with `generateMetadata`), sitemaps (`sitemap.ts`), robots.txt (`robots.ts`), and Open Graph images. Research confirmed that packages like `next-seo` and `next-sitemap` are deprecated and unnecessary—Next.js built-in features are superior and type-safe.
 
 **Core technologies:**
-- **Next.js 15.5+ (App Router)**: Full-stack React framework — perfect for BFF architecture where frontend and backend live in one codebase, Server Components reduce bundle size, stable and production-ready
-- **TypeScript 5.5+**: Type safety across stack — required for Zod compatibility, provides compile-time safety for pricing calculations and API contracts
-- **Shopify Admin API (GraphQL)**: Draft Order creation — official approach for custom pricing on all Shopify plans, GraphQL required as REST is deprecated post-2024
-- **@shopify/shopify-api 12.3.0+**: Official Node.js Admin API client — supports API version 2025-10 with Draft Orders, use for server-side Draft Order creation
-- **Zod 4.x**: Runtime validation + TypeScript inference — validates dimension inputs, pricing matrix structure, and API payloads. Zod 4 is 14x faster than v3 with 57% smaller bundle
-- **React Hook Form 7.x**: Form state management — 8KB bundle, zero dependencies, uncontrolled components prevent re-render storms, integrates with Zod via @hookform/resolvers
-- **Zustand 5.x**: Client state management — recommended for cart state (better performance than Context API for frequently updated state), lightweight and minimal bundle
-- **Vercel**: Hosting platform — first-party Next.js deployment with automatic environment variable management, edge functions, and preview deployments
+- **Resend** (^6.7.0): Contact form email delivery — Modern developer API, Server Actions native, free tier sufficient (100 emails/day). Superior to SendGrid (complex, expensive) and Nodemailer (SMTP management, not serverless-friendly).
+- **schema-dts** (^1.x, optional dev dependency): TypeScript types for Schema.org JSON-LD — Provides autocomplete and validation for structured data without runtime cost.
+- **@tailwindcss/typography** (^0.5.x, optional): Prose styling for long-form content — Only if content pages need automatic paragraph/heading styling. May need v1.x for Tailwind CSS 4 compatibility.
 
-**Critical stack decisions:**
-- Use Server Actions for Draft Order creation (type-safe, less boilerplate), but keep API Routes available for future webhooks
-- Store prices in cents (integers) from day one — never use floating-point for currency
-- Pricing matrix in JSON file for v1 (appropriate for MVP), migrate to database when scaling or building multi-merchant app
-- Use API version 2025-10 or later — earlier versions (2025-01) have reported bugs with custom pricing in Draft Orders
+**Critical decision: Skip MDX for v1.1.** All content pages (homepage, FAQ, policies, thank you) are static and infrequently updated. Use plain TSX components. MDX adds build complexity, requires configuration, and increases bundle size without providing value for 10 static pages. Re-evaluate only if blog launches with 1+ posts/week.
+
+**New production dependencies: 1-2 packages** (Resend required, optional react-email for templated emails). Everything else uses Next.js built-in features.
 
 ### Expected Features
 
-Custom-dimension product configurators have well-established patterns: users expect real-time price feedback as they adjust dimensions, clear communication about rounding strategies, and transparent breakdown of how prices are calculated. The research identifies three feature tiers based on user expectations and competitive differentiation.
-
 **Must have (table stakes):**
-- **Dimension Input (Width/Height)** — core value proposition, without this there's no product
-- **Real-time Price Display** — customers expect instant feedback without page reload, 94% of customers more loyal to brands with pricing transparency
-- **Input Validation** — prevents invalid orders that can't be fulfilled (negative, zero, out-of-range dimensions)
-- **Rounding Strategy Communication** — critical for trust, customers must understand they get ≥ what they ordered (e.g., "You ordered 165cm, you'll receive 170cm")
-- **Add to Cart** — standard e-commerce expectation, must preserve custom dimensions as line item properties in Shopify
-- **Multi-Item Cart Support** — users will order multiple items with different dimensions (e.g., curtains for multiple windows)
-- **Mobile-Responsive Design** — non-negotiable in 2026, 71% of users expect mobile-optimized experiences
-- **Order Confirmation Details** — custom products require confirmation of exact specifications to avoid disputes
+- **Homepage** — Primary entry point for organic traffic, value proposition within seconds, self-segmentation for custom products
+- **Privacy policy** — GDPR requirement (€20M fine risk), must detail data collection, usage, retention, user rights
+- **Shipping & returns policy** — Dutch Distance Selling Act: 14-day cooling-off period, must inform before purchase
+- **Terms & conditions** — Legal protection, contract terms, standard for e-commerce
+- **Contact page with form** — Trust signal, support access, spam protection required
+- **FAQ page** — Reduces support tickets 30-40%, SEO benefit via long-tail keywords and FAQ schema
+- **SEO foundation** — Meta tags (title, description), Open Graph for social sharing, sitemap.xml, robots.txt
+- **Cart page (dedicated)** — Table stakes despite overlay existing, conversion best practice for reviewing full order
+- **Thank you page** — Post-checkout expectation, legal requirement in Netherlands, shows order details and next steps
 
 **Should have (competitive advantage):**
-- **Price Calculation Breakdown** — shows exactly how price is determined (material cost, dimensions, markup), 94% customer loyalty boost with transparent pricing
-- **Visual Size Preview** — dynamic visualization showing relative size (40% increase in conversion rates for configurators with visual preview)
-- **Dimension Rounding Preview** — shows before/after rounding with visual indicator, builds confidence
-- **Smart Dimension Suggestions** — suggest standard/popular sizes based on product type (reduces input friction)
+- **JSON-LD structured data** — Rich snippets in search results (Product, Organization, FAQPage schemas), not auto-generated, manual implementation required
+- **Blog structure** — 43% of e-commerce traffic from organic search, builds topical authority, defer content to post-launch
+- **Dynamic OG images** — Better social engagement, use Next.js ImageResponse, start with static images initially
 
 **Defer (v2+):**
-- **Saved Configurations** — requires user accounts, wait until repeat customer rate justifies investment
-- **Bulk Order Entry (CSV upload)** — strong B2B differentiator, defer until Shopify app phase
-- **Visual 3D Rendering** — expensive ($10k+ for quality), limited value for flat textiles, only consider for complex products
-
-**Anti-features (deliberately NOT building):**
-- **Arbitrary Precision (1mm increments)** — creates 2000+ price points instead of 400, complicates production. Stick to 10cm rounding strategy.
-- **Real-time 3D Product Rendering** — performance impact, diminishing returns for simple textiles. Use simple dimensional diagram instead.
-- **Price After Add-to-Cart** — pricing surprises kill sales and erode trust. Always show price in real-time before add-to-cart.
+- **Multi-language support (EN/NL)** — Wait for market data validating language preference
+- **User accounts** — Unnecessary for custom one-off purchases, adds GDPR obligations, consider only if repeat purchase rate justifies
+- **Live chat/chatbot** — Premature without support ticket volume data
+- **Advanced SEO** — Technical audits, backlink strategy after core content indexed
 
 ### Architecture Approach
 
-The standard architecture for custom-dimension e-commerce is a Backend-for-Frontend (BFF) pattern where Next.js API Routes aggregate domain services, secure sensitive operations, and shape responses for frontend needs. The critical architectural principle is domain isolation — the pricing engine must be completely framework-agnostic with zero dependencies on Next.js, Shopify, or cart logic to enable future extraction to a Shopify app.
+The architecture extends the existing v1.0 structure with additive-only changes. New pages integrate via Next.js App Router conventions without modifying existing product configurator or cart functionality. Root layout gains navigation and footer components, but existing page logic remains isolated.
 
 **Major components:**
-1. **Pricing Engine (isolated domain)** — pure TypeScript functions calculating prices from dimension inputs using matrix lookup + rounding rules. Zero side effects, no framework imports, no database calls. Can be extracted to Shopify app unchanged.
-2. **Cart Service (domain)** — manages cart sessions, validates items, persists state to database. Handles session management separate from pricing logic.
-3. **Shopify Client (domain)** — creates Draft Orders, handles authentication, manages API communication with rate limiting and retry logic. Wraps Shopify Admin API with error handling.
-4. **BFF API Routes** — thin controllers orchestrating domains. API routes call domain services sequentially (never let domains import each other), validate inputs, transform responses.
-5. **Product Configurator (frontend)** — captures dimension inputs, validates constraints client-side, shows real-time price preview. React components with form validation.
-6. **Matrix Storage (data layer)** — stores pricing matrix data with dimension ranges and pricing tiers. Database with indexed lookups for performance.
+1. **Root Layout with Metadata** — Wraps all pages with navigation, footer, sets `metadataBase` for absolute OG image URLs, uses title template for DRY metadata
+2. **SEO Layer** — `app/sitemap.ts` generates sitemap.xml dynamically, `app/robots.ts` generates robots.txt, `generateMetadata` exports per page for type-safe SEO
+3. **Contact Form with Server Action** — Client component form calls Server Action with Zod validation, Server Action uses Resend API to send email, follows same pattern as existing `/api/pricing` route
+4. **Content Pages as TSX Components** — Homepage, FAQ, policies built as plain React Server Components, no markdown processing, full type safety and refactoring support
+5. **JSON-LD Structured Data** — Inline `<script type="application/ld+json">` tags in page components, schema-dts types prevent typos, escape `<` characters for XSS prevention
 
-**Critical architectural patterns:**
-- **Domain isolation with public API exports**: Each domain exports clean public API through index.ts, hiding implementation details. Domains never import from each other directly.
-- **Matrix-based pricing with interpolation**: Store pricing as multi-dimensional matrix (dimension ranges → price), calculate prices via lookup for exact dimensions.
-- **Draft Order checkout flow**: Create Draft Order via Admin API, redirect customer to invoice URL for Shopify-hosted checkout and payment.
-- **BFF with server-side aggregation**: Next.js API Routes aggregate multiple domain calls, secure secrets (no API keys in browser), shape responses for frontend.
+**File structure changes:**
+- Add 9+ new page routes (homepage, /cart enhancements, /thank-you, /contact, /faq, 4 policy pages)
+- Add `sitemap.ts` and `robots.ts` at app root
+- Add `actions/contact.ts` for email Server Action
+- Extract navigation and footer into `/components/layout`
+- NO changes to existing `/api/` routes or product configurator
 
-**Build order implications:**
-The architecture suggests clear dependency order: Pricing Engine first (isolated, can develop independently), then Database + Matrix Storage, then BFF Pricing API, then Frontend Input. Cart and Shopify domains can develop in parallel after database setup. Critical path is 1 → 2 → 3 → 4 to demonstrate core pricing functionality.
+**Critical pattern: Incremental rollout.** Apply new shared layout to one new page first, verify existing pages still work, then expand. Prevents breaking v1.0 product configurator with CSS conflicts or client/server boundary violations.
 
 ### Critical Pitfalls
 
-Research identified 10 critical pitfalls specific to custom-dimension e-commerce with Shopify. The top 5 require day-one mitigation and cannot be retrofitted safely.
+1. **Missing metadataBase causing broken OG images** — Open Graph images appear as relative URLs, social platforms cannot fetch. Fix: Set `metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL)` in root layout BEFORE implementing page metadata. Validate with Facebook Sharing Debugger.
 
-1. **Price Manipulation via Frontend Cart State** — customers can manipulate prices by modifying frontend state or using browser DevTools. NEVER accept price from frontend — always recalculate on backend. Store pricing matrix server-side, validate dimensions against min/max bounds, log calculation inputs/outputs. Address in Phase 1 (Core Pricing).
+2. **GDPR cookie consent violations (Dutch DPA enforcement)** — Loading Google Analytics or tracking before user consent. Dutch DPA actively fines €600K-€40K. 50% of webshops fail compliance. Fix: Block all tracking scripts until consent, "Reject All" button equally prominent as "Accept All", no cookie walls. Implement CMP or custom solution BEFORE adding any analytics.
 
-2. **Floating-Point Arithmetic Causing Penny Discrepancies** — JavaScript floating-point creates rounding errors (0.1 + 0.2 = 0.30000000000000004). Store all prices in cents (integers), pricing matrix contains integers, all calculations use integer arithmetic. Use `Math.round(priceInCents)` only at display time. Address in Phase 1 (Core Pricing).
+3. **Contact form spam overwhelming inbox** — Bots submit 100+ forms daily without protection. Fix: Layer multiple defenses (honeypot field, invisible CAPTCHA, server-side rate limiting, email domain validation, time-based validation). Implement BEFORE launching contact form.
 
-3. **Dimension Rounding Edge Cases Creating Price Jumps** — inconsistent rounding between frontend/backend causes price mismatches (frontend: `Math.ceil(191/10)*10 = 200`, backend: `Math.round(191/10)*10 = 190`). Extract rounding to shared function, use consistent algorithm, test boundary cases explicitly (190, 191, 200, 201), show customer the rounded dimensions. Address in Phase 1 (Core Pricing).
+4. **Breaking existing pages during design refresh** — New shared layout conflicts with v1.0 product configurator, localStorage access causes SSR errors, CSS specificity wars. Fix: Test existing pages after every layout change, use route groups to isolate new pages initially, audit client/server boundaries.
 
-4. **Draft Order Auto-Deletion After 1 Year** — Draft orders created after April 1, 2025 auto-delete after 1 year of inactivity. Track draft order creation date in own database, implement expiration warning system (email at 11 months), any edit resets timer. Address in Phase 2 (Draft Order Integration).
-
-5. **Shopify API Rate Limits Causing Checkout Failures** — during high traffic, app hits Shopify rate limits (REST: 2 req/sec, GraphQL: 50 points/sec). Use GraphQL Admin API for better rate limits, implement exponential backoff for 429 responses, queue draft order creation for async processing, monitor rate limit headers. Address in Phase 2 (Draft Order Integration).
-
-**Additional critical pitfalls:**
-- **Tight Coupling to Shopify Preventing Reusability** — pricing logic mixed with Shopify SDK prevents extraction to app. Extract pricing to pure functions with zero Shopify dependencies. Address in Phase 1 (Core Pricing).
-- **Missing Dimension Bounds Allowing Out-of-Matrix Lookups** — no input validation causes matrix[999][999] lookups returning undefined/$NaN. Define explicit bounds in config, validate before any calculation, reject API requests with 400. Address in Phase 1 (Core Pricing).
-- **Webhook Duplicate Events Causing Double Processing** — Shopify sends duplicate webhooks without idempotency checks. Always check X-Shopify-Webhook-Id header, create processed_webhooks table with unique constraint, acknowledge immediately (200 response) then process asynchronously. Address in Phase 3 (Webhooks).
+5. **Missing legal pages required for Dutch e-commerce** — Launching without KVK number, VAT ID, 14-day return policy violates Dutch law. Fix: Footer must display full business info (KVK, VAT, address, contact), use GDPR-compliant privacy policy templates, explicitly state 14-day cooling-off period. Legal pages are BLOCKER for production launch.
 
 ## Implications for Roadmap
 
-Based on research findings, the roadmap should follow a dependency-driven structure prioritizing architectural foundations (pricing engine isolation, backend validation) before integration complexity (Draft Orders, webhooks). The architecture research clearly maps out build order with Phase 1-3 covering core functionality and Phase 4+ addressing enhancements.
+Based on research, suggested phase structure:
 
-### Phase 1: Core Pricing Engine & Validation
-
-**Rationale:** Pricing engine must be built first as isolated domain with zero dependencies. This enables independent development/testing and prevents tight coupling that would block future Shopify app extraction. Backend validation is a security requirement (not enhancement) — price manipulation vulnerabilities cannot be patched retroactively without major refactoring.
-
-**Delivers:**
-- Pure TypeScript pricing engine with matrix lookup and rounding logic
-- Integer-based price calculations (cents, not floats)
-- Shared rounding utility used consistently across frontend/backend
-- Input validation with explicit dimension bounds (10-200cm)
-- Database schema for pricing matrix storage
-- BFF pricing API endpoint (POST /api/pricing)
-- Frontend dimension input component with real-time price display
-
-**Addresses features:**
-- Dimension Input (Width/Height) — table stakes
-- Real-time Price Display — table stakes
-- Input Validation — table stakes
-- Rounding Strategy Communication — table stakes
-- Mobile-Responsive Design — table stakes
-
-**Avoids pitfalls:**
-- Price Manipulation (backend validation from day one)
-- Floating-Point Errors (integer pricing foundation)
-- Rounding Inconsistencies (shared utility)
-- Dimension Bounds Issues (explicit validation)
-- Tight Coupling (isolated pricing domain)
-
-**Research needs:** Standard patterns well-documented — skip `/gsd:research-phase`
-
-### Phase 2: Cart & Session Management
-
-**Rationale:** Cart state must persist server-side to enable validation before checkout and support future features (cart abandonment). This phase depends on Phase 1 pricing being complete (needs to validate cart prices). Can develop in parallel with Phase 3 (Shopify integration).
+### Phase 1: SEO Foundation
+**Rationale:** Infrastructure before content. Setting up metadata patterns, sitemap, and robots.txt first allows all subsequent pages to launch with proper SEO. No external packages needed—all Next.js built-in features.
 
 **Delivers:**
-- Cart domain with session management
-- Database schema for cart sessions
-- BFF cart API endpoints (GET/POST/DELETE /api/cart)
-- Frontend cart UI displaying configured items
-- Session-based cart with cookie ID
-- Multi-item cart support (each configuration is unique line item)
+- `metadataBase` configured in root layout (prevents broken OG images)
+- Title template for DRY metadata (`'%s | Brand Name'`)
+- `app/sitemap.ts` generating sitemap.xml (initially static routes only)
+- `app/robots.ts` generating robots.txt
+- Shared metadata utilities in `lib/metadata/defaults.ts`
 
-**Addresses features:**
-- Add to Cart — table stakes
-- Multi-Item Cart Support — table stakes
-- Order Confirmation Details — table stakes (cart data carries through)
+**Addresses:** SEO foundation (table stakes from FEATURES.md), prevents Pitfall #1 (missing metadataBase)
 
-**Uses stack:**
-- Zustand for client-side cart state synchronization
-- Prisma for cart session persistence
-- React Hook Form for cart item editing
+**Avoids:** Pitfall #9 (accidentally exposing secrets) by establishing `NEXT_PUBLIC_SITE_URL` pattern correctly
 
-**Avoids pitfalls:**
-- Cart State Sync Issues (Storage event listener for cross-tab sync documented as v1 limitation)
+**Research flag:** Standard Next.js patterns, skip research-phase. Official docs are comprehensive.
 
-**Research needs:** Standard e-commerce patterns — skip `/gsd:research-phase`
-
-### Phase 3: Shopify Integration & Draft Orders
-
-**Rationale:** Draft Order integration is most complex integration point with specific Shopify quirks (rate limits, auto-deletion, inventory reservation). Should come after core pricing and cart are proven to work. Depends on Phase 2 cart being complete (needs cart data to create draft order).
+### Phase 2: Layout & Navigation
+**Rationale:** Shared layout structure is dependency for all content pages. Extract navigation, create footer, but TEST existing pages before proceeding. Route groups provide isolation if needed.
 
 **Delivers:**
-- Shopify client domain with Draft Order creation
-- BFF checkout API endpoint (POST /api/checkout)
-- Rate limiting and retry logic for Shopify API
-- Draft order creation date tracking for expiry warnings
-- Checkout flow integration (redirect to Shopify invoice URL)
-- Environment variable configuration for Shopify credentials
+- Navigation component extracted from existing layout
+- Footer component with legal info (KVK, VAT, policies links)
+- Root layout updated with nav + footer
+- Verification that existing product/cart pages still work
 
-**Uses stack:**
-- @shopify/shopify-api 12.3.0+ for Admin API client
-- GraphQL Admin API (better rate limits than REST)
-- API version 2025-10 or later (custom pricing fix)
+**Addresses:** Navigation expectation (UX requirement), footer legal disclosure (Dutch law requirement)
 
-**Implements architecture:**
-- Shopify Client (domain) with error handling
-- BFF checkout API orchestrating Cart Service + Shopify Client
+**Avoids:** Pitfall #5 (breaking existing pages) via incremental testing, Pitfall #6 (missing legal info in footer)
 
-**Avoids pitfalls:**
-- Draft Order Auto-Deletion (creation date tracking from start)
-- API Rate Limits (exponential backoff + queue implementation)
-- Inventory Race Condition (set products to "Continue selling when out of stock")
+**Research flag:** Standard layout patterns, skip research-phase. Watch for CSS conflicts with existing pages.
 
-**Research needs:** Moderate complexity — consider `/gsd:research-phase` for Draft Order API specifics and rate limit handling strategies
-
-### Phase 4: Order Management & Webhooks
-
-**Rationale:** Webhooks enable order completion notifications and status updates but aren't blocking for core checkout flow (customer can complete purchase without webhooks). Should come after Draft Order creation is stable. Adds asynchronous complexity requiring careful idempotency handling.
+### Phase 3: Legal & Policy Pages
+**Rationale:** BLOCKER for production launch. Cannot legally operate EU e-commerce without GDPR privacy policy and Dutch 14-day return policy. Simple static pages, no complex logic.
 
 **Delivers:**
-- Webhook handler endpoints for order events
-- Idempotency checking with processed_webhooks table
-- Async webhook processing (respond 200 immediately, queue processing)
-- Order status synchronization with Shopify
-- Admin view for orders with custom dimensions
+- Privacy policy (GDPR-compliant template customized for business)
+- Terms & conditions
+- Shipping policy
+- Returns policy (14-day cooling-off period for Netherlands)
+- All linked from footer
+- Each page has `generateMetadata` for SEO
 
-**Avoids pitfalls:**
-- Webhook Duplicate Events (X-Shopify-Webhook-Id checking from day one)
+**Addresses:** Legal compliance (must-have), GDPR requirement, Dutch Distance Selling Act
 
-**Research needs:** Webhook reliability is well-documented — skip `/gsd:research-phase`
+**Avoids:** Pitfall #6 (missing legal pages, regulatory violations)
 
-### Phase 5: Enhanced Transparency & UX (v1.x)
+**Research flag:** Legal templates available, skip technical research. Consider legal review before launch.
 
-**Rationale:** Price breakdown and visual previews are differentiators but not blocking for core functionality. Add after validating core dimension calculator with real customers (50+ orders). Data-driven trigger: add if analytics show high bounce rate or customer service questions about pricing.
-
-**Delivers:**
-- Price calculation breakdown display (material cost + finishing + total)
-- Dimension rounding preview ("You ordered 165cm, you'll receive 170cm")
-- Visual size preview (simple dimensional diagram, not 3D)
-- Smart dimension suggestions (common sizes based on product type)
-
-**Addresses features:**
-- Price Calculation Breakdown — competitive advantage
-- Dimension Rounding Preview — competitive advantage
-- Visual Size Preview — competitive advantage
-- Smart Dimension Suggestions — competitive advantage
-
-**Research needs:** UX patterns are standard — skip `/gsd:research-phase`
-
-### Phase 6: Shopify App Extraction (v2+)
-
-**Rationale:** After proving business model with custom store, extract pricing engine to Shopify app for broader market (sell to other custom textile merchants). The domain isolation architecture makes this straightforward — copy pricing domain unchanged, implement MatrixRepository interface for Shopify Metafields.
+### Phase 4: Homepage & Content Pages
+**Rationale:** With layout and legal pages in place, build primary entry point (homepage) and supporting content (FAQ, thank you page). Use TSX components, defer MDX.
 
 **Delivers:**
-- Shopify app with embedded pricing configurator
-- Multi-merchant support (each merchant has own pricing matrix)
-- Matrix configuration UI (merchant can update pricing without code)
-- Database for multi-merchant state
+- Homepage with hero, value proposition, product highlights, trust signals
+- FAQ page with structured questions, FAQ schema markup for rich snippets
+- Thank you page (post-checkout confirmation, shows order details)
+- Cart page enhancements (metadata, improved layout)
+- All pages use shared metadata patterns from Phase 1
 
-**Implements architecture:**
-- Pricing engine extraction (zero modifications required if Phase 1 done correctly)
-- ShopifyMetafieldRepository implementation of MatrixRepository interface
+**Addresses:** Homepage (table stakes), FAQ (reduces support load, SEO), thank you page (legal requirement)
 
-**Research needs:** High complexity for Shopify app-specific patterns — `/gsd:research-phase` recommended for OAuth, embedded app setup, and multi-tenant architecture
+**Uses:** Metadata utilities (Phase 1), shared layout (Phase 2)
+
+**Implements:** Content pages architecture pattern (TSX components)
+
+**Avoids:** Pitfall #2 (shallow metadata merge) by using shared metadata utilities
+
+**Research flag:** Standard content page patterns, skip research-phase. Consider UX research for homepage messaging.
+
+### Phase 5: Contact Form
+**Rationale:** Interactive feature requiring server-side integration. Spam protection is critical—implement layered defenses before launch.
+
+**Delivers:**
+- Contact page with form UI
+- Server Action for form submission (Zod validation)
+- Resend integration for email delivery
+- Spam protection (honeypot field + invisible CAPTCHA + rate limiting)
+- Success/error states, loading UI
+
+**Addresses:** Contact page (table stakes), support access
+
+**Uses:** Resend from STACK.md, Server Action pattern
+
+**Avoids:** Pitfall #4 (contact form spam) via layered protection
+
+**Research flag:** Email service integration needs testing. Resend API is well-documented but verify deliverability.
+
+### Phase 6: Structured Data & SEO Enhancements
+**Rationale:** With content pages live, add JSON-LD schemas for rich results. Optional enhancement that improves SEO but not blocking for launch.
+
+**Delivers:**
+- Organization schema on homepage (business info, logo, contact)
+- Product schema on product page (price, availability)
+- FAQPage schema on FAQ (Q&A pairs for rich snippets)
+- Validation with Google Rich Results Test
+
+**Addresses:** JSON-LD structured data (competitive advantage from FEATURES.md)
+
+**Uses:** schema-dts types (optional from STACK.md)
+
+**Avoids:** Pitfall #10 (JSON-LD syntax errors) by using TypeScript objects + validation
+
+**Research flag:** Schema.org documentation is extensive. Validate each schema type before implementation.
+
+### Phase 7: Design Refresh & GDPR Compliance (CRITICAL)
+**Rationale:** Final polish and mandatory compliance. Cookie consent MUST be implemented before any analytics or marketing pixels. Test across devices.
+
+**Delivers:**
+- GDPR-compliant cookie consent (CMP or custom solution)
+- Tailwind theme customization for brand
+- @tailwindcss/typography for content pages
+- Mobile responsiveness testing
+- Accessibility audit (alt text, semantic HTML, keyboard navigation)
+
+**Addresses:** GDPR requirement (legal blocker), design consistency, UX polish
+
+**Avoids:** Pitfall #3 (GDPR violations, Dutch DPA fines) by implementing consent before analytics
+
+**Research flag:** Cookie consent libraries (CookieBot, OneTrust) or custom implementation need evaluation. GDPR compliance requires legal validation.
+
+### Phase 8: Blog Structure (OPTIONAL, Post-MVP)
+**Rationale:** Defer to validate content marketing need. 43% of e-commerce traffic from organic, but blog requires ongoing content creation. Structure can wait until content strategy is confirmed.
+
+**Delivers:**
+- Blog listing page
+- Blog post template (markdown or MDX)
+- Markdown processing utilities
+- Dynamic sitemap entries for blog posts
+- BlogPosting JSON-LD schema
+
+**Addresses:** Blog (competitive advantage, deferred from FEATURES.md)
+
+**Uses:** MDX setup from STACK.md (only if needed), existing metadata patterns
+
+**Avoids:** Over-engineering by deferring until validated need
+
+**Research flag:** MDX vs markdown decision needs content strategy input. Skip until blog content plan exists.
 
 ### Phase Ordering Rationale
 
-**Dependency chain:** Phase 1 (Pricing) must complete before Phase 2 (Cart) or Phase 3 (Shopify) because both validate prices. Phase 2 (Cart) must complete before Phase 3 (Checkout) because checkout loads cart data. Phase 3 (Checkout) must complete before Phase 4 (Webhooks) because webhooks notify about completed orders.
+- **SEO Foundation first** — Infrastructure enables all pages to launch with metadata/sitemap. No dependencies, pure Next.js features.
+- **Layout second** — Shared structure needed before building pages, but test existing pages to avoid breaking changes.
+- **Legal pages third** — Blocker for launch, simple implementation, no complex dependencies.
+- **Homepage/content fourth** — Leverages all prior phases (metadata, layout, legal links), delivers user-facing value.
+- **Contact form fifth** — Standalone feature, requires external service (Resend), benefits from existing pages being live for testing.
+- **Structured data sixth** — Enhancement of existing pages, not blocking, can iterate post-launch.
+- **Design refresh seventh** — Final polish after all pages exist, GDPR compliance critical before analytics.
+- **Blog eighth** — Optional, high effort, defer until content strategy validated.
 
-**Risk mitigation order:** Front-load foundational security (Phase 1 backend validation, integer pricing) and architectural discipline (pricing domain isolation) to prevent expensive rewrites. Defer integration complexity (Phase 3-4) until core functionality proven. Defer enhancements (Phase 5-6) until customer validation.
-
-**Parallel work opportunities:** Phase 2 (Cart) and Phase 3 (Shopify integration domain development/testing) can proceed in parallel after Phase 1 completes — cart doesn't depend on Shopify, Shopify client can be developed/tested independently with mock cart data.
+This ordering minimizes risk by validating infrastructure before building features, keeps legal compliance early (blocks launch), and defers high-effort/low-certainty work (blog) to post-MVP.
 
 ### Research Flags
 
-**Needs deeper research during planning:**
-- **Phase 3 (Shopify Integration)**: Draft Order API has version-specific quirks (custom pricing bug in 2025-01), rate limiting strategies need validation with GraphQL cost calculations, inventory reservation behavior needs testing
-- **Phase 6 (Shopify App)**: OAuth flows, embedded app patterns, multi-tenant architecture, and Shopify app billing are complex with sparse 2026 documentation
+**Phases likely needing deeper research during planning:**
+- **Phase 5 (Contact Form):** Email deliverability testing with Resend, spam protection effectiveness, rate limiting implementation on Vercel
+- **Phase 6 (Structured Data):** Schema.org vocabulary for specific business type, validation with Google Rich Results Test
+- **Phase 7 (GDPR Compliance):** Cookie consent library selection, Dutch DPA compliance verification, legal review of privacy policy
 
-**Standard patterns (skip research-phase):**
-- **Phase 1 (Pricing Engine)**: Well-established patterns for pricing engines, matrix-based lookups, and domain isolation
-- **Phase 2 (Cart Management)**: Standard e-commerce cart patterns, session management is solved problem
-- **Phase 4 (Webhooks)**: Webhook idempotency and async processing have established best practices
-- **Phase 5 (UX Enhancements)**: Price transparency and visual preview patterns are well-documented
+**Phases with standard patterns (skip research-phase):**
+- **Phase 1 (SEO Foundation):** Next.js Metadata API is well-documented, official guides sufficient
+- **Phase 2 (Layout & Navigation):** Standard React component extraction, Next.js layout conventions
+- **Phase 3 (Legal Pages):** Templates available, content-focused not technically complex
+- **Phase 4 (Homepage & Content):** Standard content page implementation
+- **Phase 8 (Blog):** Well-established MDX patterns, defer until needed
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Next.js 15.5+ is stable and production-ready, Shopify Admin API 2025-10 is current stable version, all recommended libraries have official documentation and active maintenance |
-| Features | MEDIUM-HIGH | Feature landscape verified with competitor analysis and industry sources, table stakes validated across multiple custom textile sites, anti-features identified from configurator pitfalls research |
-| Architecture | HIGH | BFF pattern is standard for headless commerce, domain isolation principles from DDD are well-established, Shopify Draft Order flow is documented in official guides, build order validated against dependency chains |
-| Pitfalls | HIGH | All critical pitfalls verified with authoritative sources (Shopify docs, security research, production incident reports), mitigation strategies tested in real implementations |
+| Stack | HIGH | Official Next.js docs verified, Resend comparison research from multiple 2026 sources, version compatibility confirmed |
+| Features | HIGH | E-commerce best practices from industry sources, GDPR/Dutch law requirements from official government sites, UX patterns from established retailers |
+| Architecture | HIGH | Next.js App Router patterns directly from official docs, Server Actions established in existing v1.0 codebase, incremental approach proven safe |
+| Pitfalls | HIGH | Verified from Next.js GitHub issues, GDPR enforcement cases from Dutch DPA, spam prevention from 2026 security guides |
 
-**Overall confidence:** HIGH
+**Overall confidence: HIGH**
 
-The research drew from official documentation (Shopify API docs, Next.js docs, library documentation), authoritative technical sources (InfoQ, Modern Treasury on floating-point), and direct competitor analysis. The stack recommendations are based on 2026-current stable versions with verified compatibility. Architecture patterns are industry-standard for headless e-commerce. Pitfalls are sourced from production incidents and official Shopify warnings.
+All four research areas draw from authoritative sources: official Next.js documentation for technical implementation, government websites for legal requirements (business.gov.nl, GDPR.eu, Dutch DPA), and recent 2026 community guides for best practices. The v1.0 codebase provides validated patterns (Zustand, Server Actions, Shopify integration) that inform v1.1 approach.
 
 ### Gaps to Address
 
-**Minor gaps requiring validation during implementation:**
+**Legal content customization:** Privacy policy and terms & conditions templates need customization with actual business details (company name, address, data retention periods, specific cookie usage). Legal review recommended before launch if budget allows.
 
-- **Draft Order custom pricing reliability**: API version 2025-10 should fix reported bugs from 2025-01, but needs testing in development store during Phase 3. If pricing override still fails, fallback strategy is creating temporary custom variants with calculated prices.
+**Email deliverability:** Resend free tier should be sufficient (100 emails/day), but verify deliverability with real email addresses across providers (Gmail, Outlook) during Phase 5 implementation. Monitor spam folder placement.
 
-- **Cart cross-device persistence**: v1 uses localStorage (single-device cart). Document limitation in UX. Evaluate server-persisted cart in post-MVP if user data shows multi-device usage patterns.
+**Cookie consent implementation details:** Research identified need for GDPR-compliant CMP but didn't select specific solution. During Phase 7, evaluate CookieBot vs OneTrust vs custom solution based on budget and technical requirements.
 
-- **Pricing matrix size limits**: 20x20 matrix (400 price points) is specified, but performance characteristics at scale unknown. Monitor matrix lookup performance in Phase 1, add database indexes if queries slow. Consider Redis caching for Phase 5+ if lookup latency becomes issue.
+**Homepage messaging:** Research covers structure and SEO but not actual copy/messaging. Content writer or stakeholder input needed for value proposition, trust signals, product descriptions.
 
-- **Rate limit thresholds for production traffic**: Research documents Shopify limits (GraphQL: 1000 points/second, REST: 2 req/sec), but actual production thresholds depend on usage patterns. Load test during Phase 3 with realistic concurrency (10+ simultaneous checkouts) to validate queue sizing.
+**MDX configuration:** If blog is implemented (Phase 8), verify @next/mdx compatibility with Next.js 16.1.6 and Tailwind CSS 4. May need plugin updates.
 
-**How to handle gaps:**
-- Test Draft Order pricing thoroughly in dev store during Phase 3 implementation, document any workarounds needed
-- Add analytics in Phase 1 to track dimension input patterns, validate matrix bounds against real usage
-- Load test before launch to confirm rate limiting strategy handles realistic traffic
-- Monitor production metrics (price calculation latency, API error rates, cart abandonment) to validate assumptions
+**Dynamic sitemap scaling:** Current sitemap approach lists static routes. If product catalog expands beyond single product type, revisit `generateSitemaps()` pattern for 50K+ URL scaling.
 
 ## Sources
 
-### Primary Sources (HIGH confidence)
+### Primary (HIGH confidence)
 
-**Official Documentation:**
-- Shopify GraphQL Admin API reference — Draft Order mutations, API versioning, rate limits
-- Next.js 15.5 Release documentation — App Router stability, React 19 support, Turbopack status
-- @shopify/shopify-api npm package — Version 12.3.0+ features, API version 2025-10 support
-- Shopify Draft Orders API guide — Creation flow, invoice URL redirect, custom pricing capabilities
-- Vercel Environment Variables documentation — Configuration strategy for Shopify credentials
+**Official Next.js Documentation:**
+- [Next.js Metadata API](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
+- [Next.js Sitemap Generation](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap)
+- [Next.js Robots.txt](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots)
+- [Next.js JSON-LD Guide](https://nextjs.org/docs/app/guides/json-ld)
+- [Next.js Forms & Server Actions](https://nextjs.org/docs/app/guides/forms)
+- [Next.js MDX Guide](https://nextjs.org/docs/app/guides/mdx)
+- [Next.js Data Security](https://nextjs.org/docs/app/guides/data-security)
 
-**Technical Libraries:**
-- Zod v4 Release (InfoQ coverage) — Performance improvements, TypeScript 5.5+ requirement
-- React Hook Form Official Documentation — Integration patterns, Zod resolver usage
-- Prisma ORM Production Guide — Connection pooling, Next.js singleton pattern
-- Shopify API Usage Limits — GraphQL cost calculations, rate limit headers, backoff strategies
+**Official Package Documentation:**
+- [Resend npm](https://www.npmjs.com/package/resend) — v6.7.0 (Jan 2026)
+- [Resend Next.js Integration](https://resend.com/nextjs)
+- [react-email npm](https://www.npmjs.com/package/react-email) — v5.2.5 (Jan 2026)
+- [schema-dts npm](https://www.npmjs.com/package/schema-dts)
 
-### Secondary Sources (MEDIUM confidence)
+**Legal & Compliance (Government/Official Sources):**
+- [Dutch Business.gov.nl - Online Sales Requirements](https://business.gov.nl/regulation/long-distance-sales-and-purchases/)
+- [KVK VAT Rules for E-commerce EU](https://www.kvk.nl/en/international/vat-rules-for-e-commerce-in-the-eu/)
+- [Dutch Business Numbers Requirements](https://business.gov.nl/starting-your-business/registering-your-business/lei-rsin-vat-and-kvk-number-which-is-which/)
+- [Dutch DPA Cookie Consent Guidelines](https://secureprivacy.ai/blog/how-to-comply-with-the-dutch-dpas-cookie-consent-guideline)
+- [GDPR Cookie Requirements EU 2026](https://cookiebanner.com/blog/cookie-banner-requirements-by-country-eu-overview-2026/)
 
-**Best Practices & Patterns:**
-- Building Secure BFF Architecture with Next.js (Medium) — Backend-for-frontend pattern validation
-- Domain-Driven Design in Practice (InfoQ) — Domain isolation principles
-- Bounded Context Pattern (Martin Fowler) — Architecture separation strategies
-- Scaling a Real-Time Pricing Engine — Matrix lookup performance optimization
+### Secondary (MEDIUM confidence)
 
-**E-commerce Patterns:**
-- Product Configurator Complete Guide 2026 (Dotinum) — Feature landscape, table stakes identification
-- Price Transparency in E-Commerce (Omnia Retail) — Customer loyalty statistics (94% trust boost)
-- What is Pricing Transparency (DealHub) — Transparency best practices
-- Custom Curtain Calculator Examples — Domain-specific UX patterns
+**SEO & Best Practices (2026 Community Sources):**
+- [Next.js 15 SEO Best Practices 2026](https://www.digitalapplied.com/blog/nextjs-seo-guide)
+- [Complete Next.js SEO Guide](https://www.adeelhere.com/blog/2025-12-09-complete-nextjs-seo-guide-from-zero-to-hero)
+- [Next.js Server Actions Best Practices 2026](https://dev.to/marufrahmanlive/nextjs-server-actions-complete-guide-with-examples-for-2026-2do0)
+- [Resend vs SendGrid vs Nodemailer Comparison](https://dev.to/ethanleetech/5-best-email-services-for-nextjs-1fa2)
 
-**Security & Reliability:**
-- The Importance of Backend Price Validation (Medium) — Price manipulation vulnerabilities
-- Floats Don't Work For Storing Cents (Modern Treasury) — Floating-point precision issues in production
-- Best Practices for Webhooks (Shopify) — Idempotency checking, duplicate handling
-- Shopify Webhook Reliability Guide (Hookdeck) — Async processing patterns
+**E-commerce Structure:**
+- [E-commerce Website Architecture Guide 2026](https://www.resultfirst.com/blog/ecommerce-seo/ecommerce-website-architecture/)
+- [25 Must-Have Pages for E-commerce](https://www.barrelny.com/posts/25-must-have-pages-for-your-ecommerce-website)
+- [E-commerce Homepage Design Best Practices 2026](https://decodeup.com/blog/ecommerce-homepage-design-best-practices)
+- [Comprehensive E-commerce SEO Guide 2026](https://seoprofy.com/blog/ecommerce-seo/)
 
-### Tertiary Sources (LOW confidence, needs verification)
+**Contact Form & Security:**
+- [Contact Form Spam Prevention 2026](https://www.nutshell.com/blog/8-ways-to-combat-form-spam)
+- [Invisible CAPTCHA Best Practices](https://stytch.com/blog/prevent-contact-form-spam/)
+- [Contact Form Design Best Practices](https://mailchimp.com/resources/contact-form-design/)
 
-**Requires validation:**
-- Draft Order custom pricing bug in API version 2025-01 — reported in community forums but not verified in official docs. Test thoroughly in development store during Phase 3.
-- Shopify Draft Order 1-year auto-deletion — confirmed in Shopify Help Center for orders created after April 1, 2025. This is reliable but relatively new policy (2025).
-- "Reserve Items" inventory behavior — community reports that reservation doesn't decrement storefront inventory. Verify in development store during Phase 3.
+### Tertiary (Community Insights)
+
+**Structured Data & JSON-LD:**
+- [Common JSON-LD Schema Issues](https://zeo.org/resources/blog/most-common-json-ld-schema-issues-and-solutions)
+- [Schema.org with Next.js](https://mikebifulco.com/posts/structured-data-json-ld-for-next-js-sites)
+- [JSON-LD in Next.js 15 App Router](https://medium.com/@sureshdotariya/json-ld-in-next-js-15-app-router-product-blog-and-breadcrumb-schemas-f752b7422c4f)
+
+**Implementation Patterns:**
+- [MDX with Next.js Best Practices](https://staticmania.com/blog/markdown-and-mdx-in-next.js-a-powerful-combination-for-content-management)
+- [Next.js Contact Form App Router](https://maxschmitt.me/posts/nextjs-contact-form-app-router)
+- [Next.js Folder Structure Best Practices 2026](https://www.codebydeep.com/blog/next-js-folder-structure-best-practices-for-scalable-applications-2026-guide)
 
 ---
-*Research completed: 2026-01-29*
-*Ready for roadmap: yes*
+
+**Research completed:** 2026-02-01
+**Milestone:** v1.1 - Multi-page website with SEO foundation
+**Ready for roadmap:** Yes
+
+**Key recommendations:**
+- Leverage Next.js built-in SEO features (no external packages)
+- Minimal new dependencies (Resend only)
+- TSX components for content (defer MDX)
+- Legal compliance as launch blocker
+- Incremental rollout to avoid breaking v1.0 pages
