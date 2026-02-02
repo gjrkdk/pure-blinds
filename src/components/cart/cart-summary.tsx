@@ -18,7 +18,6 @@ export function CartSummary() {
   }, []);
 
   if (!mounted) {
-    // Prevent hydration mismatch
     return null;
   }
 
@@ -39,8 +38,6 @@ export function CartSummary() {
       const data = await response.json();
 
       if (response.ok && data.invoiceUrl) {
-        // Redirect to Shopify checkout in same window
-        // Loading state intentionally persists until page unloads
         clearCart();
         window.location.href = data.invoiceUrl;
       } else {
@@ -54,34 +51,51 @@ export function CartSummary() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-10 border-t border-gray-200 bg-white shadow-lg">
-      <div className="mx-auto max-w-4xl p-4">
-        <div className="mb-3 flex items-center justify-between text-sm">
-          <span className="text-gray-600">
+    <div className="border border-border p-6 sm:p-8 lg:sticky lg:top-8">
+      <h2 className="text-sm font-semibold uppercase tracking-widest text-foreground">
+        Order Summary
+      </h2>
+
+      <div className="mt-6 space-y-3 border-b border-border pb-6">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted">
             Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})
           </span>
-          <span className="text-lg font-semibold text-gray-900">
+          <span className="font-medium text-foreground">
             {formatPrice(totalPrice)}
           </span>
         </div>
-        <button
-          onClick={handleCheckout}
-          disabled={loading || itemCount === 0}
-          className="w-full min-h-[44px] rounded-lg bg-blue-600 py-3 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {loading ? (
-            <span className="flex items-center justify-center gap-2">
-              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
-              Preparing checkout...
-            </span>
-          ) : (
-            'Proceed to Checkout'
-          )}
-        </button>
-        {error && (
-          <p className="mt-2 text-center text-sm text-red-600">{error}</p>
-        )}
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted">Shipping</span>
+          <span className="text-muted">Calculated at checkout</span>
+        </div>
       </div>
+
+      <div className="mt-4 flex items-center justify-between">
+        <span className="text-sm font-medium text-foreground">Total</span>
+        <span className="text-lg font-medium text-foreground">
+          {formatPrice(totalPrice)}
+        </span>
+      </div>
+
+      <button
+        onClick={handleCheckout}
+        disabled={loading || itemCount === 0}
+        className="mt-6 w-full min-h-[44px] bg-accent py-3 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        {loading ? (
+          <span className="flex items-center justify-center gap-2">
+            <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-accent-foreground border-t-transparent"></span>
+            Preparing checkout...
+          </span>
+        ) : (
+          'Proceed to Checkout'
+        )}
+      </button>
+
+      {error && (
+        <p className="mt-3 text-center text-sm text-red-600">{error}</p>
+      )}
     </div>
   );
 }
