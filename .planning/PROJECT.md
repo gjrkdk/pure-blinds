@@ -29,29 +29,7 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 ### Active
 
-#### Website Structure & Pages
-- [ ] Homepage with business introduction, product highlight, and trust signals
-- [ ] Dedicated cart page at /cart replacing current cart UI
-- [ ] Thank you / order confirmation page (post-Shopify checkout redirect)
-- [ ] Blog listing and individual blog post pages (structure only, content later)
-- [ ] FAQ page (structure only, content later)
-- [ ] Contact page with form, email/phone, and business details (address, KvK, VAT, hours)
-- [ ] Privacy Policy page
-- [ ] Terms & Conditions page
-- [ ] Returns/Refund Policy page
-- [ ] Shipping Policy page
-
-#### SEO Foundation
-- [ ] Meta tags and Open Graph tags on all pages
-- [ ] JSON-LD structured data (Organization, Product, FAQ, BreadcrumbList schemas)
-- [ ] XML sitemap generation
-- [ ] robots.txt configuration
-- [ ] Semantic HTML structure across all pages
-
-#### Design Refresh
-- [ ] Improved visual design and consistent styling across all pages
-- [ ] Shared layout with navigation and footer
-- [ ] Mobile-responsive design for all new pages
+None — no active milestone. Run `/gsd:new-milestone` to plan next work.
 
 #### Carried from v1.0
 - [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
@@ -106,11 +84,7 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 - Site lacks proper navigation, homepage, and supporting pages
 - No SEO infrastructure (no meta tags, sitemap, structured data)
 
-**Current milestone: v1.1 — Website Structure & SEO Foundation**
-- Build out full website with homepage, cart page, thank you page, blog, FAQ, contact, and policy pages
-- Add SEO foundation (meta tags, Open Graph, JSON-LD, sitemap, robots.txt)
-- Design refresh across all pages with shared layout (nav + footer)
-- Structure-first approach: page shells ready for content
+**Current milestone:** None active (v1.0 shipped, v1.1 planning removed)
 
 **Multi-phase vision:**
 - ✅ Phase 1: MVP webshop (own store, fastest validation) — v1.0 shipped
