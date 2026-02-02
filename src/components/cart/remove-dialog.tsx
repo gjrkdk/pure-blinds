@@ -32,7 +32,6 @@ export function RemoveDialog({
     const dialog = dialogRef.current;
     if (!dialog) return;
 
-    // Close if clicking on backdrop (outside dialog content)
     const rect = dialog.getBoundingClientRect();
     if (
       e.clientX < rect.left ||
@@ -51,26 +50,26 @@ export function RemoveDialog({
       aria-labelledby="remove-dialog-title"
       aria-describedby="remove-dialog-description"
       onClick={handleBackdropClick}
-      className="max-w-sm rounded-lg p-6 shadow-lg backdrop:bg-black/50"
+      className="max-w-sm border border-border p-8 shadow-sm backdrop:bg-foreground/40"
     >
-      <h2 id="remove-dialog-title" className="mb-2 text-lg font-semibold">
+      <h2 id="remove-dialog-title" className="text-base font-medium text-foreground">
         Remove from cart?
       </h2>
-      <p id="remove-dialog-description" className="mb-6 text-sm text-gray-600">
+      <p id="remove-dialog-description" className="mt-2 text-sm text-muted">
         Remove {productName} from your cart?
       </p>
-      <div className="flex gap-3">
+      <div className="mt-6 flex gap-3">
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 rounded border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
+          className="flex-1 border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface"
         >
           Cancel
         </button>
         <button
           type="button"
           onClick={onConfirm}
-          className="flex-1 rounded bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          className="flex-1 bg-foreground px-4 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-80"
         >
           Remove
         </button>

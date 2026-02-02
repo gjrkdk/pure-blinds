@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/cart/store';
 import { CartItem } from '@/components/cart/cart-item';
@@ -9,7 +8,6 @@ import { CartSummary } from '@/components/cart/cart-summary';
 
 export default function CartPage() {
   const [mounted, setMounted] = useState(false);
-  const router = useRouter();
   const items = useCartStore((state) => state.items);
 
   useEffect(() => {
@@ -17,66 +15,82 @@ export default function CartPage() {
   }, []);
 
   if (!mounted) {
-    // Prevent hydration mismatch - show minimal layout
     return (
-      <div className="mx-auto max-w-4xl px-4 py-8">
-        <h1 className="mb-8 text-3xl font-bold">Your Cart</h1>
-        <div className="animate-pulse">
-          <div className="h-24 rounded-lg bg-gray-200"></div>
+      <div className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-5xl">
+          <h1 className="text-3xl font-light tracking-tight text-foreground">Your Cart</h1>
+          <div className="mt-10 animate-pulse space-y-6">
+            <div className="h-20 bg-surface"></div>
+            <div className="h-20 bg-surface"></div>
+          </div>
         </div>
       </div>
     );
   }
 
-  const isEmpty = items.length === 0;
-
-  const handleContinueShopping = () => {
-    // Navigate back if history exists, otherwise go to home
-    if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back();
-    } else {
-      router.push('/');
-    }
-  };
-
-  if (isEmpty) {
+  if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-8">
-        <h1 className="mb-8 text-3xl font-bold">Your Cart</h1>
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <p className="mb-6 text-lg text-gray-600">Your cart is empty</p>
-          <button
-            onClick={handleContinueShopping}
-            className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white hover:bg-blue-700"
-          >
-            Continue Shopping
-          </button>
+      <div className="px-6 py-12 sm:py-16">
+        <div className="mx-auto max-w-5xl">
+          <h1 className="text-3xl font-light tracking-tight text-foreground">Your Cart</h1>
+          <div className="flex flex-col items-center py-24 text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1}
+              stroke="currentColor"
+              className="mb-6 h-12 w-12 text-border"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+              />
+            </svg>
+            <p className="text-sm text-muted">Your cart is empty</p>
+            <Link
+              href="/products/custom-textile"
+              className="mt-6 inline-flex items-center gap-2 bg-accent px-6 py-3 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
+            >
+              Start configuring
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 pb-40">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">
-          Your Cart ({items.length} {items.length === 1 ? 'item' : 'items'})
-        </h1>
-        <Link
-          href="/"
-          className="text-sm text-blue-600 hover:text-blue-700"
-        >
-          Continue Shopping
-        </Link>
-      </div>
+    <div className="px-6 py-12 sm:py-16">
+      <div className="mx-auto max-w-5xl">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-light tracking-tight text-foreground">
+            Your Cart
+          </h1>
+          <Link
+            href="/products/custom-textile"
+            className="text-sm text-muted transition-colors hover:text-foreground"
+          >
+            Continue shopping
+          </Link>
+        </div>
 
-      <div className="space-y-4">
-        {items.map((item) => (
-          <CartItem key={item.id} item={item} />
-        ))}
-      </div>
+        <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_360px]">
+          {/* Items */}
+          <div>
+            {items.map((item) => (
+              <CartItem key={item.id} item={item} />
+            ))}
+          </div>
 
-      <CartSummary />
+          {/* Summary sidebar */}
+          <div>
+            <CartSummary />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

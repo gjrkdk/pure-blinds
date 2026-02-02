@@ -74,8 +74,8 @@ export function calculatePrice(width: number, height: number): PricingResponse {
  * Example: 1000 -> "$10.00"
  */
 export function formatPrice(cents: number): string {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('nl-NL', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'EUR',
   }).format(cents / 100);
 }

@@ -8,21 +8,19 @@ export default function CartIcon() {
   const [mounted, setMounted] = useState(false)
   const itemCount = useCartStore((state) => state.getItemCount())
 
-  // Hydration safety: only show badge after client-side mount
   useEffect(() => {
     setMounted(true)
   }, [])
 
   return (
-    <Link href="/cart" className="relative inline-block">
-      {/* Shopping cart icon SVG */}
+    <Link href="/cart" className="relative inline-flex items-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        strokeWidth={2}
+        strokeWidth={1.5}
         stroke="currentColor"
-        className="w-6 h-6 text-gray-700 hover:text-gray-900 transition-colors"
+        className="h-5 w-5 text-foreground transition-colors hover:text-muted"
       >
         <path
           strokeLinecap="round"
@@ -31,9 +29,8 @@ export default function CartIcon() {
         />
       </svg>
 
-      {/* Badge with item count - only show when mounted and count > 0 */}
       {mounted && itemCount > 0 && (
-        <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full min-w-[1.25rem] h-5 flex items-center justify-center px-1">
+        <span className="absolute -top-1.5 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-foreground px-1 text-[10px] font-semibold text-accent-foreground">
           {itemCount}
         </span>
       )}

@@ -37,18 +37,18 @@ export function CartItem({ item }: CartItemProps) {
 
   return (
     <>
-      <div className="flex flex-col gap-4 rounded-lg border border-gray-200 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 border-b border-border py-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-900">{item.productName}</h3>
-          <p className="text-sm text-gray-600">
-            {item.options.width}cm × {item.options.height}cm
+          <h3 className="text-sm font-medium text-foreground">{item.productName}</h3>
+          <p className="mt-1 text-sm text-muted">
+            {item.options.width} &times; {item.options.height} cm
           </p>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-0.5 text-sm text-muted">
             {formatPrice(item.priceInCents)} each
           </p>
         </div>
 
-        <div className="flex items-center gap-4 sm:flex-col sm:items-end sm:gap-2">
+        <div className="flex items-center gap-4 sm:flex-col sm:items-end sm:gap-3">
           <div className="flex items-center gap-3">
             <QuantityInput
               quantity={item.quantity}
@@ -57,13 +57,13 @@ export function CartItem({ item }: CartItemProps) {
             <button
               type="button"
               onClick={handleRemoveClick}
-              className="text-sm text-red-600 hover:text-red-700"
+              className="text-sm text-muted transition-colors hover:text-foreground"
             >
               Remove
             </button>
           </div>
 
-          <div className="ml-auto font-semibold text-gray-900 sm:ml-0">
+          <div className="ml-auto text-sm font-medium text-foreground sm:ml-0">
             {formatPrice(lineTotal)}
           </div>
         </div>
