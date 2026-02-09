@@ -76,7 +76,7 @@ export default function Home() {
       </section>
 
       {/* Value Props */}
-      <section className="border-y border-border bg-surface px-6 py-16 sm:py-20">
+      <section id="about" className="border-y border-border bg-surface px-6 py-16 sm:py-20">
         <div className="mx-auto grid max-w-5xl gap-12 sm:grid-cols-3 sm:gap-8">
           {[
             {
@@ -105,7 +105,7 @@ export default function Home() {
       </section>
 
       {/* Product Showcase */}
-      <section className="px-6 py-20 sm:py-28">
+      <section id="services" className="px-6 py-20 sm:py-28">
         <div className="mx-auto max-w-5xl">
           <p className="text-sm font-semibold uppercase tracking-widest text-muted">
             Use cases
@@ -139,7 +139,7 @@ export default function Home() {
       </section>
 
       {/* How it Works */}
-      <section className="border-y border-border bg-surface px-6 py-20 sm:py-28">
+      <section id="work" className="border-y border-border bg-surface px-6 py-20 sm:py-28">
         <div className="mx-auto max-w-5xl">
           <p className="text-sm font-semibold uppercase tracking-widest text-muted">
             Process
@@ -167,7 +167,7 @@ export default function Home() {
       </section>
 
       {/* CTA Banner */}
-      <section className="bg-foreground px-6 py-20 sm:py-24">
+      <section id="contact" className="bg-foreground px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-5xl text-center">
           <h2 className="text-3xl font-light tracking-tight text-accent-foreground sm:text-4xl">
             Ready to get started?
