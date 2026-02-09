@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Phase 7 - Hero Section
+**Current focus:** Phase 8 - About & Services
 
 ## Current Position
 
-Phase: 7 of 10 (Hero Section)
+Phase: 8 of 10 (About & Services)
 Plan: 1 of 1 (complete)
 Status: Phase complete
-Last activity: 2026-02-09 — Completed 07-01-PLAN.md (Hero Section Redesign)
+Last activity: 2026-02-09 — Completed 08-01-PLAN.md (About & Services)
 
-Progress: [███████░░░] 70% (7 of 10 phases complete)
+Progress: [████████░░] 80% (8 of 10 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11 (9 from v1.0, 2 from v1.1)
-- Average duration: 90s (v1.1 tracking)
+- Total plans completed: 12 (9 from v1.0, 3 from v1.1)
+- Average duration: 80s (v1.1 tracking)
 - Total v1.0 execution time: ~3 days (Jan 29-31)
-- Total v1.1 execution time: 179s (2m 59s)
+- Total v1.1 execution time: 239s (3m 59s)
 
 **By Phase:**
 
@@ -35,10 +35,11 @@ Progress: [███████░░░] 70% (7 of 10 phases complete)
 | 5. Checkout Integration | 1 | v1.0 | - |
 | 6. Navigation & Layout | 1 | 113s | 113s |
 | 7. Hero Section | 1 | 66s | 66s |
+| 8. About & Services | 1 | 60s | 60s |
 
 **Recent Trend:**
-- Phase 7 complete: Full-height hero with testimonial overlay (66s)
-- Continuing zero deviations streak (2 phases, 0 deviations)
+- Phase 8 complete: About section with stats grid, interactive accordion with sticky image (60s)
+- Continuing zero deviations streak (3 phases, 0 deviations)
 
 *Updated after each plan completion*
 
@@ -56,6 +57,8 @@ Recent decisions affecting current work:
 - [06-01]: Client component for header, server component for footer - header needs scroll state and menu state; footer is static and benefits from server rendering
 - [07-01]: Use SVG placeholder for hero image - self-contained repo without external image dependencies
 - [07-01]: Hero CTA uses anchor tag with href="#contact" - follows 06-01 pattern for section navigation
+- [08-01]: First accordion item open by default - better UX for visitors to immediately see example content and functionality
+- [08-01]: Reused /hero-placeholder.svg for services sticky image - follows 07-01 pattern for self-contained repo
 
 ### Pending Todos
 
@@ -71,9 +74,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-09 (Phase 7 execution)
-Stopped at: Completed 07-01-PLAN.md (Hero Section Redesign)
+Last session: 2026-02-09 (Phase 8 execution)
+Stopped at: Completed 08-01-PLAN.md (About & Services)
 Resume file: None
 
 ---
-*Last updated: 2026-02-09 after Phase 7 Plan 01 completion*
+*Last updated: 2026-02-09 after Phase 8 Plan 01 completion*
