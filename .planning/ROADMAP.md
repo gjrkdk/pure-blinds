@@ -78,10 +78,10 @@ Plans:
   1. Visitor sees full-height hero with headline, description, and CTA button
   2. Hero displays an image with testimonial card overlay
   3. Clicking CTA button scrolls to contact section
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 07-01: TBD
+- [ ] 07-01: Full-height hero with image, testimonial overlay, and contact CTA
 
 #### Phase 8: About & Services
 **Goal**: Visitor learns about the business and available services
