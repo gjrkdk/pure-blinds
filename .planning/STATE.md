@@ -1,12 +1,12 @@
 # Project State: Custom Dimension Textile Webshop
 
-**Last Updated:** 2026-02-02
+**Last Updated:** 2026-02-09
 
 ## Project Reference
 
 **Core Value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
 
-**Current Focus:** v1.0 shipped. No active milestone.
+**Current Focus:** v1.1 Design Homepage
 
 **Validated from v1.0:** Custom dimension configurator, matrix-based pricing engine, localStorage cart with Zustand, Shopify Draft Order checkout flow, EUR currency support, cart-clear-on-checkout behavior.
 
@@ -14,11 +14,15 @@
 
 ## Current Position
 
-**Milestone:** None active
+**Milestone:** v1.1 Design Homepage
 
-**Phase:** N/A
+**Phase:** Not started (defining requirements)
 
-**Status:** Between milestones. v1.1 roadmap removed.
+**Plan:** —
+
+**Status:** Defining requirements
+
+**Last activity:** 2026-02-09 — Milestone v1.1 started
 
 ---
 
@@ -46,6 +50,13 @@
 - User requested removal of v1.1 planning artifacts
 - Deleted ROADMAP.md, REQUIREMENTS.md, and research/ directory
 
+**2026-02-09: Started v1.1 Design Homepage**
+- Focus: homepage design using reference code from /Users/robinkonijnendijk/Desktop/app
+- Reference: Vite/React SPA with sections (hero, about, services, work, testimonials, FAQs, contact, footer)
+- Adapt to Next.js App Router + Tailwind v4
+- Placeholder content (not textile-specific copy)
+- Skip image carousel for now
+
 ### Open Questions
 
 None.
@@ -59,19 +70,22 @@ None.
 ## Session Continuity
 
 **What Just Happened:**
-- Removed v1.1 roadmap, requirements, and research files
-- Reset state to between-milestones
+- Started v1.1 Design Homepage milestone
+- Reviewed reference code at /Desktop/app/src/App.tsx
+- Updated PROJECT.md and STATE.md
 
 **What's Next:**
-- `/gsd:new-milestone` when ready to plan next milestone
+- Define requirements and create roadmap
 
 **Context for Next Agent:**
 - v1.0 shipped with 5 phases (1-5)
-- v1.1 planning was removed — start fresh if needed
+- Reference design code: /Users/robinkonijnendijk/Desktop/app/src/App.tsx (single file, all sections)
+- Reference CSS: /Users/robinkonijnendijk/Desktop/app/src/index.css (animations, scroll-reveal, custom effects)
+- Current project: Next.js 15 App Router, Tailwind CSS v4, Geist font, monochrome palette
 - Existing route stubs: `/` (placeholder), `/cart` (functional), `/products/[productId]` (functional)
-- Headless Shopify with Next.js App Router, Zustand cart, Draft Order checkout
+- Existing components: header.tsx, footer.tsx in src/components/layout/
 
 ---
 
 *State initialized: 2026-02-01*
-*Current session: 2026-02-02*
+*Current session: 2026-02-09*
