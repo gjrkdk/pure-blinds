@@ -1,33 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { AboutSection } from "@/components/home/about-section";
-
-const USE_CASES = [
-  {
-    title: "Curtains",
-    description:
-      "Floor-to-ceiling or window-width — specify exact measurements for a perfect fit.",
-    href: "/products/custom-textile",
-  },
-  {
-    title: "Room Dividers",
-    description:
-      "Partition spaces with precision-cut fabric panels in any dimension you need.",
-    href: "/products/custom-textile",
-  },
-  {
-    title: "Banners",
-    description:
-      "Event displays, retail signage, or trade show backdrops — sized to your spec.",
-    href: "/products/custom-textile",
-  },
-  {
-    title: "Flags",
-    description:
-      "Custom flags for any occasion. From small desk flags to large outdoor displays.",
-    href: "/products/custom-textile",
-  },
-];
+import { ServicesAccordion } from "@/components/home/services-accordion";
 
 const STEPS = [
   {
@@ -136,39 +110,8 @@ export default function Home() {
       {/* About */}
       <AboutSection />
 
-      {/* Product Showcase */}
-      <section id="services" className="px-6 py-20 sm:py-28">
-        <div className="mx-auto max-w-5xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-muted">
-            Use cases
-          </p>
-          <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-            One configurator, endless possibilities
-          </h2>
-
-          <div className="mt-12 grid gap-4 sm:grid-cols-2">
-            {USE_CASES.map((item) => (
-              <Link
-                key={item.title}
-                href={item.href}
-                className="group flex flex-col justify-between border border-border p-8 transition-colors hover:bg-surface sm:p-10"
-              >
-                <div>
-                  <h3 className="text-xl font-normal text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted">
-                    {item.description}
-                  </p>
-                </div>
-                <span className="mt-8 text-sm text-muted transition-colors group-hover:text-foreground">
-                  Configure &rarr;
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Services */}
+      <ServicesAccordion />
 
       {/* How it Works */}
       <section id="work" className="border-y border-border bg-surface px-6 py-20 sm:py-28">
