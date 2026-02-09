@@ -85,35 +85,35 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | — | Pending |
-| NAV-02 | — | Pending |
-| NAV-03 | — | Pending |
-| NAV-04 | — | Pending |
-| NAV-05 | — | Pending |
-| HERO-01 | — | Pending |
-| HERO-02 | — | Pending |
-| HERO-03 | — | Pending |
-| ABOUT-01 | — | Pending |
-| ABOUT-02 | — | Pending |
-| SVC-01 | — | Pending |
-| SVC-02 | — | Pending |
-| SVC-03 | — | Pending |
-| WORK-01 | — | Pending |
-| WORK-02 | — | Pending |
-| WORK-03 | — | Pending |
-| TEST-01 | — | Pending |
-| TEST-02 | — | Pending |
-| FAQ-01 | — | Pending |
-| FAQ-02 | — | Pending |
-| CONT-01 | — | Pending |
-| CONT-02 | — | Pending |
-| CONT-03 | — | Pending |
+| NAV-01 | Phase 6 | Pending |
+| NAV-02 | Phase 6 | Pending |
+| NAV-03 | Phase 6 | Pending |
+| NAV-04 | Phase 6 | Pending |
+| NAV-05 | Phase 6 | Pending |
+| HERO-01 | Phase 7 | Pending |
+| HERO-02 | Phase 7 | Pending |
+| HERO-03 | Phase 7 | Pending |
+| ABOUT-01 | Phase 8 | Pending |
+| ABOUT-02 | Phase 8 | Pending |
+| SVC-01 | Phase 8 | Pending |
+| SVC-02 | Phase 8 | Pending |
+| SVC-03 | Phase 8 | Pending |
+| WORK-01 | Phase 9 | Pending |
+| WORK-02 | Phase 9 | Pending |
+| WORK-03 | Phase 9 | Pending |
+| TEST-01 | Phase 9 | Pending |
+| TEST-02 | Phase 9 | Pending |
+| FAQ-01 | Phase 10 | Pending |
+| FAQ-02 | Phase 10 | Pending |
+| CONT-01 | Phase 10 | Pending |
+| CONT-02 | Phase 10 | Pending |
+| CONT-03 | Phase 10 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 23 total
-- Mapped to phases: 0
-- Unmapped: 23 ⚠️
+- Mapped to phases: 23
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-09*
-*Last updated: 2026-02-09 after initial definition*
+*Last updated: 2026-02-09 after roadmap creation*
