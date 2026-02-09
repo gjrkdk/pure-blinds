@@ -65,10 +65,10 @@ Plans:
   3. Clicking a navigation link smooth-scrolls to the corresponding section
   4. Visitor can open a mobile hamburger menu on small screens
   5. Footer displays quick links and social media icons
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 06-01: TBD
+- [ ] 06-01: Sticky header with scroll transition, section nav, mobile menu, and footer redesign
 
 #### Phase 7: Hero Section
 **Goal**: Visitor sees compelling hero section with clear CTA
