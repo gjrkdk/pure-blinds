@@ -29,7 +29,20 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 ### Active
 
-None — no active milestone. Run `/gsd:new-milestone` to plan next work.
+## Current Milestone: v1.1 Design Homepage
+
+**Goal:** Build a polished, full-featured homepage using reference design patterns with placeholder content.
+
+**Target features:**
+- Hero section with headline, CTA, and testimonial card overlay
+- About section with stats grid
+- Services/What We Do accordion with sticky image
+- Our Work project showcase with alternating layouts
+- Testimonials grid on dark background
+- FAQs accordion
+- Contact section with form and contact info
+- Updated header navigation and footer
+- Scroll-reveal animations and custom CSS transitions
 
 #### Carried from v1.0
 - [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
@@ -84,11 +97,11 @@ None — no active milestone. Run `/gsd:new-milestone` to plan next work.
 - Site lacks proper navigation, homepage, and supporting pages
 - No SEO infrastructure (no meta tags, sitemap, structured data)
 
-**Current milestone:** None active (v1.0 shipped, v1.1 planning removed)
+**Current milestone:** v1.1 Design Homepage
 
 **Multi-phase vision:**
 - ✅ Phase 1: MVP webshop (own store, fastest validation) — v1.0 shipped
-- ◆ Phase 2: Website structure & SEO foundation — v1.1
+- ◆ Phase 2: Homepage design — v1.1
 - Phase 3: Content & advanced SEO/GEO
 - Phase 4: Shopify app v1 (theme-based stores, largest market)
 - Phase 5: Shopify app v2 (native pricing for Plus merchants)
@@ -125,6 +138,8 @@ None — no active milestone. Run `/gsd:new-milestone` to plan next work.
 | Structure-first for blog/FAQ | Ship page shells now, fill content separately — avoids blocking on copywriting | — Pending |
 | SEO foundation before content strategy | Technical SEO (meta, schema, sitemap) is prerequisite for content-driven SEO | — Pending |
 | Design refresh with v1.1 pages | New pages need consistent design; refreshing existing pages simultaneously avoids visual mismatch | — Pending |
+| Port reference design to Next.js | Existing Vite/React reference code provides proven layout/animation patterns; adapt for Next.js App Router + Tailwind v4 | — Pending |
+| Placeholder content over real copy | Ship design structure first, fill actual business copy separately — avoids blocking on copywriting | — Pending |
 
 ---
-*Last updated: 2026-02-01 after v1.1 milestone start*
+*Last updated: 2026-02-09 after v1.1 milestone start*
