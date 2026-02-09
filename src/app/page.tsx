@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const USE_CASES = [
   {
@@ -54,24 +55,73 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="px-6 pt-24 pb-20 sm:pt-32 sm:pb-28">
-        <div className="mx-auto max-w-5xl">
-          <h1 className="max-w-3xl text-4xl font-light leading-[1.1] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-            Textiles, made to your
-            <br />
-            <span className="font-normal italic">exact</span> dimensions
-          </h1>
-          <p className="mt-6 max-w-lg text-lg text-muted sm:text-xl">
-            Premium custom-sized fabrics — priced instantly, produced with care,
-            and delivered to your door.
-          </p>
-          <Link
-            href="/products/custom-textile"
-            className="mt-10 inline-flex items-center gap-2 bg-accent px-8 py-3.5 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
-          >
-            Start configuring
-            <span aria-hidden="true">&rarr;</span>
-          </Link>
+      <section className="relative min-h-screen flex items-center px-6 pt-24 pb-12">
+        <div className="mx-auto max-w-5xl w-full">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left column — text content */}
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-widest text-muted">
+                Premium Custom Textiles
+              </p>
+              <h1 className="mt-4 text-4xl font-light leading-[1.1] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
+                Textiles, crafted to your exact dimensions
+              </h1>
+              <p className="mt-6 max-w-lg text-lg text-muted sm:text-xl">
+                Premium custom-sized fabrics — priced instantly, produced with care,
+                and delivered to your door.
+              </p>
+              <a
+                href="#contact"
+                className="mt-10 inline-flex items-center gap-2 bg-accent px-8 py-3.5 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
+              >
+                Get in Touch
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+
+            {/* Right column — image with testimonial overlay */}
+            <div className="relative min-h-[400px] md:min-h-[600px]">
+              <div className="relative w-full h-full">
+                <Image
+                  src="/hero-placeholder.svg"
+                  alt="Custom textile showcase"
+                  width={800}
+                  height={1000}
+                  className="w-full h-full object-cover"
+                  priority
+                />
+
+                {/* Testimonial card overlay */}
+                <div className="absolute bottom-8 left-8 right-8 md:left-0 md:right-auto md:bottom-12 md:w-80 bg-background/95 backdrop-blur-sm border border-border p-6 shadow-lg">
+                  <div className="flex gap-0.5 text-foreground mb-3">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  </div>
+                  <p className="text-sm leading-relaxed text-foreground mb-3">
+                    "Absolutely perfect curtains, exactly the dimensions we needed."
+                  </p>
+                  <div className="text-sm text-muted">
+                    <span className="font-medium">Sarah M.</span>
+                    <span className="mx-2">·</span>
+                    <span>Interior Designer</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
