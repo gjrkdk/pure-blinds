@@ -68,7 +68,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 06-01: Sticky header with scroll transition, section nav, mobile menu, and footer redesign
+- [x] 06-01: Sticky header with scroll transition, section nav, mobile menu, and footer redesign
 
 #### Phase 7: Hero Section
 **Goal**: Visitor sees compelling hero section with clear CTA
@@ -136,11 +136,11 @@ Plans:
 | 3. Product Page | v1.0 | 2/2 | Complete | 2026-01-30 |
 | 4. Cart System | v1.0 | 1/1 | Complete | 2026-01-30 |
 | 5. Checkout Integration | v1.0 | 1/1 | Complete | 2026-01-31 |
-| 6. Navigation & Layout | v1.1 | 0/1 | Planned | - |
+| 6. Navigation & Layout | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 7. Hero Section | v1.1 | 0/? | Not started | - |
 | 8. About & Services | v1.1 | 0/? | Not started | - |
 | 9. Showcase & Social Proof | v1.1 | 0/? | Not started | - |
 | 10. Support & Contact | v1.1 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-09 (v1.1 roadmap created)*
+*Last updated: 2026-02-09 (Phase 6 complete)*

@@ -9,11 +9,11 @@ Requirements for homepage design milestone. Each maps to roadmap phases.
 
 ### Navigation
 
-- [ ] **NAV-01**: Visitor sees a sticky header with logo and section navigation links
-- [ ] **NAV-02**: Header background transitions to solid on scroll
-- [ ] **NAV-03**: Clicking a nav link smooth-scrolls to the corresponding section
-- [ ] **NAV-04**: Visitor can open a mobile hamburger menu on small screens
-- [ ] **NAV-05**: Footer displays quick links to all sections and social media icons
+- [x] **NAV-01**: Visitor sees a sticky header with logo and section navigation links
+- [x] **NAV-02**: Header background transitions to solid on scroll
+- [x] **NAV-03**: Clicking a nav link smooth-scrolls to the corresponding section
+- [x] **NAV-04**: Visitor can open a mobile hamburger menu on small screens
+- [x] **NAV-05**: Footer displays quick links to all sections and social media icons
 
 ### Hero
 
@@ -85,11 +85,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | Phase 6 | Pending |
-| NAV-02 | Phase 6 | Pending |
-| NAV-03 | Phase 6 | Pending |
-| NAV-04 | Phase 6 | Pending |
-| NAV-05 | Phase 6 | Pending |
+| NAV-01 | Phase 6 | Done |
+| NAV-02 | Phase 6 | Done |
+| NAV-03 | Phase 6 | Done |
+| NAV-04 | Phase 6 | Done |
+| NAV-05 | Phase 6 | Done |
 | HERO-01 | Phase 7 | Pending |
 | HERO-02 | Phase 7 | Pending |
 | HERO-03 | Phase 7 | Pending |
@@ -116,4 +116,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-09*
-*Last updated: 2026-02-09 after roadmap creation*
+*Last updated: 2026-02-09 after Phase 6 completion*
