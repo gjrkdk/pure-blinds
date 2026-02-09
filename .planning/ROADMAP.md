@@ -92,10 +92,10 @@ Plans:
   2. Visitor sees What We Do section with expandable service accordion
   3. Each service item expands to show description when clicked
   4. Sticky image displays alongside services accordion on larger screens
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 08-01: TBD
+- [ ] 08-01: About section with stats grid and services accordion with sticky image
 
 #### Phase 9: Showcase & Social Proof
 **Goal**: Visitor sees project portfolio and customer testimonials
