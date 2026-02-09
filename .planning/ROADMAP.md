@@ -138,7 +138,7 @@ Plans:
 | 5. Checkout Integration | v1.0 | 1/1 | Complete | 2026-01-31 |
 | 6. Navigation & Layout | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 7. Hero Section | v1.1 | 1/1 | Complete | 2026-02-09 |
-| 8. About & Services | v1.1 | 0/? | Not started | - |
+| 8. About & Services | v1.1 | 0/1 | Planned | - |
 | 9. Showcase & Social Proof | v1.1 | 0/? | Not started | - |
 | 10. Support & Contact | v1.1 | 0/? | Not started | - |
 
