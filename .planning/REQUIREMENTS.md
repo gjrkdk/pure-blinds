@@ -1,0 +1,119 @@
+# Requirements: Custom Dimension Textile Webshop
+
+**Defined:** 2026-02-09
+**Core Value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
+
+## v1.1 Requirements
+
+Requirements for homepage design milestone. Each maps to roadmap phases.
+
+### Navigation
+
+- [ ] **NAV-01**: Visitor sees a sticky header with logo and section navigation links
+- [ ] **NAV-02**: Header background transitions to solid on scroll
+- [ ] **NAV-03**: Clicking a nav link smooth-scrolls to the corresponding section
+- [ ] **NAV-04**: Visitor can open a mobile hamburger menu on small screens
+- [ ] **NAV-05**: Footer displays quick links to all sections and social media icons
+
+### Hero
+
+- [ ] **HERO-01**: Visitor sees a full-height hero with headline, description, and CTA button
+- [ ] **HERO-02**: Hero displays an image with a testimonial card overlay
+- [ ] **HERO-03**: CTA button scrolls to the contact section
+
+### About
+
+- [ ] **ABOUT-01**: Visitor sees an About section with label, heading, and description
+- [ ] **ABOUT-02**: About section displays a stats grid with 4 items (number, label, description)
+
+### Services
+
+- [ ] **SVC-01**: Visitor sees a What We Do section with accordion-style expandable services
+- [ ] **SVC-02**: Each service expands to show a description when clicked
+- [ ] **SVC-03**: A sticky image displays alongside the services accordion
+
+### Our Work
+
+- [ ] **WORK-01**: Visitor sees an Our Work section with project showcase cards
+- [ ] **WORK-02**: Projects display with alternating image/content layouts
+- [ ] **WORK-03**: Each project shows category tag, duration tag, and inline testimonial
+
+### Testimonials
+
+- [ ] **TEST-01**: Visitor sees a testimonials section on a dark background
+- [ ] **TEST-02**: Testimonials display in a responsive grid with star ratings
+
+### FAQs
+
+- [ ] **FAQ-01**: Visitor sees a FAQ section with two-column layout (intro + accordion)
+- [ ] **FAQ-02**: Each FAQ expands/collapses on click with plus/minus icons
+
+### Contact
+
+- [ ] **CONT-01**: Visitor sees a contact section with business info (address, email, phone, socials)
+- [ ] **CONT-02**: Contact form with name, email, phone, and message fields
+- [ ] **CONT-03**: Form validates required fields (name, email, message)
+
+## Future Requirements
+
+### Animations
+
+- **ANIM-01**: Sections reveal with scroll-triggered fade-in animations
+- **ANIM-02**: Hero elements animate in with staggered delays
+- **ANIM-03**: Cards have hover lift effects with shadow transitions
+
+### Content
+
+- **CONTENT-01**: Replace placeholder text with actual business copy
+- **CONTENT-02**: Replace placeholder images with product photography
+- **CONTENT-03**: Image carousel/gallery section
+
+## Out of Scope
+
+| Feature | Reason |
+|---------|--------|
+| Scroll-reveal animations | Deferred to future milestone — ship structure first |
+| Image carousel | User chose to skip for now |
+| Real business copy | Placeholder content first, copywriting is separate effort |
+| Product photography | Using placeholder images, real photos added later |
+| Contact form backend | Frontend form only — backend submission handling deferred |
+| SEO meta tags / structured data | Separate milestone for SEO foundation |
+
+## Traceability
+
+Which phases cover which requirements. Updated during roadmap creation.
+
+| Requirement | Phase | Status |
+|-------------|-------|--------|
+| NAV-01 | — | Pending |
+| NAV-02 | — | Pending |
+| NAV-03 | — | Pending |
+| NAV-04 | — | Pending |
+| NAV-05 | — | Pending |
+| HERO-01 | — | Pending |
+| HERO-02 | — | Pending |
+| HERO-03 | — | Pending |
+| ABOUT-01 | — | Pending |
+| ABOUT-02 | — | Pending |
+| SVC-01 | — | Pending |
+| SVC-02 | — | Pending |
+| SVC-03 | — | Pending |
+| WORK-01 | — | Pending |
+| WORK-02 | — | Pending |
+| WORK-03 | — | Pending |
+| TEST-01 | — | Pending |
+| TEST-02 | — | Pending |
+| FAQ-01 | — | Pending |
+| FAQ-02 | — | Pending |
+| CONT-01 | — | Pending |
+| CONT-02 | — | Pending |
+| CONT-03 | — | Pending |
+
+**Coverage:**
+- v1.1 requirements: 23 total
+- Mapped to phases: 0
+- Unmapped: 23 ⚠️
+
+---
+*Requirements defined: 2026-02-09*
+*Last updated: 2026-02-09 after initial definition*
