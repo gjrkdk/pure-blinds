@@ -136,7 +136,7 @@ Plans:
 | 3. Product Page | v1.0 | 2/2 | Complete | 2026-01-30 |
 | 4. Cart System | v1.0 | 1/1 | Complete | 2026-01-30 |
 | 5. Checkout Integration | v1.0 | 1/1 | Complete | 2026-01-31 |
-| 6. Navigation & Layout | v1.1 | 0/? | Not started | - |
+| 6. Navigation & Layout | v1.1 | 0/1 | Planned | - |
 | 7. Hero Section | v1.1 | 0/? | Not started | - |
 | 8. About & Services | v1.1 | 0/? | Not started | - |
 | 9. Showcase & Social Proof | v1.1 | 0/? | Not started | - |
