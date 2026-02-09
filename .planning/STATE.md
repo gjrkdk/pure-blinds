@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Phase 6 - Navigation & Layout
+**Current focus:** Phase 7 - Hero Section
 
 ## Current Position
 
-Phase: 6 of 10 (Navigation & Layout)
+Phase: 7 of 10 (Hero Section)
 Plan: 1 of 1 (complete)
 Status: Phase complete
-Last activity: 2026-02-09 — Completed 06-01-PLAN.md (Navigation & Layout Foundation)
+Last activity: 2026-02-09 — Completed 07-01-PLAN.md (Hero Section Redesign)
 
-Progress: [██████░░░░] 60% (6 of 10 phases complete)
+Progress: [███████░░░] 70% (7 of 10 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10 (9 from v1.0, 1 from v1.1)
-- Average duration: 113s (v1.1 tracking started)
+- Total plans completed: 11 (9 from v1.0, 2 from v1.1)
+- Average duration: 90s (v1.1 tracking)
 - Total v1.0 execution time: ~3 days (Jan 29-31)
-- Total v1.1 execution time: 113s (1m 53s)
+- Total v1.1 execution time: 179s (2m 59s)
 
 **By Phase:**
 
@@ -34,10 +34,11 @@ Progress: [██████░░░░] 60% (6 of 10 phases complete)
 | 4. Cart System | 1 | v1.0 | - |
 | 5. Checkout Integration | 1 | v1.0 | - |
 | 6. Navigation & Layout | 1 | 113s | 113s |
+| 7. Hero Section | 1 | 66s | 66s |
 
 **Recent Trend:**
-- Phase 6 complete: Navigation infrastructure with sticky header, mobile menu, footer (113s)
-- First v1.1 phase completed successfully with zero deviations
+- Phase 7 complete: Full-height hero with testimonial overlay (66s)
+- Continuing zero deviations streak (2 phases, 0 deviations)
 
 *Updated after each plan completion*
 
@@ -53,6 +54,8 @@ Recent decisions affecting current work:
 - [v1.1]: Structure-first for blog/FAQ - ship page shells now, fill content separately
 - [06-01]: Use anchor links instead of Next.js Link for section navigation - native browser smooth scrolling is simpler and more reliable than custom scroll logic
 - [06-01]: Client component for header, server component for footer - header needs scroll state and menu state; footer is static and benefits from server rendering
+- [07-01]: Use SVG placeholder for hero image - self-contained repo without external image dependencies
+- [07-01]: Hero CTA uses anchor tag with href="#contact" - follows 06-01 pattern for section navigation
 
 ### Pending Todos
 
@@ -68,9 +71,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-09 (Phase 6 execution)
-Stopped at: Completed 06-01-PLAN.md (Navigation & Layout Foundation)
+Last session: 2026-02-09 (Phase 7 execution)
+Stopped at: Completed 07-01-PLAN.md (Hero Section Redesign)
 Resume file: None
 
 ---
-*Last updated: 2026-02-09 after Phase 6 Plan 01 completion*
+*Last updated: 2026-02-09 after Phase 7 Plan 01 completion*
