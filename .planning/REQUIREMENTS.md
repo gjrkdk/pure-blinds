@@ -17,9 +17,9 @@ Requirements for homepage design milestone. Each maps to roadmap phases.
 
 ### Hero
 
-- [ ] **HERO-01**: Visitor sees a full-height hero with headline, description, and CTA button
-- [ ] **HERO-02**: Hero displays an image with a testimonial card overlay
-- [ ] **HERO-03**: CTA button scrolls to the contact section
+- [x] **HERO-01**: Visitor sees a full-height hero with headline, description, and CTA button
+- [x] **HERO-02**: Hero displays an image with a testimonial card overlay
+- [x] **HERO-03**: CTA button scrolls to the contact section
 
 ### About
 
@@ -90,9 +90,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAV-03 | Phase 6 | Done |
 | NAV-04 | Phase 6 | Done |
 | NAV-05 | Phase 6 | Done |
-| HERO-01 | Phase 7 | Pending |
-| HERO-02 | Phase 7 | Pending |
-| HERO-03 | Phase 7 | Pending |
+| HERO-01 | Phase 7 | Done |
+| HERO-02 | Phase 7 | Done |
+| HERO-03 | Phase 7 | Done |
 | ABOUT-01 | Phase 8 | Pending |
 | ABOUT-02 | Phase 8 | Pending |
 | SVC-01 | Phase 8 | Pending |
@@ -116,4 +116,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-09*
-*Last updated: 2026-02-09 after Phase 6 completion*
+*Last updated: 2026-02-09 after Phase 7 completion*
