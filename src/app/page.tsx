@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { AboutSection } from "@/components/home/about-section";
 
 const USE_CASES = [
   {
@@ -55,69 +56,76 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center px-6 pt-24 pb-12">
-        <div className="mx-auto max-w-5xl w-full">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Left column — text content */}
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-widest text-muted">
-                Premium Custom Textiles
-              </p>
-              <h1 className="mt-4 text-4xl font-light leading-[1.1] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-                Textiles, crafted to your exact dimensions
-              </h1>
-              <p className="mt-6 max-w-lg text-lg text-muted sm:text-xl">
-                Premium custom-sized fabrics — priced instantly, produced with care,
-                and delivered to your door.
-              </p>
+      <section className="relative min-h-screen">
+        {/* Mobile: background image with overlay */}
+        <div className="absolute inset-0 md:hidden">
+          <Image
+            src="/hero-placeholder.svg"
+            alt="Custom textile showcase"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
+        </div>
+
+        {/* Desktop layout */}
+        <div className="relative flex flex-col justify-center min-h-screen md:flex-row md:items-center md:gap-12 lg:gap-16 px-6 md:px-12 lg:px-20 mx-auto max-w-7xl">
+          {/* Text content — left ~60% */}
+          <div className="flex flex-col justify-center py-32 md:py-0 md:w-[58%] md:shrink-0">
+            <p className="text-sm font-semibold uppercase tracking-widest text-muted">
+              Premium Custom Textiles
+            </p>
+            <h1 className="mt-4 text-4xl font-light leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              Textiles, crafted to your exact dimensions
+            </h1>
+            <p className="mt-6 max-w-md text-base text-muted sm:text-lg">
+              Premium custom-sized fabrics — priced instantly, produced with care,
+              and delivered to your door.
+            </p>
+            <div className="mt-10">
               <a
                 href="#contact"
-                className="mt-10 inline-flex items-center gap-2 bg-accent px-8 py-3.5 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
+                className="inline-flex items-center gap-3 rounded-full bg-accent pl-7 pr-2 py-2 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
               >
                 Get in Touch
-                <span aria-hidden="true">&rarr;</span>
+                <span className="flex items-center justify-center w-9 h-9 rounded-full bg-accent-foreground/10">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7" />
+                    <path d="M7 7h10v10" />
+                  </svg>
+                </span>
               </a>
             </div>
+          </div>
 
-            {/* Right column — image with testimonial overlay */}
-            <div className="relative min-h-[400px] md:min-h-[600px]">
-              <div className="relative w-full h-full">
-                <Image
-                  src="/hero-placeholder.svg"
-                  alt="Custom textile showcase"
-                  width={800}
-                  height={1000}
-                  className="w-full h-full object-cover"
-                  priority
-                />
+          {/* Image — hidden on mobile (used as bg), right ~42% on desktop with rounded corners */}
+          <div className="hidden md:block relative md:w-[42%] md:shrink-0 self-center">
+            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl">
+              <Image
+                src="/hero-placeholder.svg"
+                alt="Custom textile showcase"
+                fill
+                className="object-cover"
+                priority
+              />
 
-                {/* Testimonial card overlay */}
-                <div className="absolute bottom-8 left-8 right-8 md:left-0 md:right-auto md:bottom-12 md:w-80 bg-background/95 backdrop-blur-sm border border-border p-6 shadow-lg">
-                  <div className="flex gap-0.5 text-foreground mb-3">
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+              {/* Testimonial card overlay */}
+              <div className="absolute bottom-6 left-6 right-6 bg-background/90 backdrop-blur-md border border-border/50 rounded-2xl p-5 shadow-lg">
+                <div className="flex gap-0.5 text-foreground mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                     </svg>
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                  </div>
-                  <p className="text-sm leading-relaxed text-foreground mb-3">
-                    "Absolutely perfect curtains, exactly the dimensions we needed."
-                  </p>
-                  <div className="text-sm text-muted">
-                    <span className="font-medium">Sarah M.</span>
-                    <span className="mx-2">·</span>
-                    <span>Interior Designer</span>
-                  </div>
+                  ))}
+                </div>
+                <p className="text-sm leading-relaxed text-foreground mb-2">
+                  &ldquo;Absolutely perfect curtains, exactly the dimensions we needed.&rdquo;
+                </p>
+                <div className="text-xs text-muted">
+                  <span className="font-medium">Sarah M.</span>
+                  <span className="mx-1.5">&middot;</span>
+                  <span>Interior Designer</span>
                 </div>
               </div>
             </div>
@@ -125,34 +133,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Value Props */}
-      <section id="about" className="border-y border-border bg-surface px-6 py-16 sm:py-20">
-        <div className="mx-auto grid max-w-5xl gap-12 sm:grid-cols-3 sm:gap-8">
-          {[
-            {
-              title: "Made to Measure",
-              text: "Specify any dimension between 10 and 200 cm. Each piece is cut precisely to your requirements.",
-            },
-            {
-              title: "Instant Pricing",
-              text: "No waiting for quotes. Our live calculator shows your exact price as you enter dimensions.",
-            },
-            {
-              title: "Quality Materials",
-              text: "Durable, premium-grade fabrics suitable for interiors, displays, and everyday use.",
-            },
-          ].map((prop) => (
-            <div key={prop.title}>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-foreground">
-                {prop.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">
-                {prop.text}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* About */}
+      <AboutSection />
 
       {/* Product Showcase */}
       <section id="services" className="px-6 py-20 sm:py-28">
