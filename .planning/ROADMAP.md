@@ -81,7 +81,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 07-01: Full-height hero with image, testimonial overlay, and contact CTA
+- [x] 07-01: Full-height hero with image, testimonial overlay, and contact CTA
 
 #### Phase 8: About & Services
 **Goal**: Visitor learns about the business and available services
@@ -137,10 +137,10 @@ Plans:
 | 4. Cart System | v1.0 | 1/1 | Complete | 2026-01-30 |
 | 5. Checkout Integration | v1.0 | 1/1 | Complete | 2026-01-31 |
 | 6. Navigation & Layout | v1.1 | 1/1 | Complete | 2026-02-09 |
-| 7. Hero Section | v1.1 | 0/1 | Planned | - |
+| 7. Hero Section | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 8. About & Services | v1.1 | 0/? | Not started | - |
 | 9. Showcase & Social Proof | v1.1 | 0/? | Not started | - |
 | 10. Support & Contact | v1.1 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-09 (Phase 6 complete)*
+*Last updated: 2026-02-09 (Phase 7 complete)*
