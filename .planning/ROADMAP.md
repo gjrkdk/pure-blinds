@@ -125,7 +125,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 10-01: FAQ section with two-column accordion and Contact section with validated form and business info
+- [x] 10-01: FAQ section with two-column accordion and Contact section with validated form and business info
 
 ## Progress
 
@@ -140,7 +140,7 @@ Plans:
 | 7. Hero Section | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 8. About & Services | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 9. Showcase & Social Proof | v1.1 | 1/1 | Complete | 2026-02-10 |
-| 10. Support & Contact | v1.1 | 0/? | Not started | - |
+| 10. Support & Contact | v1.1 | 1/1 | Complete | 2026-02-10 |
 
 ---
-*Last updated: 2026-02-10 (Phase 9 complete)*
+*Last updated: 2026-02-10 (Phase 10 complete — v1.1 milestone done)*
