@@ -38,7 +38,7 @@ export function WorkSection() {
   return (
     <section id="our-work" className="border-t border-border px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
-        <p className="text-sm font-semibold uppercase tracking-widest text-muted">
+        <p className="text-sm font-semibold uppercase tracking-wider text-muted">
           Our Work
         </p>
         <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
@@ -59,7 +59,7 @@ export function WorkSection() {
               <div
                 className={index % 2 === 1 ? "md:order-2" : ""}
               >
-                <div className="aspect-[4/3] w-full bg-surface border border-border rounded-lg flex items-center justify-center">
+                <div className="aspect-[4/3] w-full bg-white rounded-2xl shadow-lifted flex items-center justify-center">
                   <span className="text-sm text-muted">Project Image</span>
                 </div>
               </div>

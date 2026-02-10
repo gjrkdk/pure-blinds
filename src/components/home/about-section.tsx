@@ -25,7 +25,7 @@ export function AboutSection() {
   return (
     <section id="about" className="border-t border-border px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
-        <p className="text-sm font-semibold uppercase tracking-widest text-muted">
+        <p className="text-sm font-semibold uppercase tracking-wider text-muted">
           About Us
         </p>
         <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
@@ -40,11 +40,11 @@ export function AboutSection() {
         {/* Stats Grid */}
         <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
-            <div key={stat.label}>
-              <div className="text-3xl font-light text-foreground sm:text-4xl">
+            <div key={stat.label} className="rounded-2xl bg-white p-6 shadow-lifted">
+              <div className="text-3xl font-semibold text-foreground sm:text-4xl">
                 {stat.number}
               </div>
-              <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-foreground">
+              <div className="mt-2 text-sm font-semibold uppercase tracking-wider text-foreground">
                 {stat.label}
               </div>
               <p className="mt-1 text-sm leading-relaxed text-muted">

@@ -47,7 +47,7 @@ export function TestimonialsSection() {
   return (
     <section id="testimonials" className="bg-foreground px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
-        <p className="text-sm font-semibold uppercase tracking-widest text-neutral-400">
+        <p className="text-sm font-semibold uppercase tracking-wider text-neutral-400">
           Testimonials
         </p>
         <h2 className="mt-3 text-3xl font-light tracking-tight text-accent-foreground sm:text-4xl">
@@ -58,7 +58,7 @@ export function TestimonialsSection() {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="border border-neutral-700 rounded-lg p-6"
+              className="border border-neutral-700/50 rounded-2xl p-6 bg-neutral-900/40"
             >
               {/* Star rating */}
               <div className="flex gap-0.5 mb-3">

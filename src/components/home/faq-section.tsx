@@ -48,7 +48,7 @@ export function FaqSection() {
         <div className="lg:grid lg:grid-cols-2 lg:gap-16">
           {/* Left column: Intro */}
           <div>
-            <p className="text-sm font-semibold uppercase tracking-widest text-muted">
+            <p className="text-sm font-semibold uppercase tracking-wider text-muted">
               Frequently Asked Questions
             </p>
             <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground">

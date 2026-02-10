@@ -44,7 +44,7 @@ export default async function ThankYouPage({
 
         {/* What happens next */}
         <div className="mx-auto mt-14 max-w-sm text-left">
-          <h2 className="text-sm font-semibold uppercase tracking-widest text-foreground">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
             What happens next
           </h2>
           <ol className="mt-6 space-y-5">

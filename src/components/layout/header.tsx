@@ -38,9 +38,9 @@ export function Header() {
         >
           <Link
             href="/"
-            className="text-base font-semibold tracking-tight text-foreground hover:text-muted transition-colors"
+            className="text-base font-bold tracking-tight text-foreground hover:text-muted transition-colors"
           >
-            Custom Textiles
+            Pure Blinds
           </Link>
 
           {/* Desktop Navigation */}

@@ -41,7 +41,7 @@ export function ServicesAccordion() {
   return (
     <section id="services" className="px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
-        <p className="text-sm font-semibold uppercase tracking-widest text-muted">
+        <p className="text-sm font-semibold uppercase tracking-wider text-muted">
           What We Do
         </p>
         <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
@@ -93,7 +93,7 @@ export function ServicesAccordion() {
 
           {/* Right column: Sticky Image */}
           <div className="mt-12 lg:mt-0 lg:sticky lg:top-28 lg:self-start">
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl">
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-lifted">
               <Image
                 src="/hero-placeholder.svg"
                 alt="Our services showcase"
