@@ -1,9 +1,10 @@
-import Link from "next/link";
 import Image from "next/image";
 import { AboutSection } from "@/components/home/about-section";
 import { ServicesAccordion } from "@/components/home/services-accordion";
 import { WorkSection } from "@/components/home/work-section";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
+import { FaqSection } from "@/components/home/faq-section";
+import { ContactSection } from "@/components/home/contact-section";
 
 export default function Home() {
   return (
@@ -98,25 +99,11 @@ export default function Home() {
       {/* Testimonials */}
       <TestimonialsSection />
 
-      {/* CTA Banner */}
-      <section id="contact" className="bg-foreground px-6 py-20 sm:py-24">
-        <div className="mx-auto max-w-5xl text-center">
-          <h2 className="text-3xl font-light tracking-tight text-accent-foreground sm:text-4xl">
-            Ready to get started?
-          </h2>
-          <p className="mx-auto mt-4 max-w-md text-sm text-neutral-400">
-            Enter your dimensions, see your price, and order — all in under a
-            minute.
-          </p>
-          <Link
-            href="/products/custom-textile"
-            className="mt-8 inline-flex items-center gap-2 border border-neutral-600 px-8 py-3.5 text-sm font-medium tracking-wide text-accent-foreground transition-colors hover:border-neutral-400 hover:text-white"
-          >
-            Start configuring
-            <span aria-hidden="true">&rarr;</span>
-          </Link>
-        </div>
-      </section>
+      {/* FAQ */}
+      <FaqSection />
+
+      {/* Contact */}
+      <ContactSection />
     </>
   );
 }
