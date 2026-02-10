@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Phase 9 - Showcase & Social Proof
+**Current focus:** Phase 10 - Support & Contact (COMPLETE)
 
 ## Current Position
 
-Phase: 9 of 10 (Showcase & Social Proof)
+Phase: 10 of 10 (Support & Contact)
 Plan: 1 of 1 (complete)
-Status: Phase complete
-Last activity: 2026-02-10 — Completed 09-01-PLAN.md (Showcase & Social Proof)
+Status: Phase complete — v1.1 Homepage Design Milestone COMPLETE
+Last activity: 2026-02-10 — Completed 10-01-PLAN.md (Support & Contact)
 
-Progress: [█████████░] 90% (9 of 10 phases complete)
+Progress: [██████████] 100% (10 of 10 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13 (9 from v1.0, 4 from v1.1)
-- Average duration: 87s (v1.1 tracking)
+- Total plans completed: 14 (9 from v1.0, 5 from v1.1)
+- Average duration: 93s (v1.1 tracking)
 - Total v1.0 execution time: ~3 days (Jan 29-31)
-- Total v1.1 execution time: 348s (5m 48s)
+- Total v1.1 execution time: 465s (7m 45s)
 
 **By Phase:**
 
@@ -37,10 +37,12 @@ Progress: [█████████░] 90% (9 of 10 phases complete)
 | 7. Hero Section | 1 | 66s | 66s |
 | 8. About & Services | 1 | 60s | 60s |
 | 9. Showcase & Social Proof | 1 | 109s | 109s |
+| 10. Support & Contact | 1 | 117s | 117s |
 
 **Recent Trend:**
-- Phase 9 complete: Portfolio showcase with alternating layouts, testimonials grid on dark background (109s)
-- Continuing zero deviations streak (4 phases, 0 deviations)
+- Phase 10 complete: FAQ accordion and contact form with validation complete homepage v1.1 (117s)
+- Zero deviations streak continues (5 phases, 0 deviations)
+- v1.1 Homepage Design Milestone COMPLETE — all 10 phases shipped
 
 *Updated after each plan completion*
 
@@ -64,6 +66,9 @@ Recent decisions affecting current work:
 - [09-01]: Used placeholder divs for project images - follows established pattern for self-contained repo without external dependencies
 - [09-01]: Included inline testimonial within each project card - provides immediate client validation for each project type
 - [09-01]: Positioned Testimonials section between Work and CTA Banner - natural trust-building flow before conversion
+- [10-01]: Reused accordion pattern from Phase 8 for FAQ - maintained consistency with services-accordion (toggle, plus icon rotation, first item open)
+- [10-01]: Client-side only form validation - no backend integration for contact form (out of scope), shows success message after validation
+- [10-01]: ContactSection owns #contact anchor - replaced CTA Banner so hero CTA links correctly to contact form
 
 ### Pending Todos
 
@@ -79,9 +84,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-10 (Phase 9 execution)
-Stopped at: Completed 09-01-PLAN.md (Showcase & Social Proof)
+Last session: 2026-02-10 (Phase 10 execution)
+Stopped at: Completed 10-01-PLAN.md (Support & Contact) — v1.1 Homepage Design Milestone COMPLETE
 Resume file: None
 
 ---
-*Last updated: 2026-02-10 after Phase 9 Plan 01 completion*
+*Last updated: 2026-02-10 after Phase 10 Plan 01 completion*
