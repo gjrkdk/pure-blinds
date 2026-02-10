@@ -122,10 +122,10 @@ Plans:
   3. Visitor sees contact section with business info (address, email, phone, socials)
   4. Contact form displays name, email, phone, and message fields
   5. Form validates required fields (name, email, message) before submission
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 10-01: TBD
+- [ ] 10-01: FAQ section with two-column accordion and Contact section with validated form and business info
 
 ## Progress
 
