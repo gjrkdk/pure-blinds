@@ -107,10 +107,10 @@ Plans:
   3. Each project shows category tag, duration tag, and inline testimonial
   4. Visitor sees testimonials section on dark background
   5. Testimonials display in responsive grid with star ratings
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 09-01: TBD
+- [ ] 09-01: Our Work showcase with alternating project cards and Testimonials grid with star ratings
 
 #### Phase 10: Support & Contact
 **Goal**: Visitor can read FAQs and contact the business
