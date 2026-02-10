@@ -5,24 +5,24 @@
 See: .planning/PROJECT.md (updated 2026-02-09)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Phase 8 - About & Services
+**Current focus:** Phase 9 - Showcase & Social Proof
 
 ## Current Position
 
-Phase: 8 of 10 (About & Services)
+Phase: 9 of 10 (Showcase & Social Proof)
 Plan: 1 of 1 (complete)
 Status: Phase complete
-Last activity: 2026-02-09 — Completed 08-01-PLAN.md (About & Services)
+Last activity: 2026-02-10 — Completed 09-01-PLAN.md (Showcase & Social Proof)
 
-Progress: [████████░░] 80% (8 of 10 phases complete)
+Progress: [█████████░] 90% (9 of 10 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12 (9 from v1.0, 3 from v1.1)
-- Average duration: 80s (v1.1 tracking)
+- Total plans completed: 13 (9 from v1.0, 4 from v1.1)
+- Average duration: 87s (v1.1 tracking)
 - Total v1.0 execution time: ~3 days (Jan 29-31)
-- Total v1.1 execution time: 239s (3m 59s)
+- Total v1.1 execution time: 348s (5m 48s)
 
 **By Phase:**
 
@@ -36,10 +36,11 @@ Progress: [████████░░] 80% (8 of 10 phases complete)
 | 6. Navigation & Layout | 1 | 113s | 113s |
 | 7. Hero Section | 1 | 66s | 66s |
 | 8. About & Services | 1 | 60s | 60s |
+| 9. Showcase & Social Proof | 1 | 109s | 109s |
 
 **Recent Trend:**
-- Phase 8 complete: About section with stats grid, interactive accordion with sticky image (60s)
-- Continuing zero deviations streak (3 phases, 0 deviations)
+- Phase 9 complete: Portfolio showcase with alternating layouts, testimonials grid on dark background (109s)
+- Continuing zero deviations streak (4 phases, 0 deviations)
 
 *Updated after each plan completion*
 
@@ -59,6 +60,10 @@ Recent decisions affecting current work:
 - [07-01]: Hero CTA uses anchor tag with href="#contact" - follows 06-01 pattern for section navigation
 - [08-01]: First accordion item open by default - better UX for visitors to immediately see example content and functionality
 - [08-01]: Reused /hero-placeholder.svg for services sticky image - follows 07-01 pattern for self-contained repo
+- [09-01]: Replaced "How it Works" section with Our Work portfolio - portfolio showcase provides more compelling social proof than generic process steps
+- [09-01]: Used placeholder divs for project images - follows established pattern for self-contained repo without external dependencies
+- [09-01]: Included inline testimonial within each project card - provides immediate client validation for each project type
+- [09-01]: Positioned Testimonials section between Work and CTA Banner - natural trust-building flow before conversion
 
 ### Pending Todos
 
@@ -74,9 +79,9 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-09 (Phase 8 execution)
-Stopped at: Completed 08-01-PLAN.md (About & Services)
+Last session: 2026-02-10 (Phase 9 execution)
+Stopped at: Completed 09-01-PLAN.md (Showcase & Social Proof)
 Resume file: None
 
 ---
-*Last updated: 2026-02-09 after Phase 8 Plan 01 completion*
+*Last updated: 2026-02-10 after Phase 9 Plan 01 completion*
