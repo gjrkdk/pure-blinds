@@ -36,7 +36,7 @@ export function WorkSection() {
   ];
 
   return (
-    <section id="our-work" className="border-t border-border px-6 py-20 sm:py-28">
+    <section id="our-work" className="px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
         <p className="text-sm font-semibold uppercase tracking-wider text-muted">
           Our Work
