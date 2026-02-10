@@ -52,7 +52,7 @@ export function CartSummary() {
 
   return (
     <div className="border border-border p-6 sm:p-8 lg:sticky lg:top-8">
-      <h2 className="text-sm font-semibold uppercase tracking-widest text-foreground">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
         Order Summary
       </h2>
 

@@ -178,7 +178,7 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Width input */}
         <div>
-          <label htmlFor="width" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="width" className="block text-sm font-medium text-foreground mb-2">
             Width (cm)
           </label>
           <input
@@ -190,13 +190,13 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
             onChange={handleWidthChange}
             aria-invalid={!!fieldErrors.width}
             aria-describedby={fieldErrors.width ? 'width-error' : undefined}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              fieldErrors.width ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors ${
+              fieldErrors.width ? 'border-red-500' : 'border-border'
             }`}
             placeholder="e.g., 100"
           />
           {fieldErrors.width && (
-            <p id="width-error" className="text-red-600 text-sm mt-1">
+            <p id="width-error" className="text-red-500 text-sm mt-1">
               {fieldErrors.width}
             </p>
           )}
@@ -204,7 +204,7 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
 
         {/* Height input */}
         <div>
-          <label htmlFor="height" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="height" className="block text-sm font-medium text-foreground mb-2">
             Height (cm)
           </label>
           <input
@@ -216,13 +216,13 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
             onChange={handleHeightChange}
             aria-invalid={!!fieldErrors.height}
             aria-describedby={fieldErrors.height ? 'height-error' : undefined}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              fieldErrors.height ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors ${
+              fieldErrors.height ? 'border-red-500' : 'border-border'
             }`}
             placeholder="e.g., 150"
           />
           {fieldErrors.height && (
-            <p id="height-error" className="text-red-600 text-sm mt-1">
+            <p id="height-error" className="text-red-500 text-sm mt-1">
               {fieldErrors.height}
             </p>
           )}
@@ -232,16 +232,16 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
       {/* Price display */}
       <div className="mt-6">
         {loading ? (
-          <p className="text-2xl font-semibold text-gray-600">Calculating...</p>
+          <p className="text-2xl font-semibold text-muted">Calculating...</p>
         ) : error ? (
-          <p className="text-2xl font-semibold text-red-600">{error}</p>
+          <p className="text-2xl font-semibold text-red-500">{error}</p>
         ) : price !== null ? (
           <div>
-            <p className="text-sm text-gray-600 mb-1">Price</p>
-            <p className="text-3xl font-bold text-gray-900">{formatPrice(price)}</p>
+            <p className="text-sm text-muted mb-1">Price</p>
+            <p className="text-3xl font-semibold text-foreground">{formatPrice(price)}</p>
           </div>
         ) : (
-          <p className="text-sm text-gray-500">Enter dimensions to see price</p>
+          <p className="text-sm text-muted">Enter dimensions to see price</p>
         )}
       </div>
 
@@ -250,7 +250,7 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
         <button
           onClick={handleAddToCart}
           disabled={!canAddToCart}
-          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-accent text-accent-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {addedFeedback ? 'Added to Cart!' : 'Add to Cart'}
         </button>

@@ -48,7 +48,7 @@ export default async function ProductPage({
           {/* Right column — product details */}
           <div className="lg:pt-2">
             <div className="border border-border p-8 sm:p-10">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-foreground">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
                 Product Details
               </h2>
               <dl className="mt-6 space-y-5">
@@ -64,7 +64,7 @@ export default async function ProductPage({
             </div>
 
             <div className="mt-6 border border-border p-8 sm:p-10">
-              <h2 className="text-sm font-semibold uppercase tracking-widest text-foreground">
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
                 How It Works
               </h2>
               <ol className="mt-6 space-y-4">
