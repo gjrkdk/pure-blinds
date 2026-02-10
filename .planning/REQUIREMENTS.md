@@ -34,14 +34,14 @@ Requirements for homepage design milestone. Each maps to roadmap phases.
 
 ### Our Work
 
-- [ ] **WORK-01**: Visitor sees an Our Work section with project showcase cards
-- [ ] **WORK-02**: Projects display with alternating image/content layouts
-- [ ] **WORK-03**: Each project shows category tag, duration tag, and inline testimonial
+- [x] **WORK-01**: Visitor sees an Our Work section with project showcase cards
+- [x] **WORK-02**: Projects display with alternating image/content layouts
+- [x] **WORK-03**: Each project shows category tag, duration tag, and inline testimonial
 
 ### Testimonials
 
-- [ ] **TEST-01**: Visitor sees a testimonials section on a dark background
-- [ ] **TEST-02**: Testimonials display in a responsive grid with star ratings
+- [x] **TEST-01**: Visitor sees a testimonials section on a dark background
+- [x] **TEST-02**: Testimonials display in a responsive grid with star ratings
 
 ### FAQs
 
@@ -93,16 +93,16 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HERO-01 | Phase 7 | Done |
 | HERO-02 | Phase 7 | Done |
 | HERO-03 | Phase 7 | Done |
-| ABOUT-01 | Phase 8 | Pending |
-| ABOUT-02 | Phase 8 | Pending |
-| SVC-01 | Phase 8 | Pending |
-| SVC-02 | Phase 8 | Pending |
-| SVC-03 | Phase 8 | Pending |
-| WORK-01 | Phase 9 | Pending |
-| WORK-02 | Phase 9 | Pending |
-| WORK-03 | Phase 9 | Pending |
-| TEST-01 | Phase 9 | Pending |
-| TEST-02 | Phase 9 | Pending |
+| ABOUT-01 | Phase 8 | Done |
+| ABOUT-02 | Phase 8 | Done |
+| SVC-01 | Phase 8 | Done |
+| SVC-02 | Phase 8 | Done |
+| SVC-03 | Phase 8 | Done |
+| WORK-01 | Phase 9 | Done |
+| WORK-02 | Phase 9 | Done |
+| WORK-03 | Phase 9 | Done |
+| TEST-01 | Phase 9 | Done |
+| TEST-02 | Phase 9 | Done |
 | FAQ-01 | Phase 10 | Pending |
 | FAQ-02 | Phase 10 | Pending |
 | CONT-01 | Phase 10 | Pending |
