@@ -45,14 +45,14 @@ Requirements for homepage design milestone. Each maps to roadmap phases.
 
 ### FAQs
 
-- [ ] **FAQ-01**: Visitor sees a FAQ section with two-column layout (intro + accordion)
-- [ ] **FAQ-02**: Each FAQ expands/collapses on click with plus/minus icons
+- [x] **FAQ-01**: Visitor sees a FAQ section with two-column layout (intro + accordion)
+- [x] **FAQ-02**: Each FAQ expands/collapses on click with plus/minus icons
 
 ### Contact
 
-- [ ] **CONT-01**: Visitor sees a contact section with business info (address, email, phone, socials)
-- [ ] **CONT-02**: Contact form with name, email, phone, and message fields
-- [ ] **CONT-03**: Form validates required fields (name, email, message)
+- [x] **CONT-01**: Visitor sees a contact section with business info (address, email, phone, socials)
+- [x] **CONT-02**: Contact form with name, email, phone, and message fields
+- [x] **CONT-03**: Form validates required fields (name, email, message)
 
 ## Future Requirements
 
@@ -103,11 +103,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WORK-03 | Phase 9 | Done |
 | TEST-01 | Phase 9 | Done |
 | TEST-02 | Phase 9 | Done |
-| FAQ-01 | Phase 10 | Pending |
-| FAQ-02 | Phase 10 | Pending |
-| CONT-01 | Phase 10 | Pending |
-| CONT-02 | Phase 10 | Pending |
-| CONT-03 | Phase 10 | Pending |
+| FAQ-01 | Phase 10 | Done |
+| FAQ-02 | Phase 10 | Done |
+| CONT-01 | Phase 10 | Done |
+| CONT-02 | Phase 10 | Done |
+| CONT-03 | Phase 10 | Done |
 
 **Coverage:**
 - v1.1 requirements: 23 total
