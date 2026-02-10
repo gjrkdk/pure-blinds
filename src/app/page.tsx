@@ -3,6 +3,7 @@ import Image from "next/image";
 import { AboutSection } from "@/components/home/about-section";
 import { ServicesAccordion } from "@/components/home/services-accordion";
 import { WorkSection } from "@/components/home/work-section";
+import { TestimonialsSection } from "@/components/home/testimonials-section";
 
 export default function Home() {
   return (
@@ -93,6 +94,9 @@ export default function Home() {
 
       {/* Our Work */}
       <WorkSection />
+
+      {/* Testimonials */}
+      <TestimonialsSection />
 
       {/* CTA Banner */}
       <section id="contact" className="bg-foreground px-6 py-20 sm:py-24">
