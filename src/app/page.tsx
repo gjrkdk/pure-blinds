@@ -2,29 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { AboutSection } from "@/components/home/about-section";
 import { ServicesAccordion } from "@/components/home/services-accordion";
-
-const STEPS = [
-  {
-    number: "01",
-    title: "Choose your dimensions",
-    description: "Enter the exact width and height you need, from 10 to 200 cm.",
-  },
-  {
-    number: "02",
-    title: "Get an instant price",
-    description: "See your price update in real time as you adjust dimensions.",
-  },
-  {
-    number: "03",
-    title: "Place your order",
-    description: "Add to cart and check out securely through our payment system.",
-  },
-  {
-    number: "04",
-    title: "Delivered to your door",
-    description: "Your custom textile is produced and shipped directly to you.",
-  },
-];
+import { WorkSection } from "@/components/home/work-section";
 
 export default function Home() {
   return (
@@ -113,33 +91,8 @@ export default function Home() {
       {/* Services */}
       <ServicesAccordion />
 
-      {/* How it Works */}
-      <section id="work" className="border-y border-border bg-surface px-6 py-20 sm:py-28">
-        <div className="mx-auto max-w-5xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-muted">
-            Process
-          </p>
-          <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-            How it works
-          </h2>
-
-          <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-            {STEPS.map((step) => (
-              <div key={step.number}>
-                <span className="font-mono text-xs text-muted">
-                  {step.number}
-                </span>
-                <h3 className="mt-2 text-base font-medium text-foreground">
-                  {step.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  {step.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Our Work */}
+      <WorkSection />
 
       {/* CTA Banner */}
       <section id="contact" className="bg-foreground px-6 py-20 sm:py-24">
