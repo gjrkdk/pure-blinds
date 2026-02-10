@@ -27,3 +27,33 @@
 **What's next:** v1.1 refinements - add Phase 3 verification documentation, create test products in Shopify store, expand test coverage for pricing calculator and cart operations.
 
 ---
+
+## v1.1 Design Homepage (Shipped: 2026-02-10)
+
+**Delivered:** Polished, full-featured homepage with navigation, hero, about, services, portfolio, testimonials, FAQ, and contact sections using placeholder content.
+
+**Phases completed:** 6-10 (5 plans, 10 tasks)
+
+**Key accomplishments:**
+
+- Sticky header with scroll-aware background transition, section navigation with smooth scrolling, and mobile hamburger menu
+- Full-height hero section with two-column layout, testimonial card overlay, and anchor-based CTA
+- About section with 4-stat grid and interactive services accordion with sticky image sidebar
+- Our Work portfolio showcase with alternating project layouts, category/duration tags, and inline testimonials
+- Testimonials grid on dark background with star ratings in responsive 3-column layout
+- FAQ two-column accordion and validated contact form with business info completing the homepage flow
+
+**Stats:**
+
+- 34 files modified (+3,498/-311 lines)
+- 2,807 lines of TypeScript/TSX (total project)
+- 5 phases, 5 plans, 10 tasks
+- 2 days (Feb 9-10), 465s (7m 45s) execution time
+- Zero deviations across all phases
+
+**Git range:** `feat(06-01)` → `refactor styles and components`
+
+**What's next:** Animations, real content/photography, contact form backend, SEO foundation.
+
+---
+

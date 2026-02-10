@@ -2,19 +2,18 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-09)
+See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Phase 10 - Support & Contact (COMPLETE)
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 10 of 10 (Support & Contact)
-Plan: 1 of 1 (complete)
-Status: Phase complete — v1.1 Homepage Design Milestone COMPLETE
-Last activity: 2026-02-10 — Completed 10-01-PLAN.md (Support & Contact)
+Phase: 10 of 10 (all milestones shipped)
+Status: v1.1 Design Homepage milestone COMPLETE — awaiting next milestone
+Last activity: 2026-02-10 — v1.1 milestone archived
 
-Progress: [██████████] 100% (10 of 10 phases complete)
+Progress: [██████████] 100% (v1.0 + v1.1 complete)
 
 ## Performance Metrics
 
@@ -24,26 +23,6 @@ Progress: [██████████] 100% (10 of 10 phases complete)
 - Total v1.0 execution time: ~3 days (Jan 29-31)
 - Total v1.1 execution time: 465s (7m 45s)
 
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1. Foundation | 3 | v1.0 | - |
-| 2. Pricing Engine | 2 | v1.0 | - |
-| 3. Product Page | 2 | v1.0 | - |
-| 4. Cart System | 1 | v1.0 | - |
-| 5. Checkout Integration | 1 | v1.0 | - |
-| 6. Navigation & Layout | 1 | 113s | 113s |
-| 7. Hero Section | 1 | 66s | 66s |
-| 8. About & Services | 1 | 60s | 60s |
-| 9. Showcase & Social Proof | 1 | 109s | 109s |
-| 10. Support & Contact | 1 | 117s | 117s |
-
-**Recent Trend:**
-- Phase 10 complete: FAQ accordion and contact form with validation complete homepage v1.1 (117s)
-- Zero deviations streak continues (5 phases, 0 deviations)
-- v1.1 Homepage Design Milestone COMPLETE — all 10 phases shipped
-
 *Updated after each plan completion*
 
 ## Accumulated Context
@@ -51,24 +30,7 @@ Progress: [██████████] 100% (10 of 10 phases complete)
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- [v1.1]: Port reference design to Next.js - existing Vite/React reference code provides proven layout/animation patterns; adapt for Next.js App Router + Tailwind v4
-- [v1.1]: Placeholder content over real copy - ship design structure first, fill actual business copy separately to avoid blocking on copywriting
-- [v1.1]: Structure-first for blog/FAQ - ship page shells now, fill content separately
-- [06-01]: Use anchor links instead of Next.js Link for section navigation - native browser smooth scrolling is simpler and more reliable than custom scroll logic
-- [06-01]: Client component for header, server component for footer - header needs scroll state and menu state; footer is static and benefits from server rendering
-- [07-01]: Use SVG placeholder for hero image - self-contained repo without external image dependencies
-- [07-01]: Hero CTA uses anchor tag with href="#contact" - follows 06-01 pattern for section navigation
-- [08-01]: First accordion item open by default - better UX for visitors to immediately see example content and functionality
-- [08-01]: Reused /hero-placeholder.svg for services sticky image - follows 07-01 pattern for self-contained repo
-- [09-01]: Replaced "How it Works" section with Our Work portfolio - portfolio showcase provides more compelling social proof than generic process steps
-- [09-01]: Used placeholder divs for project images - follows established pattern for self-contained repo without external dependencies
-- [09-01]: Included inline testimonial within each project card - provides immediate client validation for each project type
-- [09-01]: Positioned Testimonials section between Work and CTA Banner - natural trust-building flow before conversion
-- [10-01]: Reused accordion pattern from Phase 8 for FAQ - maintained consistency with services-accordion (toggle, plus icon rotation, first item open)
-- [10-01]: Client-side only form validation - no backend integration for contact form (out of scope), shows success message after validation
-- [10-01]: ContactSection owns #contact anchor - replaced CTA Banner so hero CTA links correctly to contact form
+All v1.1 decisions archived — see .planning/milestones/v1.1-ROADMAP.md for details.
 
 ### Pending Todos
 
@@ -80,13 +42,13 @@ From v1.0 carried forward:
 
 ### Blockers/Concerns
 
-None yet.
+None.
 
 ## Session Continuity
 
-Last session: 2026-02-10 (Phase 10 execution)
-Stopped at: Completed 10-01-PLAN.md (Support & Contact) — v1.1 Homepage Design Milestone COMPLETE
+Last session: 2026-02-10 (v1.1 milestone completion)
+Stopped at: Milestone archived, ready for next milestone
 Resume file: None
 
 ---
-*Last updated: 2026-02-10 after Phase 10 Plan 01 completion*
+*Last updated: 2026-02-10 after v1.1 milestone completion*
