@@ -18,6 +18,7 @@ export function Header() {
   }, []);
 
   const navLinks = [
+    { href: "/products/rollerblinds", label: "Rollerblinds" },
     { href: "#about", label: "About" },
     { href: "#services", label: "Services" },
     { href: "#our-work", label: "Our Work" },
@@ -45,15 +46,25 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm text-muted hover:text-foreground transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.href.startsWith("/") ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-muted hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-muted hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </a>
+              )
+            )}
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
@@ -96,16 +107,27 @@ export function Header() {
           }`}
         >
           <nav className="rounded-2xl bg-background/90 backdrop-blur-md shadow-lg shadow-black/[0.03] border border-border/50 px-5 py-4 flex flex-col gap-3">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={handleMobileLinkClick}
-                className="text-sm text-muted hover:text-foreground transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.href.startsWith("/") ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={handleMobileLinkClick}
+                  className="text-sm text-muted hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={handleMobileLinkClick}
+                  className="text-sm text-muted hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </a>
+              )
+            )}
             <div className="flex items-center justify-between pt-2 border-t border-border/50">
               <Link
                 href="/products/custom-textile"
