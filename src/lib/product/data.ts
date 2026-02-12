@@ -22,6 +22,20 @@ const products: Record<string, ProductData> = {
       { label: "Care", value: "Machine washable at 30 °C" },
     ],
   },
+  "venetian-blinds-25mm": {
+    id: "10373715755274",
+    name: "Venetian Blinds 25mm",
+    description:
+      "Classic 25mm venetian blinds made to measure. Enter your desired width and height to get an instant price quote.",
+    details: [
+      { label: "Slat width", value: "25 mm" },
+      { label: "Material", value: "Aluminium" },
+      { label: "Dimensions", value: "10–200 cm (width & height)" },
+      { label: "Production time", value: "3–5 business days" },
+      { label: "Mounting", value: "Inside or outside recess" },
+      { label: "Care", value: "Wipe clean with damp cloth" },
+    ],
+  },
 };
 
 export function getProduct(productId: string): ProductData | undefined {
