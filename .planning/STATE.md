@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-02-10)
 
 Phase: 10 of 10 (all milestones shipped)
 Status: v1.1 Design Homepage milestone COMPLETE — awaiting next milestone
-Last activity: 2026-02-10 — v1.1 milestone archived
+Last activity: 2026-02-12 - Completed quick task 3: Add category page with white and black rollerblinds categories
 
 Progress: [██████████] 100% (v1.0 + v1.1 complete)
 
@@ -43,6 +43,12 @@ From v1.0 carried forward:
 ### Blockers/Concerns
 
 None.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 3 | Add category page with white and black rollerblinds categories | 2026-02-12 | c98a510 | [3-add-category-page-with-white-and-black-r](./quick/3-add-category-page-with-white-and-black-r/) |
 
 ## Session Continuity
 
