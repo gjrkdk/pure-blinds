@@ -6,10 +6,11 @@
 import { z } from 'zod';
 
 /**
- * Validation schema for dimension inputs
- * Ensures dimensions are within 10-200cm range with descriptive error messages
+ * Validation schema for pricing API requests
+ * Includes productId and dimension constraints (10-200cm range)
  */
-export const DimensionInputSchema = z.object({
+export const PricingRequestSchema = z.object({
+  productId: z.string().min(1, 'Product ID is required'),
   width: z
     .number()
     .min(10, 'Width must be at least 10cm')
@@ -23,4 +24,4 @@ export const DimensionInputSchema = z.object({
 /**
  * TypeScript type inferred from the Zod schema
  */
-export type DimensionInput = z.infer<typeof DimensionInputSchema>;
+export type PricingRequest = z.infer<typeof PricingRequestSchema>;

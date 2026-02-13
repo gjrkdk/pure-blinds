@@ -99,6 +99,7 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
+            productId,
             width: widthNum,
             height: heightNum
           })
@@ -123,6 +124,9 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
               })
               setFieldErrors(errors)
             }
+            setPrice(null)
+          } else if (response.status === 404) {
+            setError('Product pricing unavailable')
             setPrice(null)
           } else {
             setError('Unable to calculate price')
