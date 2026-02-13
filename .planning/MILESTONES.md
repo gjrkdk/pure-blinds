@@ -57,3 +57,33 @@
 
 ---
 
+
+## v1.2 Product Catalog & Navigation (Shipped: 2026-02-13)
+
+**Delivered:** Full product catalog with multi-product pricing, category navigation, Velite-powered blog, and URL polish completing the storefront experience.
+
+**Phases completed:** 11-14 (6 plans, 12 tasks)
+
+**Key accomplishments:**
+
+- Multi-product catalog with 4 products, per-product pricing matrices, and pure pricing calculator accepting any matrix as parameter
+- Category navigation with Products overview page, static category pages (rollerblinds, venetian-blinds, textiles), and W3C ARIA breadcrumbs
+- Header/footer navigation overhaul: Products and Blog links, mobile menu update, footer category and blog links
+- Velite-powered blog with type-safe MDX content management, 3 sample posts (buying guides, care instructions), and responsive typography
+- URL migration from /thank-you to /confirmation with 308 permanent redirect preserving query parameters
+- WCAG 2.5.8 responsive breadcrumbs with 44px touch targets, text truncation, and flex-wrap on mobile
+
+**Stats:**
+
+- 20+ files created/modified
+- 3,449 lines of TypeScript/TSX (total project)
+- 4 phases, 6 plans, 12 tasks
+- 1 day (Feb 13), 1,481s (24m 41s) execution time
+- Zero deviations across all phases
+
+**Git range:** `feat(11-01)` → `feat(14-01)`
+
+**What's next:** SEO foundation, real content/photography, contact form backend, scroll animations.
+
+---
+
