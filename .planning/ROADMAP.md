@@ -142,7 +142,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 13-01-PLAN.md — Velite blog infrastructure, sample MDX content, listing and detail pages
+- [x] 13-01-PLAN.md — Velite blog infrastructure, sample MDX content, listing and detail pages
 
 #### Phase 14: Polish & URL Migration
 **Goal**: URL migration and consistent navigation styling
@@ -175,8 +175,8 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 10. Support & Contact | v1.1 | 1/1 | Complete | 2026-02-10 |
 | 11. Product Catalog Foundation | v1.2 | 2/2 | Complete | 2026-02-13 |
 | 12. Category Navigation & Product Expansion | v1.2 | 2/2 | Complete | 2026-02-13 |
-| 13. Blog Foundation & Content Marketing | v1.2 | 0/1 | Not started | - |
+| 13. Blog Foundation & Content Marketing | v1.2 | 1/1 | Complete | 2026-02-13 |
 | 14. Polish & Metadata | v1.2 | 0/1 | Not started | - |
 
 ---
-*Last updated: 2026-02-13 after Phase 12 completion*
+*Last updated: 2026-02-13 after Phase 13 completion*
