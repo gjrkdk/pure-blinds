@@ -109,8 +109,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 11-01-PLAN.md — Product catalog data model, types, per-product pricing matrices, and pricing engine refactor
-- [ ] 11-02-PLAN.md — API route with productId, cart ID format change with migration, Shopify customAttributes
+- [x] 11-01-PLAN.md — Product catalog data model, types, per-product pricing matrices, and pricing engine refactor
+- [x] 11-02-PLAN.md — API route with productId, cart ID format change with migration, Shopify customAttributes
 
 #### Phase 12: Category Navigation & Product Expansion
 **Goal**: Category-based product browsing with product grids and enhanced detail pages
@@ -174,7 +174,7 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 8. About & Services | v1.1 | 1/1 | Complete | 2026-02-09 |
 | 9. Showcase & Social Proof | v1.1 | 1/1 | Complete | 2026-02-10 |
 | 10. Support & Contact | v1.1 | 1/1 | Complete | 2026-02-10 |
-| 11. Product Catalog Foundation | v1.2 | 0/2 | Not started | - |
+| 11. Product Catalog Foundation | v1.2 | 2/2 | Complete | 2026-02-13 |
 | 12. Category Navigation & Product Expansion | v1.2 | 0/2 | Not started | - |
 | 13. Blog Foundation & Content Marketing | v1.2 | 0/2 | Not started | - |
 | 14. Polish & Metadata | v1.2 | 0/1 | Not started | - |
