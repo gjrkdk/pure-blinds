@@ -10,20 +10,20 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 12 of 14 (Category Navigation & Product Expansion)
-Plan: 12-02 of 2
-Status: In progress
-Last activity: 2026-02-13 — Completed 12-02-PLAN.md (navigation structure)
+Plan: Complete (2/2 plans finished)
+Status: Phase complete
+Last activity: 2026-02-13 — Completed 12-01-PLAN.md (category navigation and breadcrumbs)
 
-Progress: [████████████░░░░░░░░] 80% (11.5/14 phases complete)
+Progress: [█████████████░░░░░░░] 86% (12/14 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 17 (9 from v1.0, 5 from v1.1, 3 from v1.2)
-- Average duration: 204s (v1.2 tracking)
+- Total plans completed: 18 (9 from v1.0, 5 from v1.1, 4 from v1.2)
+- Average duration: 200s (v1.2 tracking)
 - Total v1.0 execution time: ~3 days (Jan 29-31)
 - Total v1.1 execution time: 465s (7m 45s)
-- Total v1.2 execution time: 616s (10m 16s)
+- Total v1.2 execution time: 1114s (18m 34s)
 
 **By Milestone:**
 
@@ -31,9 +31,9 @@ Progress: [████████████░░░░░░░░] 80% (11
 |-----------|--------|-------|------------|----------|
 | v1.0 MVP | 1-5 | 9 | ~3 days | ~53 min |
 | v1.1 Homepage | 6-10 | 5 | 465s (7.75m) | 93s |
-| v1.2 Catalog | 11-14 | 3/7 | 616s (10.3m) | 205s |
+| v1.2 Catalog | 11-14 | 4/7 | 1114s (18.6m) | 279s |
 
-*Updated after 12-02 execution*
+*Updated after 12-01 execution*
 
 ## Accumulated Context
 
@@ -42,6 +42,8 @@ Progress: [████████████░░░░░░░░] 80% (11
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- [12-01]: Static category routes vs dynamic [category] route — for 3 stable categories, static pages avoid Next.js route collision with [productId], simpler than URL restructuring
+- [12-01]: Breadcrumbs as reusable server component with W3C ARIA — aria-label, aria-current, aria-hidden for accessibility, zero client-side JS
 - [12-02]: Static category routes vs dynamic [category] — avoids Next.js route ambiguity with [productId], enables full SSG
 - [11-02]: Cart ID format as human-readable productId-widthxheight — better debugging than hashes
 - [11-02]: Zustand persist v2 migration clears old carts — acceptable pre-launch, simpler than transformation
@@ -77,9 +79,9 @@ From v1.0 carried forward:
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Completed 12-02-PLAN.md — navigation structure with breadcrumbs and category pages
+Stopped at: Completed Phase 12 (Category Navigation & Product Expansion) — all 2 plans finished
 Resume file: None
-Next step: Continue Phase 12 execution (12-01 remaining)
+Next step: `/gsd:plan-phase 13` to begin Metadata & SEO phase
 
 ---
-*Last updated: 2026-02-13 after 12-02 execution*
+*Last updated: 2026-02-13 after Phase 12 execution*
