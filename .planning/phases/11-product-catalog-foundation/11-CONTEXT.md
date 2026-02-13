@@ -36,7 +36,7 @@ This phase establishes the data architecture. Product browsing UI comes in Phase
 
 ### Shopify Variant Mapping
 - **Product structure**: 1:1 mapping — each catalog product = 1 Shopify product with single 'Custom Size' variant
-- **Dimension passing**: Use line item properties — `[{key: 'Width', value: '150cm'}, {key: 'Height', value: '200cm'}]` — visible on orders and invoices
+- **Dimension passing**: Use customAttributes (GraphQL API) — `[{key: 'Width', value: '150cm'}, {key: 'Height', value: '200cm'}]` — visible on orders and invoices
 - **Price handling**: Override variant price in Draft Order API with calculated price — Shopify variant has placeholder price (€0 or €1)
 - **Shopify IDs**: Store both shopifyProductId and shopifyVariantId in product data — variant ID is what Draft Order API needs
 
@@ -53,7 +53,7 @@ This phase establishes the data architecture. Product browsing UI comes in Phase
 
 - Pricing engine must remain dependency-free so it can be reused in other contexts (client-side, background jobs, etc.)
 - Cart ID format should be readable for debugging: `rollerblinds-white-150x200` better than hash
-- Line item properties are better than custom attributes because they show on invoices automatically
+- Shopify GraphQL uses customAttributes for line item metadata (appears on invoices automatically)
 
 </specifics>
 
