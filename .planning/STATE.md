@@ -10,20 +10,20 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 ## Current Position
 
 Phase: 12 of 14 (Category Navigation & Product Expansion)
-Plan: Not yet planned
-Status: Ready to plan
-Last activity: 2026-02-13 — Phase 11 complete and verified (all must-haves passed)
+Plan: 12-02 of 2
+Status: In progress
+Last activity: 2026-02-13 — Completed 12-02-PLAN.md (navigation structure)
 
-Progress: [████████████░░░░░░░░] 79% (11/14 phases complete)
+Progress: [████████████░░░░░░░░] 80% (11.5/14 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16 (9 from v1.0, 5 from v1.1, 2 from v1.2)
-- Average duration: 161s (v1.2 tracking)
+- Total plans completed: 17 (9 from v1.0, 5 from v1.1, 3 from v1.2)
+- Average duration: 204s (v1.2 tracking)
 - Total v1.0 execution time: ~3 days (Jan 29-31)
 - Total v1.1 execution time: 465s (7m 45s)
-- Total v1.2 execution time: 321s (5m 21s)
+- Total v1.2 execution time: 616s (10m 16s)
 
 **By Milestone:**
 
@@ -31,9 +31,9 @@ Progress: [████████████░░░░░░░░] 79% (11
 |-----------|--------|-------|------------|----------|
 | v1.0 MVP | 1-5 | 9 | ~3 days | ~53 min |
 | v1.1 Homepage | 6-10 | 5 | 465s (7.75m) | 93s |
-| v1.2 Catalog | 11-14 | 2/7 | 321s (5.35m) | 161s |
+| v1.2 Catalog | 11-14 | 3/7 | 616s (10.3m) | 205s |
 
-*Updated after 11-02 execution*
+*Updated after 12-02 execution*
 
 ## Accumulated Context
 
@@ -42,6 +42,7 @@ Progress: [████████████░░░░░░░░] 79% (11
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- [12-02]: Static category routes vs dynamic [category] — avoids Next.js route ambiguity with [productId], enables full SSG
 - [11-02]: Cart ID format as human-readable productId-widthxheight — better debugging than hashes
 - [11-02]: Zustand persist v2 migration clears old carts — acceptable pre-launch, simpler than transformation
 - [11-02]: Shopify customAttributes with capitalized keys and units — better invoice display
@@ -76,9 +77,9 @@ From v1.0 carried forward:
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Phase 11 verified and complete — all 5 success criteria passed
+Stopped at: Completed 12-02-PLAN.md — navigation structure with breadcrumbs and category pages
 Resume file: None
-Next step: `/gsd:plan-phase 12` to begin Category Navigation & Product Expansion
+Next step: Continue Phase 12 execution (12-01 remaining)
 
 ---
-*Last updated: 2026-02-13 after Phase 11 execution and verification*
+*Last updated: 2026-02-13 after 12-02 execution*
