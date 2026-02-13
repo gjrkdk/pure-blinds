@@ -106,11 +106,11 @@ Plans:
   3. API route `/api/pricing` loads correct pricing matrix based on productId
   4. Cart generates unique item IDs that include productId (no collisions between products with same dimensions)
   5. Product data includes Shopify variant ID mapping for checkout integration
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 11-01: TBD
-- [ ] 11-02: TBD
+- [ ] 11-01-PLAN.md — Product catalog data model, types, per-product pricing matrices, and pricing engine refactor
+- [ ] 11-02-PLAN.md — API route with productId, cart ID format change with migration, Shopify customAttributes
 
 #### Phase 12: Category Navigation & Product Expansion
 **Goal**: Category-based product browsing with product grids and enhanced detail pages
