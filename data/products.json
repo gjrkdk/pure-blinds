@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-13",
+  "products": [
+    {
+      "id": "rollerblinds-white",
+      "name": "White Rollerblind",
+      "slug": "white-rollerblind",
+      "category": "rollerblinds",
+      "description": "Clean white rollerblind made to measure. Enter your desired width and height to get an instant price quote.",
+      "pricingMatrixPath": "/data/pricing/rollerblinds-white.json",
+      "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_WHITE",
+      "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_WHITE",
+      "details": [
+        { "label": "Slat material", "value": "Fabric" },
+        { "label": "Color", "value": "White" },
+        { "label": "Dimensions", "value": "10–200 cm (width & height)" },
+        { "label": "Production time", "value": "3–5 business days" },
+        { "label": "Mounting", "value": "Inside or outside recess" },
+        { "label": "Operation", "value": "Chain-operated" },
+        { "label": "Care", "value": "Wipe clean with damp cloth" }
+      ]
+    },
+    {
+      "id": "rollerblinds-black",
+      "name": "Black Rollerblind",
+      "slug": "black-rollerblind",
+      "category": "rollerblinds",
+      "description": "Sleek black rollerblind made to measure. Enter your desired width and height to get an instant price quote.",
+      "pricingMatrixPath": "/data/pricing/rollerblinds-black.json",
+      "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_BLACK",
+      "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_BLACK",
+      "details": [
+        { "label": "Slat material", "value": "Fabric" },
+        { "label": "Color", "value": "Black" },
+        { "label": "Dimensions", "value": "10–200 cm (width & height)" },
+        { "label": "Production time", "value": "3–5 business days" },
+        { "label": "Mounting", "value": "Inside or outside recess" },
+        { "label": "Operation", "value": "Chain-operated" },
+        { "label": "Blackout", "value": "Yes - blocks 99% of light" },
+        { "label": "Care", "value": "Wipe clean with damp cloth" }
+      ]
+    },
+    {
+      "id": "venetian-blinds-25mm",
+      "name": "Venetian Blinds 25mm",
+      "slug": "venetian-blinds-25mm",
+      "category": "venetian-blinds",
+      "description": "Classic 25mm venetian blinds made to measure. Enter your desired width and height to get an instant price quote.",
+      "pricingMatrixPath": "/data/pricing/venetian-blinds-25mm.json",
+      "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_VENETIAN",
+      "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_VENETIAN",
+      "details": [
+        { "label": "Slat width", "value": "25 mm" },
+        { "label": "Material", "value": "Aluminium" },
+        { "label": "Dimensions", "value": "10–200 cm (width & height)" },
+        { "label": "Production time", "value": "3–5 business days" },
+        { "label": "Mounting", "value": "Inside or outside recess" },
+        { "label": "Care", "value": "Wipe clean with damp cloth" }
+      ]
+    },
+    {
+      "id": "custom-textile",
+      "name": "Custom Textile",
+      "slug": "custom-textile",
+      "category": "textiles",
+      "description": "Premium custom-dimension textile. Enter your desired width and height to get an instant price quote.",
+      "pricingMatrixPath": "/data/pricing/custom-textile.json",
+      "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_TEXTILE",
+      "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_TEXTILE",
+      "details": [
+        { "label": "Material", "value": "Premium polyester blend" },
+        { "label": "Dimensions", "value": "10–200 cm (width & height)" },
+        { "label": "Production time", "value": "3–5 business days" },
+        { "label": "Finish", "value": "Hemmed edges, ready to use" },
+        { "label": "Care", "value": "Machine washable at 30 °C" }
+      ]
+    }
+  ]
+}
