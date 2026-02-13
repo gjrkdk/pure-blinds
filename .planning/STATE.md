@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Milestone v1.2 Product Catalog & Navigation
+**Current focus:** Phase 11 - Product Catalog Foundation
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-13 — Milestone v1.2 started
+Phase: 11 of 14 (Product Catalog Foundation)
+Plan: Not yet planned
+Status: Ready to plan
+Last activity: 2026-02-13 — v1.2 roadmap created with 4 phases (11-14)
 
-Progress: [░░░░░░░░░░] 0% (requirements phase)
+Progress: [████████████░░░░░░░░] 71% (10/14 phases complete)
 
 ## Performance Metrics
 
@@ -24,14 +24,27 @@ Progress: [░░░░░░░░░░] 0% (requirements phase)
 - Total v1.0 execution time: ~3 days (Jan 29-31)
 - Total v1.1 execution time: 465s (7m 45s)
 
-*Updated after each plan completion*
+**By Milestone:**
+
+| Milestone | Phases | Plans | Total Time | Avg/Plan |
+|-----------|--------|-------|------------|----------|
+| v1.0 MVP | 1-5 | 9 | ~3 days | ~53 min |
+| v1.1 Homepage | 6-10 | 5 | 465s (7.75m) | 93s |
+| v1.2 Catalog | 11-14 | 0/7 | - | - |
+
+*Updated after roadmap creation*
 
 ## Accumulated Context
 
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-All v1.1 decisions archived — see .planning/milestones/v1.1-ROADMAP.md for details.
+Recent decisions affecting current work:
+
+- [v1.1]: Placeholder content over real copy — ship structure first, fill business copy separately
+- [v1.1]: Client component for header, server for footer — optimal rendering split
+- [v1.0]: Pricing as standalone domain — engine must be reusable across webshop, app, and API
+- [v1.0]: BFF architecture (Next.js) — single codebase for frontend + backend
 
 ### Pending Todos
 
@@ -43,7 +56,10 @@ From v1.0 carried forward:
 
 ### Blockers/Concerns
 
-None.
+**Architecture flags for v1.2:**
+- Cart ID generation must include productId to prevent collisions (Phase 11)
+- Pricing engine refactor must maintain zero Shopify dependencies (Phase 11)
+- Zustand localStorage hydration needs proper client-side handling (Phase 11)
 
 ### Quick Tasks Completed
 
@@ -53,9 +69,10 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-10 (v1.1 milestone completion)
-Stopped at: Milestone archived, ready for next milestone
+Last session: 2026-02-13
+Stopped at: v1.2 roadmap and state files created
 Resume file: None
+Next step: `/gsd:plan-phase 11` to begin Product Catalog Foundation
 
 ---
-*Last updated: 2026-02-13 after v1.2 milestone start*
+*Last updated: 2026-02-13 after v1.2 roadmap creation*

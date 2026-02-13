@@ -58,15 +58,11 @@ Requirements for Product Catalog & Navigation milestone. Each maps to roadmap ph
 - [ ] **NAV-06**: Footer updated with links to product categories
 - [ ] **NAV-07**: Footer includes link to blog
 
-### Polish & Metadata
+### Polish
 
 - [ ] **POLISH-01**: Thank you page renamed to Confirmation page at `/confirmation`
 - [ ] **POLISH-02**: 301 redirect from `/thank-you` to `/confirmation`
-- [ ] **POLISH-03**: Products overview page has SEO metadata (title, description, OG tags)
-- [ ] **POLISH-04**: Category pages have dynamic SEO metadata
-- [ ] **POLISH-05**: Blog pages have SEO metadata
-- [ ] **POLISH-06**: Product detail pages have dynamic metadata based on product
-- [ ] **POLISH-07**: Breadcrumbs styled consistently across all pages
+- [ ] **POLISH-03**: Breadcrumbs styled consistently across all pages
 
 ## v2 Requirements
 
@@ -79,6 +75,13 @@ Deferred to future release. Tracked but not in current roadmap.
 - **ENHANCE-03**: Product reviews and ratings (wait for real customer reviews)
 - **ENHANCE-04**: Quick-view modal from category pages (not needed for custom products)
 - **ENHANCE-05**: Product comparison feature (defer until multiple similar products exist)
+
+### SEO & Metadata
+
+- **SEO-01**: Products overview page has SEO metadata (title, description, OG tags)
+- **SEO-02**: Category pages have dynamic SEO metadata
+- **SEO-03**: Blog pages have SEO metadata
+- **SEO-04**: Product detail pages have dynamic metadata based on product
 
 ### Blog Enhancements
 
@@ -120,13 +123,51 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (To be filled by roadmapper) | | |
+| CATALOG-01 | Phase 11 | Pending |
+| CATALOG-02 | Phase 11 | Pending |
+| CATALOG-03 | Phase 11 | Pending |
+| CATALOG-04 | Phase 11 | Pending |
+| CATALOG-05 | Phase 11 | Pending |
+| CATALOG-06 | Phase 11 | Pending |
+| CATALOG-07 | Phase 11 | Pending |
+| CATEGORY-01 | Phase 12 | Pending |
+| CATEGORY-02 | Phase 12 | Pending |
+| CATEGORY-03 | Phase 12 | Pending |
+| CATEGORY-04 | Phase 12 | Pending |
+| CATEGORY-05 | Phase 12 | Pending |
+| CATEGORY-06 | Phase 12 | Pending |
+| CATEGORY-07 | Phase 12 | Pending |
+| CATEGORY-08 | Phase 12 | Pending |
+| PRODUCT-01 | Phase 12 | Pending |
+| PRODUCT-02 | Phase 12 | Pending |
+| PRODUCT-03 | Phase 12 | Pending |
+| PRODUCT-04 | Phase 12 | Pending |
+| PRODUCT-05 | Phase 12 | Pending |
+| PRODUCT-06 | Phase 12 | Pending |
+| NAV-01 | Phase 12 | Pending |
+| NAV-02 | Phase 12 | Pending |
+| NAV-03 | Phase 12 | Pending |
+| NAV-04 | Phase 12 | Pending |
+| NAV-05 | Phase 12 | Pending |
+| BLOG-01 | Phase 13 | Pending |
+| BLOG-02 | Phase 13 | Pending |
+| BLOG-03 | Phase 13 | Pending |
+| BLOG-04 | Phase 13 | Pending |
+| BLOG-05 | Phase 13 | Pending |
+| BLOG-06 | Phase 13 | Pending |
+| BLOG-07 | Phase 13 | Pending |
+| BLOG-08 | Phase 13 | Pending |
+| NAV-06 | Phase 13 | Pending |
+| NAV-07 | Phase 13 | Pending |
+| POLISH-01 | Phase 14 | Pending |
+| POLISH-02 | Phase 14 | Pending |
+| POLISH-03 | Phase 14 | Pending |
 
 **Coverage:**
-- v1.2 requirements: 0 total
-- Mapped to phases: 0
+- v1.2 requirements: 39 total
+- Mapped to phases: 39/39 (100%)
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-13*
-*Last updated: 2026-02-13 after initial definition*
+*Last updated: 2026-02-13 after roadmap creation*
