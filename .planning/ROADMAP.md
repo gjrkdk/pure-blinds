@@ -151,10 +151,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. Thank you page renamed to Confirmation at `/confirmation` with 301 redirect from `/thank-you`
   2. Breadcrumbs styled consistently across all pages with responsive behavior
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 14-01: TBD
+- [ ] 14-01-PLAN.md — URL migration (thank-you to confirmation) and responsive breadcrumb styling
 
 ## Progress
 
