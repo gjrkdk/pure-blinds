@@ -139,11 +139,10 @@ Plans:
   3. System includes 2-3 sample blog posts (buying guides, care instructions) managed via Velite MDX
   4. Blog post detail pages are responsive with good typography
   5. Footer includes links to product categories and blog
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 13-01: TBD
-- [ ] 13-02: TBD
+- [ ] 13-01-PLAN.md — Velite blog infrastructure, sample MDX content, listing and detail pages
 
 #### Phase 14: Polish & URL Migration
 **Goal**: URL migration and consistent navigation styling
@@ -176,7 +175,7 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 10. Support & Contact | v1.1 | 1/1 | Complete | 2026-02-10 |
 | 11. Product Catalog Foundation | v1.2 | 2/2 | Complete | 2026-02-13 |
 | 12. Category Navigation & Product Expansion | v1.2 | 2/2 | Complete | 2026-02-13 |
-| 13. Blog Foundation & Content Marketing | v1.2 | 0/2 | Not started | - |
+| 13. Blog Foundation & Content Marketing | v1.2 | 0/1 | Not started | - |
 | 14. Polish & Metadata | v1.2 | 0/1 | Not started | - |
 
 ---
