@@ -123,11 +123,11 @@ Plans:
   4. Breadcrumb navigation shows current page path (Home > Products > Category)
   5. Product detail page loads correct product data, pricing matrix, and images based on productId from URL
   6. Header navigation shows updated structure: Pure Blinds | Products | Blog | Cart
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 12-01: TBD
-- [ ] 12-02: TBD
+- [ ] 12-01-PLAN.md — Breadcrumbs component, Products overview page, dynamic category listing page
+- [ ] 12-02-PLAN.md — Header/footer navigation update, product detail breadcrumbs, blog placeholder
 
 #### Phase 13: Blog Foundation & Content Marketing
 **Goal**: Blog listing and post detail pages with type-safe MDX content management
