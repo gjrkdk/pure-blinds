@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import CartIcon from "@/components/cart/cart-icon";
@@ -13,8 +13,8 @@ export function Header() {
       setScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
