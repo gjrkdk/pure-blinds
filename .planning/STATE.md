@@ -5,25 +5,25 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Phase 13 - Blog Foundation & Content Marketing
+**Current focus:** Phase 14 - Polish & URL Migration
 
 ## Current Position
 
-Phase: 13 of 14 (Blog Foundation & Content Marketing)
+Phase: 14 of 14 (Polish & URL Migration)
 Plan: 1 of 1 complete
-Status: Phase 13 complete
-Last activity: 2026-02-13 — Plan 13-01 complete (Velite blog foundation with 3 sample posts)
+Status: Phase 14 complete
+Last activity: 2026-02-13 — Plan 14-01 complete (URL migration to /confirmation, WCAG breadcrumbs)
 
-Progress: [██████████████░░░░░░] 93% (13/14 phases complete)
+Progress: [████████████████████] 100% (14/14 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19 (9 from v1.0, 5 from v1.1, 5 from v1.2)
+- Total plans completed: 20 (9 from v1.0, 5 from v1.1, 6 from v1.2)
 - Average duration: 220s (v1.2 tracking)
 - Total v1.0 execution time: ~3 days (Jan 29-31)
 - Total v1.1 execution time: 465s (7m 45s)
-- Total v1.2 execution time: 1377s (22m 57s)
+- Total v1.2 execution time: 1481s (24m 41s)
 
 **By Milestone:**
 
@@ -31,9 +31,9 @@ Progress: [██████████████░░░░░░] 93% (13
 |-----------|--------|-------|------------|----------|
 | v1.0 MVP | 1-5 | 9 | ~3 days | ~53 min |
 | v1.1 Homepage | 6-10 | 5 | 465s (7.75m) | 93s |
-| v1.2 Catalog | 11-14 | 5/7 | 1377s (23m) | 275s |
+| v1.2 Catalog | 11-14 | 6/7 | 1481s (24.7m) | 247s |
 
-*Updated after 13-01 execution*
+*Updated after 14-01 execution*
 
 ## Accumulated Context
 
@@ -42,6 +42,9 @@ Progress: [██████████████░░░░░░] 93% (13
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- [14-01]: 308 permanent redirect preserves query parameters through /thank-you to /confirmation migration
+- [14-01]: Mobile touch targets use py-3 (44px) for WCAG 2.5.8 compliance
+- [14-01]: Breadcrumb truncation at 150px for links, 200px for current page with title hover text
 - [13-01]: Relative imports for .velite data vs TypeScript path alias — Turbopack doesn't recognize #content/* alias, relative imports work without config
 - [13-01]: next.config.mjs with ESM vs next.config.ts — Velite requires top-level await, TypeScript config doesn't support it
 - [13-01]: @plugin directive for Tailwind v4 typography — Tailwind v4 loads plugins via CSS, not tailwind.config.js
@@ -82,9 +85,9 @@ From v1.0 carried forward:
 ## Session Continuity
 
 Last session: 2026-02-13
-Stopped at: Phase 13 Plan 01 complete — Velite blog foundation with 3 sample posts, listing and detail pages working
+Stopped at: Phase 14 Plan 01 complete — URL migration to /confirmation with permanent redirect, WCAG 2.5.8 breadcrumbs with responsive touch targets
 Resume file: None
-Next step: `/gsd:plan-phase 14` to begin final phase (SEO & Analytics)
+Next step: v1.2 milestone complete — all 14 phases finished
 
 ---
-*Last updated: 2026-02-13 after Phase 13-01 execution*
+*Last updated: 2026-02-13 after Phase 14-01 execution*
