@@ -2,18 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-10)
+See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Planning next milestone
+**Current focus:** Milestone v1.2 Product Catalog & Navigation
 
 ## Current Position
 
-Phase: 10 of 10 (all milestones shipped)
-Status: v1.1 Design Homepage milestone COMPLETE — awaiting next milestone
-Last activity: 2026-02-12 - Completed quick task 3: Add category page with white and black rollerblinds categories
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-13 — Milestone v1.2 started
 
-Progress: [██████████] 100% (v1.0 + v1.1 complete)
+Progress: [░░░░░░░░░░] 0% (requirements phase)
 
 ## Performance Metrics
 
@@ -57,4 +58,4 @@ Stopped at: Milestone archived, ready for next milestone
 Resume file: None
 
 ---
-*Last updated: 2026-02-10 after v1.1 milestone completion*
+*Last updated: 2026-02-13 after v1.2 milestone start*

@@ -8,6 +8,18 @@ A custom webshop for selling textiles (curtains, flags) with dynamic pricing bas
 
 Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
 
+## Current Milestone: v1.2 Product Catalog & Navigation
+
+**Goal:** Transform single-product webshop into full product catalog with category navigation, multiple products with different pricing matrices, improved product pages, and blog foundation.
+
+**Target features:**
+- Products page with category overview (Light/Dark Rollerblinds)
+- Category pages showing product grids with images
+- Multi-product support with separate pricing matrices per category
+- Enhanced product detail page with better UX and visuals
+- Blog grid and individual post pages with placeholder content
+- Updated navigation (Products, Blog, Cart) and rename Thank You → Confirmation
+
 ## Requirements
 
 ### Validated
@@ -38,6 +50,15 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 ### Active
 
+#### v1.2 Product Catalog & Navigation
+- [ ] Products overview page with Light/Dark category cards
+- [ ] Category pages (Light Rollerblinds, Dark Rollerblinds) with product grids
+- [ ] Multi-product data model with separate pricing matrices
+- [ ] Enhanced product detail page supporting multiple products
+- [ ] Updated navigation (Products, Blog, Cart)
+- [ ] Blog page with grid layout and individual post pages
+- [ ] Rename Thank You page to Confirmation page
+
 #### Carried from v1.0
 - [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
 - [ ] Create test products in Shopify store (deferred from Phase 1)
@@ -46,22 +67,21 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 ### Out of Scope
 
-- Category pages — Only one product currently, add when multi-product launches
 - Advanced SEO (content strategy, keyword research, link building) — Foundation first, strategy later
 - GEO optimization — Deferred until SEO foundation is solid
-- Order status/tracking page — Beyond thank you page, deferred
+- Order status/tracking page — Beyond confirmation page, deferred
 - Shopify app version — Requires different architecture
 - Theme extensions — App-specific feature
 - Native cart price overrides — Requires Shopify Plus
 - Shopify Functions — Plan-gated feature
 - Database for matrix storage — v1 uses JSON, defer until needed
 - Variant-per-dimension structures — Explicitly excluded, doesn't scale
-- Multi-product support — Single product type, expand later if validated
 - Contact form backend — Frontend form only, backend submission handling deferred
 - Scroll-reveal animations — Ship structure first, add polish later
 - Image carousel — Deferred to future milestone
 - Real business copy — Placeholder content first, copywriting is separate effort
 - Product photography — Using placeholder images, real photos added later
+- Real blog content — Mock posts for structure, content strategy separate effort
 
 ## Context
 
@@ -140,4 +160,4 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 | Client-side form validation only | Backend contact form submission deferred | ✓ Good — form validates required fields, shows success message |
 
 ---
-*Last updated: 2026-02-10 after v1.1 milestone*
+*Last updated: 2026-02-13 after v1.2 milestone start*
