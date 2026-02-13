@@ -35,7 +35,12 @@ export function generateOptionsSignature(options: {
 }
 
 /**
- * Generates a unique cart item ID by combining product ID and options hash
+ * Generates a unique cart item ID by combining product ID and dimensions
+ * Format: ${productId}-${width}x${height}
+ *
+ * Examples:
+ * - rollerblinds-white-150x200
+ * - rollerblinds-black-150x200  (same dimensions, different product = unique ID)
  *
  * @param productId - Product identifier
  * @param options - User-entered dimensions
@@ -45,6 +50,5 @@ export function generateCartItemId(
   productId: string,
   options: { width: number; height: number }
 ): string {
-  const signature = generateOptionsSignature(options);
-  return `${productId}-${signature}`;
+  return `${productId}-${options.width}x${options.height}`;
 }

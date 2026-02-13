@@ -145,9 +145,19 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: 'cart-storage',
+      version: 2,
       storage: createJSONStorage(() => storageWithTTL),
       // Only persist the items array, not derived values
       partialize: (state) => ({ items: state.items }),
+      migrate: (persistedState, version) => {
+        // Version 0 or 1 = old format (no productId in cart ID, or hash-based IDs)
+        // Clear cart and start fresh
+        if (version < 2) {
+          console.warn('Cart format changed (v2: productId in cart IDs) - clearing old items');
+          return { items: [] };
+        }
+        return persistedState as { items: CartItem[] };
+      },
     }
   )
 );
