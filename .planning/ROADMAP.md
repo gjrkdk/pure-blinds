@@ -126,8 +126,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 12-01-PLAN.md — Breadcrumbs component, Products overview page, dynamic category listing page
-- [ ] 12-02-PLAN.md — Header/footer navigation update, product detail breadcrumbs, blog placeholder
+- [x] 12-01-PLAN.md — Breadcrumbs component, Products overview page, static category pages
+- [x] 12-02-PLAN.md — Header/footer navigation update, product detail breadcrumbs, blog placeholder
 
 #### Phase 13: Blog Foundation & Content Marketing
 **Goal**: Blog listing and post detail pages with type-safe MDX content management
@@ -175,9 +175,9 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 9. Showcase & Social Proof | v1.1 | 1/1 | Complete | 2026-02-10 |
 | 10. Support & Contact | v1.1 | 1/1 | Complete | 2026-02-10 |
 | 11. Product Catalog Foundation | v1.2 | 2/2 | Complete | 2026-02-13 |
-| 12. Category Navigation & Product Expansion | v1.2 | 0/2 | Not started | - |
+| 12. Category Navigation & Product Expansion | v1.2 | 2/2 | Complete | 2026-02-13 |
 | 13. Blog Foundation & Content Marketing | v1.2 | 0/2 | Not started | - |
 | 14. Polish & Metadata | v1.2 | 0/1 | Not started | - |
 
 ---
-*Last updated: 2026-02-13 after v1.2 roadmap creation*
+*Last updated: 2026-02-13 after Phase 12 completion*
