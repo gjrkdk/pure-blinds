@@ -45,10 +45,11 @@ export async function createDraftOrder(items: CartItem[]): Promise<{ invoiceUrl:
               currencyCode: "EUR"
             },
             quantity: item.quantity,
-            // Store dimensions as custom attributes for fulfillment
+            // Store dimensions and product metadata as custom attributes for fulfillment
             customAttributes: [
-              { key: "width", value: item.options.width.toString() },
-              { key: "height", value: item.options.height.toString() }
+              { key: "Width", value: `${item.options.width}cm` },
+              { key: "Height", value: `${item.options.height}cm` },
+              { key: "Product ID", value: item.productId }
             ]
           }))
         }
