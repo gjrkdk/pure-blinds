@@ -1,10 +1,12 @@
+import Link from "next/link";
+
 export function Footer() {
   const links = [
+    { label: "Rollerblinds", href: "/products/rollerblinds" },
+    { label: "Venetian Blinds", href: "/products/venetian-blinds" },
+    { label: "Textiles", href: "/products/textiles" },
+    { label: "Blog", href: "/blog" },
     { label: "About us", href: "#about" },
-    { label: "Testimonials", href: "#testimonials" },
-    { label: "Our work", href: "#our-work" },
-    { label: "FAQs", href: "#faq" },
-    { label: "Services", href: "#services" },
     { label: "Contact", href: "#contact" },
   ];
 
@@ -23,15 +25,25 @@ export function Footer() {
               Quick links
             </h3>
             <nav className="mt-4 grid grid-cols-2 gap-x-16 gap-y-2">
-              {links.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-sm text-neutral-400 hover:text-accent-foreground transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {links.map((link) =>
+                link.href.startsWith("/") ? (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="text-sm text-neutral-400 hover:text-accent-foreground transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="text-sm text-neutral-400 hover:text-accent-foreground transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                )
+              )}
             </nav>
           </div>
         </div>

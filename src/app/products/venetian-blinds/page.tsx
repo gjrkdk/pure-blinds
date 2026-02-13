@@ -2,10 +2,10 @@ import Link from "next/link";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
 import { getProductsByCategory } from "@/lib/product/catalog";
 
-export default function RollerblindsPage() {
-  const category = "rollerblinds";
+export default function VenetianBlindsPage() {
+  const category = "venetian-blinds";
   const products = getProductsByCategory(category);
-  const displayName = "Rollerblinds";
+  const displayName = "Venetian Blinds";
 
   return (
     <div className="px-6 py-12 sm:py-16">

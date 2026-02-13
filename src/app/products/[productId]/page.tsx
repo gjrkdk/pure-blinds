@@ -1,7 +1,21 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import DimensionConfigurator from "@/components/dimension-configurator";
-import { getProduct } from "@/lib/product/data";
+import Breadcrumbs from "@/components/layout/breadcrumbs";
+import { getProduct, getAllProducts } from "@/lib/product/catalog";
+
+export function generateStaticParams() {
+  const products = getAllProducts();
+  return products.map((product) => ({
+    productId: product.id,
+  }));
+}
+
+function formatCategoryName(category: string): string {
+  return category
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
 
 export default async function ProductPage({
   params,
@@ -18,14 +32,17 @@ export default async function ProductPage({
   return (
     <div className="px-6 py-12 sm:py-16">
       <div className="mx-auto max-w-5xl">
-        {/* Breadcrumb */}
-        <nav className="mb-10 flex items-center gap-2 text-sm text-muted">
-          <Link href="/" className="transition-colors hover:text-foreground">
-            Home
-          </Link>
-          <span aria-hidden="true">/</span>
-          <span className="text-foreground">{product.name}</span>
-        </nav>
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Products", href: "/products" },
+            {
+              label: formatCategoryName(product.category),
+              href: `/products/${product.category}`,
+            },
+            { label: product.name, current: true },
+          ]}
+        />
 
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left column — product info + configurator */}
