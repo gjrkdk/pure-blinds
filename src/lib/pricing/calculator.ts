@@ -4,10 +4,6 @@
  */
 
 import type { PricingResponse, PricingMatrixData } from './types';
-import pricingData from '../../../data/pricing-matrix.json';
-
-// Type assertion to ensure JSON matches our interface
-const pricing = pricingData as PricingMatrixData;
 
 /**
  * Normalizes a dimension to the nearest 10cm increment (rounded up)
@@ -29,9 +25,16 @@ export function dimensionToIndex(normalizedDimension: number): number {
  * Calculates price for given dimensions using the pricing matrix
  * Normalizes dimensions, performs bounds checking, and returns price in integer cents
  *
+ * @param pricingMatrix - The pricing matrix data to use for calculation
+ * @param width - Width dimension in cm
+ * @param height - Height dimension in cm
  * @throws Error if dimensions are out of bounds for the matrix
  */
-export function calculatePrice(width: number, height: number): PricingResponse {
+export function calculatePrice(
+  pricingMatrix: PricingMatrixData,
+  width: number,
+  height: number
+): PricingResponse {
   // Normalize both dimensions to nearest 10cm increment
   const normalizedWidth = normalizeDimension(width);
   const normalizedHeight = normalizeDimension(height);
@@ -41,23 +44,23 @@ export function calculatePrice(width: number, height: number): PricingResponse {
   const heightIndex = dimensionToIndex(normalizedHeight);
 
   // Bounds check for width
-  if (widthIndex < 0 || widthIndex >= pricing.matrix.length) {
+  if (widthIndex < 0 || widthIndex >= pricingMatrix.matrix.length) {
     throw new Error(
       `Width dimension ${width}cm (normalized to ${normalizedWidth}cm) is out of bounds. ` +
-        `Valid range: ${pricing.dimensions.width.min}-${pricing.dimensions.width.max}cm`
+        `Valid range: ${pricingMatrix.dimensions.width.min}-${pricingMatrix.dimensions.width.max}cm`
     );
   }
 
   // Bounds check for height
-  if (heightIndex < 0 || heightIndex >= pricing.matrix[0].length) {
+  if (heightIndex < 0 || heightIndex >= pricingMatrix.matrix[0].length) {
     throw new Error(
       `Height dimension ${height}cm (normalized to ${normalizedHeight}cm) is out of bounds. ` +
-        `Valid range: ${pricing.dimensions.height.min}-${pricing.dimensions.height.max}cm`
+        `Valid range: ${pricingMatrix.dimensions.height.min}-${pricingMatrix.dimensions.height.max}cm`
     );
   }
 
   // Lookup price from matrix (already in integer cents)
-  const priceInCents = pricing.matrix[widthIndex][heightIndex];
+  const priceInCents = pricingMatrix.matrix[widthIndex][heightIndex];
 
   return {
     priceInCents,
