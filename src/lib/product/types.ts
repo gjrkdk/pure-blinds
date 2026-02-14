@@ -7,6 +7,7 @@ export interface Product {
   name: string; // e.g., 'White Rollerblind'
   slug: string; // e.g., 'white-rollerblind' (URL-friendly)
   category: string; // e.g., 'rollerblinds' (flat string, not nested)
+  subcategory?: string; // e.g., 'transparent', 'blackout' (optional subcategory)
   description: string;
   pricingMatrixPath: string; // e.g., '/data/pricing/rollerblinds-white.json'
   shopifyProductId: string; // e.g., 'gid://shopify/Product/123'
