@@ -36,10 +36,10 @@ export function generateStaticParams() {
   const products = getAllProducts();
   return products.map((product) => {
     // Build slug array from product URL
-    // e.g., /products/roller-blinds/transparent-roller-blinds/roller-blind-white
-    // becomes ['roller-blinds', 'transparent-roller-blinds', 'roller-blind-white']
+    // e.g., /producten/rolgordijnen/transparante-rolgordijnen/wit-rolgordijn
+    // becomes ['rolgordijnen', 'transparante-rolgordijnen', 'wit-rolgordijn']
     const url = getProductUrl(product);
-    const slugArray = url.split('/').filter(s => s && s !== 'products');
+    const slugArray = url.split('/').filter(s => s && s !== 'producten');
     return {
       slug: slugArray,
     };
@@ -47,7 +47,14 @@ export function generateStaticParams() {
 }
 
 function formatCategoryName(category: string): string {
-  return category
+  // Map Dutch slugs to proper display names
+  const categoryMap: Record<string, string> = {
+    'rolgordijnen': 'Rolgordijnen',
+    'transparante-rolgordijnen': 'Transparante Rolgordijnen',
+    'verduisterende-rolgordijnen': 'Verduisterende Rolgordijnen',
+  };
+
+  return categoryMap[category] || category
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
@@ -74,10 +81,10 @@ export default async function ProductPage({
   // Build breadcrumbs based on whether product has subcategory
   const breadcrumbItems: Array<{ label: string; href?: string; current?: boolean }> = [
     { label: "Home", href: "/" },
-    { label: "Producten", href: "/products" },
+    { label: "Producten", href: "/producten" },
     {
       label: formatCategoryName(product.category),
-      href: `/products/${product.category}`,
+      href: `/producten/${product.category}`,
     },
   ];
 
@@ -85,7 +92,7 @@ export default async function ProductPage({
   if (product.subcategory) {
     breadcrumbItems.push({
       label: formatCategoryName(product.subcategory),
-      href: `/products/${product.category}/${product.subcategory}`,
+      href: `/producten/${product.category}/${product.subcategory}`,
     });
   }
 

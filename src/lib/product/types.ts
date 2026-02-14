@@ -2,8 +2,8 @@
  * Product catalog type definitions
  */
 
-export type Category = 'roller-blinds';
-export type Subcategory = 'transparent-roller-blinds' | 'blackout-roller-blinds';
+export type Category = 'rolgordijnen';
+export type Subcategory = 'transparante-rolgordijnen' | 'verduisterende-rolgordijnen';
 
 export interface Product {
   id: string; // e.g., 'rollerblinds-white'

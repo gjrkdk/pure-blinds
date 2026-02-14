@@ -25,11 +25,11 @@ interface Category {
 
 const categories: Category[] = [
   {
-    id: "roller-blinds",
+    id: "rolgordijnen",
     name: "Rolgordijnen",
     description:
       "Rolgordijnen op maat in transparante en verduisterende uitvoeringen",
-    href: "/products/roller-blinds",
+    href: "/producten/rolgordijnen",
     image: "/png/rolgordijn-keuken.png",
   },
 ];
