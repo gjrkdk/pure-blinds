@@ -22,7 +22,7 @@ const SERVICES = [
   {
     title: "Event Decoration",
     description:
-      "Transform any venue with custom event textiles. From backdrop drapes to table runners, we create pieces that match your event's theme and dimensions perfectly.",
+      "Transform any venue with custom window treatments. From backdrop drapes to table runners, we create pieces that match your event's theme and dimensions perfectly.",
   },
   {
     title: "Flags & Banners",

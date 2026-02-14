@@ -46,7 +46,7 @@ export function WorkSection() {
         </h2>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
           From residential curtains to commercial installations, see how we bring
-          custom textile solutions to life for diverse clients.
+          custom roller blind solutions to life for diverse clients.
         </p>
 
         <div className="mt-14 space-y-16 sm:space-y-20">

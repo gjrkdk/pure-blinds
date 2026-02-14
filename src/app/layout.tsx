@@ -10,9 +10,9 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Custom Textiles — Made to Measure",
+  title: "Custom Roller Blinds — Made to Measure",
   description:
-    "Order custom-dimension textiles online. Instant pricing, premium materials, delivered to your door.",
+    "Order custom roller blinds online. Instant pricing, premium materials, delivered to your door.",
 };
 
 export default function RootLayout({

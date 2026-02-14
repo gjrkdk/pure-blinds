@@ -6,7 +6,7 @@ const FAQ_ITEMS = [
   {
     question: "What dimensions can I order?",
     answer:
-      "We can create custom textiles to virtually any dimension you need. Simply enter your desired width and height on the product page, and our system will calculate the exact price for your specifications.",
+      "We can create custom roller blinds to virtually any dimension you need. Simply enter your desired width and height on the product page, and our system will calculate the exact price for your specifications.",
   },
   {
     question: "How does pricing work?",
@@ -16,7 +16,7 @@ const FAQ_ITEMS = [
   {
     question: "What fabrics are available?",
     answer:
-      "We offer a curated selection of premium fabrics suitable for curtains, banners, dividers, and decorative textiles. Each product page shows the available fabric options with details about weight, opacity, and ideal uses.",
+      "We offer a curated selection of premium fabrics suitable for transparent and blackout roller blinds. Each product page shows the available fabric options with details about weight, opacity, and ideal uses.",
   },
   {
     question: "How long does delivery take?",
@@ -26,7 +26,7 @@ const FAQ_ITEMS = [
   {
     question: "Can I return custom orders?",
     answer:
-      "Because every order is made to your exact specifications, we cannot accept returns on custom-sized textiles. However, if there's a manufacturing defect or error on our part, we'll gladly replace your order at no charge.",
+      "Because every order is made to your exact specifications, we cannot accept returns on custom-sized roller blinds. However, if there's a manufacturing defect or error on our part, we'll gladly replace your order at no charge.",
   },
   {
     question: "Do you offer bulk discounts?",
@@ -55,7 +55,7 @@ export function FaqSection() {
               Everything you need to know
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted">
-              Have questions about ordering custom textiles? Find answers to the
+              Have questions about ordering custom roller blinds? Find answers to the
               most common questions about dimensions, pricing, fabrics, and
               delivery.
             </p>
