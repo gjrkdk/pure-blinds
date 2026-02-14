@@ -1,13 +1,28 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
 import { getProductsBySubcategory, getProductUrl } from "@/lib/product/catalog";
+
+export const metadata: Metadata = {
+  title: "Verduisterende Rolgordijnen op Maat | Pure Blinds",
+  description:
+    "Verduisterende rolgordijnen op maat die 99% van het licht blokkeren. Ideaal voor slaapkamers en kinderkamers. Bestel online met directe prijsopgave.",
+  openGraph: {
+    locale: "nl_NL",
+    type: "website",
+    title: "Verduisterende Rolgordijnen op Maat | Pure Blinds",
+    description:
+      "Verduisterende rolgordijnen op maat die 99% van het licht blokkeren. Ideaal voor slaapkamers en kinderkamers.",
+    siteName: "Pure Blinds",
+  },
+};
 
 export default function BlackoutRollerBlindsPage() {
   const products = getProductsBySubcategory(
     "roller-blinds",
     "blackout-roller-blinds",
   );
-  const displayName = "Blackout Roller Blinds";
+  const displayName = "Verduisterende Rolgordijnen";
 
   return (
     <div className="px-6 py-12 sm:py-16">
@@ -15,8 +30,8 @@ export default function BlackoutRollerBlindsPage() {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: "Products", href: "/products" },
-            { label: "Roller Blinds", href: "/products/roller-blinds" },
+            { label: "Producten", href: "/products" },
+            { label: "Rolgordijnen", href: "/products/roller-blinds" },
             { label: displayName, current: true },
           ]}
         />
@@ -30,8 +45,10 @@ export default function BlackoutRollerBlindsPage() {
             {displayName}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Browse our collection of blackout roller blinds. Block up to 99% of
-            light for complete darkness and privacy.
+            Verduisterende rolgordijnen op maat zijn de ultieme oplossing wanneer u volledige controle wilt over de lichtinval in uw ruimte. Deze rolgordijnen blokkeren tot 99% van het binnenkomende licht, waardoor ze bij uitstek geschikt zijn voor slaapkamers, kinderkamers en thuisbioscopen. Een donkere slaapomgeving stimuleert de aanmaak van melatonine, het slaaphormoon, en draagt zo bij aan een diepere en betere nachtrust. Ook voor mensen die in ploegendienst werken en overdag moeten slapen, zijn verduisterende rolgordijnen onmisbaar.
+          </p>
+          <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
+            Naast de uitstekende lichtblokkerende werking bieden onze verduisterende rolgordijnen ook extra isolatie. De dikkere stof houdt in de winter de warmte binnen en in de zomer de hitte buiten, wat kan bijdragen aan een lager energieverbruik. De kettingbediening maakt het eenvoudig om het gordijn op elke gewenste hoogte te plaatsen. Bestel eenvoudig online: voer uw maten in, bekijk direct de prijs, en ontvang uw maatwerk rolgordijn binnen enkele werkdagen thuisbezorgd.
           </p>
         </div>
 
@@ -46,7 +63,7 @@ export default function BlackoutRollerBlindsPage() {
               <div className="overflow-hidden rounded-2xl border border-border bg-surface">
                 {/* Product image placeholder */}
                 <div className="flex aspect-4/3 items-center justify-center rounded-2xl bg-white shadow-lifted">
-                  <span className="text-sm text-muted">Product Image</span>
+                  <span className="text-sm text-muted">Productafbeelding</span>
                 </div>
 
                 {/* Product info */}
@@ -58,7 +75,7 @@ export default function BlackoutRollerBlindsPage() {
                     {product.description}
                   </p>
                   <div className="mt-4 flex items-center gap-2 text-sm font-medium text-foreground">
-                    Configure
+                    Configureer
                     <svg
                       width="14"
                       height="14"
