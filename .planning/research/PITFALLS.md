@@ -1,518 +1,716 @@
 # Pitfalls Research
 
-**Domain:** Multi-Product E-Commerce Expansion (Next.js)
-**Researched:** 2026-02-13
+**Domain:** Dutch content & SEO for Next.js 15 App Router ecommerce webshop
+**Researched:** 2026-02-14
 **Confidence:** HIGH
 
 ## Critical Pitfalls
 
-### Pitfall 1: Hardcoded Single Pricing Matrix Import
+### Pitfall 1: Removing Product Categories Without 301 Redirects
 
 **What goes wrong:**
-The pricing calculator currently imports a single JSON file directly: `import pricingData from '../../../data/pricing-matrix.json'`. When adding multiple products with different pricing matrices, developers often duplicate this pattern by importing all matrices at build time, causing massive bundle bloat. Each pricing matrix JSON gets bundled into every client-side chunk that imports the calculator.
+When removing product categories (venetian-blinds, textiles) from the live site, all existing URLs become 404s. This causes:
+- Loss of search engine rankings for those category pages
+- Broken links from external sites (backlinks)
+- Loss of accumulated link equity and authority
+- Poor user experience for visitors using bookmarked URLs or coming from search results
+- Google may interpret this as site quality issues if many pages suddenly return 404
 
 **Why it happens:**
-The existing single-product system uses static imports because it's simple and works fine for one matrix. The pattern looks clean and easy to replicate. Developers assume "just add more imports" without considering bundle size implications. Static imports in Next.js are processed at build time, and multiple large JSON files (20KB+ each) quickly balloon the initial bundle.
+Developers focus on removing the code/routes but forget that these URLs exist in:
+- Google's search index
+- External backlinks from other websites
+- User bookmarks
+- Internal links from blog posts or content pages
+- Sitemap files that haven't been updated
 
 **How to avoid:**
-1. **Refactor pricing calculator to accept matrix as parameter** instead of importing it directly
-2. **Load pricing matrices server-side only** in API routes or Server Components
-3. **Pass product-specific matrix to calculator** rather than bundling all matrices
-4. **Use dynamic imports for client-side scenarios** only when necessary (rarely needed for pricing)
-
-Example refactor:
-```typescript
-// OLD: Couples calculator to single matrix
-import pricingData from '../../../data/pricing-matrix.json';
-export function calculatePrice(width: number, height: number): PricingResponse {
-  const pricing = pricingData as PricingMatrixData;
-  // ...calculation
-}
-
-// NEW: Calculator accepts matrix as dependency
-export function calculatePrice(
-  width: number,
-  height: number,
-  pricingMatrix: PricingMatrixData
-): PricingResponse {
-  // ...calculation using pricingMatrix parameter
-}
-```
+1. **Audit before deletion:** Identify all URLs that will be affected (use Google Search Console to find indexed pages)
+2. **Create 301 redirect map:** For each removed category, determine the most relevant replacement:
+   - `/venetian-blinds` → `/roller-blinds` (main remaining category)
+   - `/venetian-blinds/product-x` → `/roller-blinds/similar-product` OR `/roller-blinds` if no similar product exists
+   - `/textiles` → `/roller-blinds` (main category) or homepage if no logical match
+3. **Implement redirects in next.config.js:**
+   ```javascript
+   async redirects() {
+     return [
+       {
+         source: '/venetian-blinds/:path*',
+         destination: '/roller-blinds',
+         permanent: true, // 301 redirect
+       },
+     ]
+   }
+   ```
+4. **DO NOT redirect everything to homepage** - Google treats this as a soft 404 and may deindex pages anyway
+5. **Update sitemap.xml** immediately - remove deleted URLs from sitemap to preserve crawl budget
+6. **Update internal links** in any static content, blog posts, or footer links
 
 **Warning signs:**
-- Initial bundle size increases by 100KB+ after adding products
-- Lighthouse performance score drops
-- Chrome DevTools Network tab shows large JSON chunks in client bundles
-- Multiple `pricing-matrix-*.json` files visible in `.next/static/chunks/`
+- Sudden drop in organic traffic after category removal
+- Google Search Console shows spike in 404 errors
+- Crawl budget wasted on removed pages
+- Loss of rankings for keywords that used to rank via removed categories
 
 **Phase to address:**
-**Phase 1: Product Catalog Foundation** - Must refactor before adding multiple products. Fixing this after the fact requires touching every pricing call site.
+Phase 1 (Category Cleanup & Route Restructuring) - must be first phase before any other changes
 
 ---
 
-### Pitfall 2: Cart Item ID Collisions Between Products
+### Pitfall 2: Metadata Streaming Breaking SEO for Social Media Bots
 
 **What goes wrong:**
-The cart uses `generateCartItemId(productId, options)` to create unique IDs. When adding multiple products, if two different products happen to have the same options (width/height), the cart treats them as the same item, merging quantities incorrectly. For example, a 100x150cm white rollerblind gets merged with a 100x150cm black rollerblind because the ID generation doesn't distinguish products clearly enough.
+Next.js 15 introduced metadata streaming where `generateMetadata` resolves after initial HTML is sent. For JavaScript-capable bots (like Googlebot), metadata appears in the `<body>` tag after streaming. However:
+- Facebook's crawler (`facebookexternalhit`) is HTML-limited and cannot execute JavaScript
+- LinkedIn, Twitter/X, and WhatsApp bots may not wait for streamed metadata
+- Open Graph tags end up in `<body>` instead of `<head>` for these bots
+- Result: broken preview cards when sharing on social media, missing product images, wrong titles
 
 **Why it happens:**
-The current cart system was designed for a single product where only dimensions matter for uniqueness. The `generateCartItemId` function likely hashes or concatenates just the options, not incorporating the product ID properly. Developers assume the existing ID generation "just works" without auditing the actual implementation for multi-product scenarios.
+- Using `generateMetadata` with database calls or external API fetches creates async metadata
+- Next.js streams this metadata to improve TTFB, but not all bots support this
+- The default behavior prioritizes performance over compatibility with HTML-only bots
 
 **How to avoid:**
-1. **Audit cart ID generation** to ensure `productId` is properly included in the hash/ID
-2. **Add integration tests** covering multi-product cart scenarios
-3. **Verify cart deduplication logic** explicitly checks both `productId` AND `options`
-4. **Add cart validation** that prevents invalid merges
+1. **For critical pages (homepage, main product categories), use static metadata object instead of `generateMetadata`:**
+   ```typescript
+   export const metadata: Metadata = {
+     title: 'Rolgordijnen op Maat | Pure Blinds',
+     description: '...',
+     openGraph: {
+       title: 'Rolgordijnen op Maat | Pure Blinds',
+       images: [{ url: '/og-image.jpg' }],
+       locale: 'nl_NL', // Note: underscore, not hyphen
+     },
+   }
+   ```
 
-Test case to write:
-```typescript
-// Test: Different products with same dimensions should NOT merge
-test('cart keeps different products separate with identical dimensions', () => {
-  const cart = useCartStore.getState();
+2. **If you must use `generateMetadata`, add 'use cache' directive for external data:**
+   ```typescript
+   export async function generateMetadata() {
+     'use cache'
+     const data = await fetch('...')
+     return { title: data.title }
+   }
+   ```
 
-  cart.addItem({
-    productId: 'white-rollerblind',
-    productName: 'White Rollerblind',
-    options: { width: 100, height: 150 },
-    priceInCents: 5000
-  });
+3. **Configure `htmlLimitedBots` in next.config.js to block streaming for social bots:**
+   ```javascript
+   module.exports = {
+     htmlLimitedBots: /(facebookexternalhit|LinkedInBot|Twitterbot|WhatsApp)/,
+   }
+   ```
 
-  cart.addItem({
-    productId: 'black-rollerblind',
-    productName: 'Black Rollerblind',
-    options: { width: 100, height: 150 },
-    priceInCents: 6000
-  });
-
-  expect(cart.items).toHaveLength(2); // NOT 1 merged item
-});
-```
+4. **Test with social media preview tools:**
+   - Facebook Sharing Debugger
+   - LinkedIn Post Inspector
+   - Twitter Card Validator
 
 **Warning signs:**
-- QA reports "wrong product in cart"
-- Quantity increases when adding different products
-- Cart total incorrect when multiple products have same dimensions
-- Customer complaints about checkout showing wrong items
+- Social media share previews show generic/missing images
+- Open Graph meta tags appear in `<body>` when viewing page source
+- `generateMetadata` appears in server component trace in devtools
 
 **Phase to address:**
-**Phase 1: Product Catalog Foundation** - Cart must handle multiple products correctly from the start. This is a data corruption risk that silently breaks the checkout flow.
+Phase 2 (Dutch Content & Metadata) - when implementing all meta tags and Open Graph
 
 ---
 
-### Pitfall 3: Next.js Route Conflicts: `/products/[productId]` vs `/products/rollerblinds`
+### Pitfall 3: Dutch Language Translation Quality Destroying Trust
 
 **What goes wrong:**
-You already have `/products/[productId]/page.tsx` for individual products and `/products/rollerblinds/page.tsx` for the category listing. Next.js treats static segments (`rollerblinds`) with higher priority than dynamic segments (`[productId]`), so this works. However, if you later add a product with ID `rollerblinds`, it creates an ambiguous conflict. The router cannot distinguish between the category page and a product detail page for a product literally named "rollerblinds".
+Using automatic translation (Google Translate, ChatGPT without review) for Dutch content results in:
+- Unnatural phrasing that native speakers immediately recognize as machine-translated
+- Grammar errors (Dutch has gendered articles: de/het)
+- Wrong terminology for window blinds industry (rolgordijn vs rolgordijnen, jaloezie vs venetiaanse jaloezie)
+- Formal vs informal Dutch mismatch (u vs jij/je) - critical for ecommerce trust
+- Loss of credibility and perceived professionalism
+- Google penalizes low-quality content with poor grammar
+
+Studies show 90%+ of Dutch searches are in Dutch language, but poor Dutch is worse than good English.
 
 **Why it happens:**
-Next.js file-based routing appears straightforward, but the interaction between static and dynamic routes at the same level is subtle. Developers don't realize that product IDs and category slugs share the same URL namespace under `/products/`. When product data comes from multiple sources (database, CMS, manual entry), nothing prevents ID collision with category slugs.
+- Developers assume automated translation is "good enough" for MVP
+- No budget allocated for native Dutch speaker review
+- Underestimating how critical language quality is for trust in ecommerce
+- Not understanding Dutch grammar complexity (compound words, de/het articles)
 
 **How to avoid:**
-1. **Use different route prefixes**: `/products/[productId]` for products, `/categories/[slug]` for categories
-2. **OR use route groups** to separate concerns: `/products/(item)/[productId]` vs `/products/(category)/[slug]` with rewrites
-3. **Validate product IDs** against reserved category slugs in the product data layer
-4. **Document reserved words** that cannot be used as product IDs (category slugs, "new", "search", etc.)
+1. **Never use raw machine translation** - use it only as a draft, then:
+   - Hire native Dutch speaker (preferably from Netherlands, not Belgium - different terminology)
+   - Use professional translation service specialized in ecommerce
+   - Get industry-specific review for technical terms (rolgordijn, screentype, etc.)
 
-Recommended structure:
-```
-app/
-├── products/
-│   └── [productId]/
-│       └── page.tsx          # Individual product detail
-├── categories/
-│   └── [categorySlug]/
-│       └── page.tsx          # Category listing
-└── blog/
-    └── [slug]/
-        └── page.tsx          # Blog posts
-```
+2. **Decide tone early:** Dutch ecommerce typically uses informal "je/jij" for B2C, but confirm with competitor analysis
+
+3. **Create terminology glossary before translation:**
+   - Roller blind = rolgordijn (singular) / rolgordijnen (plural)
+   - Custom-made = op maat
+   - Width = breedte
+   - Height = hoogte
+   - Fabric = stof OR doek (different contexts)
+
+4. **Use Context7 or competitor websites for reference:**
+   - veneta.com
+   - raamdecoratie.com
+   - raamdecoratievantuiss.nl
+   - 123jaloezie.nl
+
+5. **Test with native speakers** before launch - not just translation accuracy but natural feel
 
 **Warning signs:**
-- 404 errors for valid product IDs that match category names
-- Category page renders product detail or vice versa
-- Next.js build warnings about route priority conflicts
-- SEO issues with duplicate or conflicting canonical URLs
+- High bounce rate from Netherlands traffic
+- Low time-on-site for Dutch pages vs English
+- Direct feedback from users about "strange Dutch"
+- De/het article errors (very obvious to native speakers)
 
 **Phase to address:**
-**Phase 1: Product Catalog Foundation** - Establish routing architecture before expanding. Refactoring routes after content is indexed breaks SEO and customer bookmarks.
+Phase 2 (Dutch Content & Metadata) - content quality is non-negotiable before launch
 
 ---
 
-### Pitfall 4: Zustand localStorage Hydration Mismatch with Multi-Product Cart
+### Pitfall 4: Open Graph Locale Format Breaking Social Sharing
 
 **What goes wrong:**
-The cart uses Zustand with localStorage persistence. With a single product, hydration mismatches are rare because the cart structure is simple. With multiple products, different pricing matrices, and more complex cart items, the server renders with empty cart state while the client hydrates with localStorage data. React throws hydration errors: "Text content does not match server-rendered HTML" when cart counts differ. The cart icon shows "0 items" for a flash before updating to the correct count.
+Using wrong locale format in Open Graph tags causes:
+- Facebook/LinkedIn ignoring locale metadata
+- Wrong language shown in social previews
+- Inconsistent metadata across platforms
+- May default to English interpretation even for Dutch content
+
+Common mistakes:
+- Using `nl-NL` (hyphen) instead of `nl_NL` (underscore)
+- Using `nl` without country code
+- Using `<meta name="og:locale">` instead of `<meta property="og:locale">`
 
 **Why it happens:**
-Server-side rendering cannot access localStorage (browser API). Zustand's persist middleware loads data only after client-side hydration. The current implementation likely renders cart state directly in the initial SSR output, causing a mismatch. With more complex multi-product data, the divergence between server (empty) and client (populated) state becomes more visible.
+- Open Graph protocol requires underscore format (`en_US`, `nl_NL`), unlike hreflang which uses hyphen
+- Next.js metadata API doesn't validate locale format
+- Confusion between hreflang (`nl-NL`) and Open Graph (`nl_NL`) standards
 
 **How to avoid:**
-1. **Implement `useSyncExternalStore`** pattern for cart state (tells React mismatch is expected)
-2. **OR use `useState` + `useEffect`** to defer cart rendering until client-side hydration completes
-3. **OR use cookie-based persistence** (accessible server-side) instead of localStorage
-4. **Render placeholder during hydration** to prevent content shift
-
-Recommended pattern:
 ```typescript
-// useHydration.ts - Custom hook to handle SSR/client mismatch
-export function useHydration() {
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
-  return hydrated;
-}
-
-// cart-icon.tsx - Use hydration hook
-export function CartIcon() {
-  const hydrated = useHydration();
-  const itemCount = useCartStore((state) => state.getItemCount());
-
-  // Show placeholder during SSR and initial client render
-  if (!hydrated) {
-    return <CartIconShell count={0} />;
-  }
-
-  return <CartIconShell count={itemCount} />;
+export const metadata: Metadata = {
+  openGraph: {
+    locale: 'nl_NL', // CORRECT - underscore
+    // NOT 'nl-NL' with hyphen
+    title: 'Dutch title',
+    description: 'Dutch description',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630 }],
+  },
 }
 ```
 
+**Validation checklist:**
+- [ ] Open Graph: `nl_NL` (underscore)
+- [ ] Hreflang: `nl-NL` (hyphen)
+- [ ] HTML lang attribute: `nl-NL` (hyphen)
+- [ ] Property attribute: `<meta property="og:locale">` not `<meta name="og:locale">`
+
 **Warning signs:**
-- Console errors: "Warning: Text content did not match..."
-- Cart icon flashes wrong count on page load
-- Layout shift (CLS) when cart hydrates
-- React hydration warnings in development
+- Facebook Sharing Debugger shows warnings about locale
+- Social previews appear in wrong language context
 
 **Phase to address:**
-**Phase 1: Product Catalog Foundation** - Fix before multi-product expansion amplifies the issue. With more products, hydration mismatches become more frequent and visible.
+Phase 2 (Dutch Content & Metadata) - when implementing Open Graph tags
 
 ---
 
-### Pitfall 5: API Race Conditions When Loading Multiple Pricing Matrices
+### Pitfall 5: Structured Data (JSON-LD) XSS Vulnerability
 
 **What goes wrong:**
-The dimension configurator debounces pricing API calls (400ms). With a single product, this works fine. With multiple products on a category page (each with a configurator or quick-add form), multiple pricing API calls fire simultaneously. The API route currently loads the pricing matrix synchronously via static import, but as you scale to per-product matrices, developers will add dynamic loading logic. Without proper concurrent request handling, race conditions cause: (1) wrong pricing loaded for wrong product, (2) API responses arriving out-of-order and updating wrong component state, (3) excessive server load from redundant matrix loading.
-
-**Why it happens:**
-The current API route (`/api/pricing`) doesn't accept a `productId` parameter - it assumes one global pricing matrix. When developers add product-specific pricing, they'll either: (1) add `productId` to the API and load matrices dynamically, or (2) create separate API routes per product. Both approaches introduce concurrency issues if not properly handled. Client-side debouncing prevents request spam from a single user, but doesn't coordinate between multiple concurrent users or multiple components.
-
-**How to avoid:**
-1. **Add caching/memoization** for pricing matrix loading (in-memory cache with TTL)
-2. **Use React Query or SWR** on client for request deduplication
-3. **Implement request coalescing** (combine multiple pending requests for same product)
-4. **Add `productId` to API request** and load product-specific matrices
-5. **Use AbortController** to cancel stale requests when user changes input
-
-API pattern:
+When generating structured data (Product schema, Organization schema) with user-generated content or external data, directly using `JSON.stringify()` without sanitization creates XSS vulnerability:
 ```typescript
-// In-memory cache for pricing matrices
-const matrixCache = new Map<string, { data: PricingMatrixData; timestamp: number }>();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-
-async function loadPricingMatrix(productId: string): Promise<PricingMatrixData> {
-  const cached = matrixCache.get(productId);
-
-  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-    return cached.data;
-  }
-
-  // Dynamic import only when cache miss
-  const matrix = await import(`../../../../data/pricing/${productId}.json`);
-  matrixCache.set(productId, { data: matrix.default, timestamp: Date.now() });
-
-  return matrix.default;
-}
-
-export async function POST(request: Request) {
-  const { width, height, productId } = await request.json();
-
-  // Load product-specific matrix (cached)
-  const matrix = await loadPricingMatrix(productId);
-
-  // Calculate price with product-specific matrix
-  const result = calculatePrice(width, height, matrix);
-
-  return NextResponse.json(result);
-}
+// DANGEROUS - allows script injection
+<script type="application/ld+json">
+  {JSON.stringify(productData)}
+</script>
 ```
 
+If `productData.name` contains `</script><script>alert('XSS')</script>`, it breaks out of the JSON-LD script tag.
+
+**Why it happens:**
+- Developers assume JSON.stringify is safe (it's not for HTML context)
+- Not aware that `<` character needs to be escaped as `\u003c` in JSON within HTML
+- Copy-pasting examples without understanding security implications
+
+**How to avoid:**
+1. **Replace dangerous characters:**
+   ```typescript
+   const jsonLd = JSON.stringify(productData).replace(/</g, '\\u003c')
+   ```
+
+2. **Use Next.js recommended approach from official docs:**
+   ```typescript
+   export default function Page() {
+     const jsonLd = {
+       '@context': 'https://schema.org',
+       '@type': 'Product',
+       name: 'Rolgordijn op Maat',
+       description: 'Custom roller blinds',
+     }
+
+     return (
+       <script
+         type="application/ld+json"
+         dangerouslySetInnerHTML={{
+           __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c')
+         }}
+       />
+     )
+   }
+   ```
+
+3. **Or use community package `serialize-javascript`** for production safety
+
+4. **Never inject raw user input** into structured data without validation
+
 **Warning signs:**
-- Intermittent wrong prices displayed
-- Console errors about stale state updates
-- High API response times under load
-- Server memory usage increases with traffic
+- Security audit flags dangerouslySetInnerHTML usage
+- JSON-LD contains unescaped `<` characters
+- Using product descriptions directly in structured data without sanitization
 
 **Phase to address:**
-**Phase 2: Category Navigation** - Required when category pages show multiple products with pricing. Can defer if phase 2 only shows product cards without live pricing.
+Phase 3 (Structured Data & Rich Snippets) - when implementing Schema.org markup
 
 ---
 
-### Pitfall 6: Product Data Structure Inconsistency Breaking Cart/Checkout
+### Pitfall 6: Hreflang Tag Mistakes for Single-Country Targeting
 
 **What goes wrong:**
-The current product data (`src/lib/product/data.ts`) uses an in-memory object with mixed ID schemes: `"custom-textile"` uses a semantic ID, `"venetian-blinds-25mm"` uses a Shopify product ID (`10373715755274`), and newer products use semantic IDs. When checkout creates Shopify draft orders, it needs Shopify product variant IDs. The mismatch between product data IDs and Shopify IDs causes checkout failures. Cart items with semantic IDs can't be mapped to Shopify line items.
+When targeting Netherlands only, developers make these hreflang mistakes:
+- Adding hreflang tags when only one language/country is served (unnecessary, but harmless)
+- Missing self-referencing hreflang tag if using hreflang at all
+- Conflicting signals: hreflang says `nl-NL` but content/IP targeting says something else
+- Using wrong country code format (case-sensitive: `nl-NL` not `nl-nl`)
+
+For Netherlands-only site with Dutch language, hreflang is actually **not needed**, but if added incorrectly it can cause problems.
 
 **Why it happens:**
-The initial implementation mixed concerns: product catalog IDs (for routing/display) and Shopify integration IDs (for checkout). This works when manually wiring up single products, but breaks down with catalog expansion. Developers adding new products don't have clear guidance on which ID to use, leading to inconsistent data structure.
+- SEO tutorials focus on multi-language sites, developers add hreflang "to be safe"
+- Not understanding that hreflang is for sites serving different languages/regions
+- Copy-pasting without understanding when hreflang applies
 
 **How to avoid:**
-1. **Separate catalog IDs from Shopify IDs** in product data structure
-2. **Add explicit Shopify variant ID mapping** for each product
-3. **Validate ID structure** in product data (TypeScript types + runtime validation)
-4. **Add checkout integration tests** that verify ID mappings
+1. **For Netherlands-only site:** Don't use hreflang at all - it's not needed and adds complexity
 
-Recommended structure:
-```typescript
-export interface ProductData {
-  id: string;                    // Catalog ID (for routing, URLs)
-  name: string;
-  description: string;
-  category?: string;
-  shopify: {
-    productId: string;           // Shopify product ID
-    variantId: string;           // Shopify variant ID (for draft orders)
-  };
-  details: { label: string; value: string; }[];
-}
-```
+2. **If planning future expansion (Belgium, Flanders):** Then implement hreflang correctly from start:
+   ```typescript
+   alternates: {
+     canonical: 'https://pureblinds.nl',
+     languages: {
+       'nl-NL': 'https://pureblinds.nl', // Self-reference required
+       // Future: 'nl-BE': 'https://pureblinds.be',
+     },
+   }
+   ```
 
-Migration strategy:
-- Audit all existing products for Shopify ID mappings
-- Update product data structure with separate fields
-- Add validation that prevents missing Shopify IDs
-- Update checkout flow to use `product.shopify.variantId`
+3. **Must include self-referencing tag** - every page needs hreflang pointing to itself
+
+4. **Ensure consistency:**
+   - HTML lang attribute: `<html lang="nl-NL">`
+   - Open Graph locale: `nl_NL` (underscore)
+   - Hreflang: `nl-NL` (hyphen)
+   - Geo targeting in Google Search Console: Netherlands
 
 **Warning signs:**
-- Checkout fails with "Product not found" errors
-- Draft order API returns validation errors
-- Some products checkout successfully, others fail
-- Inconsistent error messages from Shopify API
+- Google Search Console shows hreflang errors
+- Missing return tags warning
+- Conflicting signals between hreflang and content language
 
 **Phase to address:**
-**Phase 1: Product Catalog Foundation** - Critical before expanding catalog. Every new product without proper ID mapping breaks checkout.
+Phase 2 (Dutch Content & Metadata) - decide on hreflang strategy early
 
 ---
 
-### Pitfall 7: Breaking Portability of Pricing Engine with Product Coupling
+### Pitfall 7: Sitemap Contains Removed Routes and Redirected URLs
 
 **What goes wrong:**
-The project context emphasizes "Pure pricing engine (zero external dependencies, must stay portable)". Currently, the pricing engine is indeed pure: it accepts dimensions, loads a matrix, calculates price. However, when adding multiple products, developers will be tempted to couple the pricing engine to the product catalog by: (1) importing product data into calculator, (2) adding product-specific logic branches in calculator, (3) embedding matrix file paths inside calculator. This destroys portability and makes the pricing engine dependent on your specific product structure.
+After removing categories, if sitemap.xml still includes:
+- Removed category URLs (`/venetian-blinds`, `/textiles`)
+- URLs that 301 redirect to other pages
+- Duplicate URLs (both old and new)
+
+This wastes crawl budget and confuses Google:
+- Googlebot crawls removed URLs from sitemap
+- Sees 301 redirects and has to follow them
+- Crawl budget exhausted on redirects instead of new content
+- Google may temporarily deindex pages if sitemap quality is poor
 
 **Why it happens:**
-It's the easiest solution that "just works". Instead of passing the pricing matrix as a parameter, developers hardcode product lookups: `if (productId === 'white-rollerblind') { load matrix A }`. This feels pragmatic but violates the separation of concerns principle. The pricing engine should remain a pure mathematical function that knows nothing about your product catalog structure.
+- Static sitemap.xml file not updated when routes change
+- Using `next-sitemap` package without configuring exclusions
+- Not regenerating sitemap after code changes
+- Forgetting sitemap exists
 
 **How to avoid:**
-1. **Keep calculator pure**: Only accept `width`, `height`, and `pricingMatrix` parameters
-2. **Move product-to-matrix mapping** into a separate module (NOT in calculator)
-3. **Establish clear boundaries**: Pricing engine = math, Product module = business logic
-4. **Add architectural tests** that enforce import rules (calculator cannot import from product module)
+1. **Use Next.js 15 App Router dynamic sitemap:**
+   ```typescript
+   // app/sitemap.ts
+   import { MetadataRoute } from 'next'
 
-Layered architecture:
-```
-lib/
-├── pricing/
-│   ├── calculator.ts          # Pure calculation (no product knowledge)
-│   ├── types.ts               # Pure types
-│   └── validator.ts           # Pure validation
-├── product/
-│   ├── data.ts                # Product catalog
-│   └── pricing-config.ts      # Product → Matrix mapping (NEW)
-└── api/
-    └── pricing/
-        └── route.ts           # Orchestrates: product lookup + matrix loading + calculation
-```
+   export default function sitemap(): MetadataRoute.Sitemap {
+     return [
+       {
+         url: 'https://pureblinds.nl',
+         lastModified: new Date(),
+         changeFrequency: 'monthly',
+         priority: 1,
+       },
+       {
+         url: 'https://pureblinds.nl/roller-blinds',
+         lastModified: new Date(),
+         changeFrequency: 'weekly',
+         priority: 0.8,
+       },
+       // Generate from database for products
+     ]
+   }
+   ```
 
-Example orchestration in API route:
-```typescript
-import { calculatePrice } from '@/lib/pricing/calculator';
-import { getProduct } from '@/lib/product/data';
-import { loadPricingMatrix } from '@/lib/product/pricing-config';
+2. **Explicitly exclude removed routes:**
+   - No venetian-blinds
+   - No textiles
+   - Only include active categories
 
-export async function POST(request: Request) {
-  const { width, height, productId } = await request.json();
+3. **Remove URLs with 301 redirects from sitemap** - sitemap should only contain final destinations
 
-  // Product layer handles business logic
-  const product = getProduct(productId);
-  if (!product) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+4. **Set proper priorities:**
+   - Homepage: 1.0
+   - Main categories: 0.8
+   - Product pages: 0.6
+   - Static pages: 0.5
 
-  // Product layer provides matrix
-  const matrix = await loadPricingMatrix(productId);
-
-  // Pricing engine stays pure - just math
-  const result = calculatePrice(width, height, matrix);
-
-  return NextResponse.json(result);
-}
-```
+5. **Submit updated sitemap to Google Search Console** immediately after category removal
 
 **Warning signs:**
-- `import { getProduct } from '@/lib/product'` appears in pricing calculator files
-- Product-specific conditional logic in calculator
-- Calculator tests require product fixtures
-- Difficulty reusing pricing engine in other projects
+- Google Search Console shows "Submitted URL returns 3XX redirect"
+- Crawl stats show high redirect rate
+- Sitemap contains more URLs than actually exist on site
 
 **Phase to address:**
-**Phase 1: Product Catalog Foundation** - Establish architectural boundaries before patterns become entrenched. Refactoring later is expensive and risky.
+Phase 1 (Category Cleanup & Route Restructuring) - update sitemap same time as implementing redirects
+
+---
+
+### Pitfall 8: Robots.txt Blocking Important Pages After Restructuring
+
+**What goes wrong:**
+After removing categories and restructuring routes:
+- Old robots.txt rules may block new routes
+- Disallow rules for `/venetian-blinds` still present but redirects go to `/roller-blinds` which gets blocked
+- Accidentally blocking `/roller-blinds` because of wildcard rules
+- Dynamic robots.txt not updated to reflect new site structure
+
+**Why it happens:**
+- Static robots.txt file never updated
+- Copy-pasted rules from old site structure
+- Not testing robots.txt after route changes
+- Using overly broad Disallow rules
+
+**How to avoid:**
+1. **Use Next.js 15 App Router dynamic robots.txt:**
+   ```typescript
+   // app/robots.ts
+   import { MetadataRoute } from 'next'
+
+   export default function robots(): MetadataRoute.Robots {
+     return {
+       rules: {
+         userAgent: '*',
+         allow: '/',
+         disallow: ['/admin', '/api'],
+       },
+       sitemap: 'https://pureblinds.nl/sitemap.xml',
+     }
+   }
+   ```
+
+2. **Remove any Disallow rules for old categories** - they're already 301 redirected
+
+3. **Test with Google's robots.txt Tester** in Search Console
+
+4. **Keep it simple:** Only disallow admin pages and API routes, allow everything else
+
+5. **Include sitemap reference** in robots.txt
+
+**Warning signs:**
+- Google Search Console shows "Blocked by robots.txt" errors
+- New pages not getting indexed despite proper metadata
+- Crawl stats show blocked URLs
+
+**Phase to address:**
+Phase 4 (Sitemap & Robots.txt) - after all route changes are complete
+
+---
+
+### Pitfall 9: Missing or Duplicate Meta Descriptions for Dutch Pages
+
+**What goes wrong:**
+Meta descriptions issues specific to Dutch content:
+- Copying English meta descriptions and forgetting to translate
+- Same meta description on multiple pages (category vs homepage)
+- Meta descriptions in English while page content is Dutch (language mismatch)
+- Meta descriptions too short (<120 chars) or too long (>160 chars)
+- Generic descriptions like "Koop rolgordijnen" instead of unique value propositions
+- Duplicate meta descriptions across all product pages
+
+Google may ignore your meta description and generate one from page content, reducing CTR.
+
+**Why it happens:**
+- Developers set default meta description in root layout, never override in pages
+- Forgetting to translate metadata when translating content
+- Not understanding that each page needs unique meta description
+- Using same template for all products without customization
+
+**How to avoid:**
+1. **Create unique meta descriptions for each page type:**
+   ```typescript
+   // app/page.tsx (Homepage)
+   export const metadata = {
+     title: 'Rolgordijnen op Maat | Pure Blinds',
+     description: 'Bestel rolgordijnen op maat. Gratis thuislevering, 5 jaar garantie. Nederlandse kwaliteit vanaf €X. Configureer nu online.',
+   }
+
+   // app/roller-blinds/page.tsx
+   export const metadata = {
+     title: 'Rolgordijnen Collectie | Pure Blinds',
+     description: 'Ontdek onze rolgordijnen collectie. Verschillende stoffen, kleuren en maten. Eenvoudig online configureren en bestellen.',
+   }
+   ```
+
+2. **For product pages, use generateMetadata with product data:**
+   ```typescript
+   export async function generateMetadata({ params }) {
+     const product = await getProduct(params.id)
+     return {
+       description: `${product.name} - ${product.fabric} - Op maat gemaakt - Vanaf €${product.price}. Bestel nu!`
+     }
+   }
+   ```
+
+3. **Follow Dutch SEO best practices:**
+   - Include target keyword naturally
+   - Add unique selling points (gratis levering, garantie)
+   - Use action words (bestel, ontdek, configureer)
+   - Keep 150-160 characters (Dutch words are often longer than English)
+
+4. **Audit all meta descriptions before launch:**
+   - No duplicates
+   - All in Dutch
+   - All within character limits
+   - Include USPs and call-to-action
+
+**Warning signs:**
+- Google Search Console shows "Duplicate meta descriptions"
+- Low CTR from search results
+- Google rewrites your meta descriptions (shown in search results differs from your code)
+
+**Phase to address:**
+Phase 2 (Dutch Content & Metadata) - part of content translation effort
+
+---
+
+### Pitfall 10: Next.js Metadata API Duplication Issues
+
+**What goes wrong:**
+In Next.js 15 App Router, there are known issues with metadata duplication:
+- `generateMetadata` sometimes injects tags twice in `<head>`
+- Metadata defined in both layout.js and page.js can conflict
+- File-based metadata (opengraph-image.tsx) overrides metadata object without warning
+- Title templates don't apply correctly, causing duplicate titles
+
+Example bug: metadata tags appear both in `<head>` and duplicated inside RSC payload.
+
+**Why it happens:**
+- Using both `metadata` object AND `generateMetadata` function in same file (not allowed)
+- Not understanding metadata merging/overwriting rules
+- File-based metadata taking priority without realizing it
+- Bug in Next.js 15.x App Router metadata handling (verified in GitHub issues)
+
+**How to avoid:**
+1. **Never export both `metadata` object and `generateMetadata` function from same segment:**
+   ```typescript
+   // WRONG - causes errors
+   export const metadata = { title: 'Test' }
+   export async function generateMetadata() { return { title: 'Test' } }
+   ```
+
+2. **Understand metadata merging:**
+   - Child segments **replace** parent fields (not merge)
+   - `openGraph` object in child completely replaces parent `openGraph`
+   - To extend parent, use `parent` parameter:
+   ```typescript
+   export async function generateMetadata({ params }, parent) {
+     const previousImages = (await parent).openGraph?.images || []
+     return {
+       openGraph: {
+         images: ['/new-image.jpg', ...previousImages],
+       },
+     }
+   }
+   ```
+
+3. **File-based metadata has highest priority:**
+   - If you have `opengraph-image.tsx`, it overrides `metadata.openGraph.images`
+   - Know which approach you're using and stick to it
+
+4. **Use title templates correctly:**
+   - Define `title.template` in layout
+   - Define `title.default` when using template
+   - Child pages set simple title string
+
+5. **Test metadata output:**
+   - View page source and check `<head>` section
+   - Verify no duplicate meta tags
+   - Use React DevTools to check for hydration issues
+
+**Warning signs:**
+- Duplicate `<meta>` tags in page source
+- Title shows template literally (e.g., "%s | Site Name")
+- Hydration errors in console
+- Metadata appearing in `<body>` instead of `<head>`
+
+**Phase to address:**
+Phase 2 (Dutch Content & Metadata) - when implementing metadata system
 
 ---
 
 ## Technical Debt Patterns
 
-Shortcuts that seem reasonable but create long-term problems.
-
 | Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
 |----------|-------------------|----------------|-----------------|
-| Import all pricing matrices in client bundle | Works, no API changes needed | Every new product increases bundle size, slow performance | Never - Always load server-side |
-| Use product ID as both URL slug and Shopify ID | Simpler data structure, one less field | Cannot change URLs without breaking Shopify integration, impossible to A/B test URLs | Never - Always separate concerns |
-| Hardcode category slugs in navigation | Fast to implement, no data layer needed | Adding categories requires code deployment, no CMS control | Only for MVP with ≤3 fixed categories |
-| Skip cart hydration mismatch fixes | No visible errors in dev mode | Hydration warnings in prod, poor UX with cart flash, potential React errors | Never - Fix before multi-product launch |
-| Reuse same API route for all products with if/else | No new API routes, single endpoint | N-way branching logic, untestable, hard to add products | Never - Use product-specific config |
-| Store pricing matrices in code vs database | Easy git versioning, no DB needed | Requires build/deploy to update prices, no admin UI | Acceptable if prices rarely change (<1/month) |
-| Mix semantic IDs and Shopify IDs inconsistently | Works for first few products | Checkout breaks randomly, impossible to debug, data inconsistency | Never - Establish schema from start |
+| Using English meta descriptions temporarily | Faster MVP launch | Low CTR from Dutch searches, unprofessional appearance | Only for initial testing, max 1 week |
+| Machine-translated Dutch without review | Saves translation budget | Destroys trust, high bounce rate, brand damage | Never acceptable for ecommerce |
+| Redirecting all removed URLs to homepage | Quick implementation | Google treats as soft 404, loses link equity | Never - always redirect to relevant pages |
+| Static sitemap.xml instead of dynamic | Simpler setup | Outdated sitemap after changes, wasted crawl budget | Only if site structure never changes (rare) |
+| Skipping Open Graph images for product pages | Faster development | Poor social sharing, lost traffic from social media | Never for main pages; acceptable for legal/policy pages |
+| Using default metadata from layout everywhere | No per-page configuration needed | Duplicate meta descriptions, poor SEO | Only during initial development, never for production |
 
 ## Integration Gotchas
 
-Common mistakes when connecting to external services.
-
 | Integration | Common Mistake | Correct Approach |
 |-------------|----------------|------------------|
-| Shopify Draft Orders | Using product catalog ID as Shopify variant ID | Store separate `shopify.variantId` in product data, map before API call |
-| Shopify Line Items | Passing custom dimensions as title or properties | Use `customAttributes` array: `[{key: 'width', value: '100cm'}, {key: 'height', value: '150cm'}]` |
-| Shopify Metafields | Adding metafields without namespace/type definition | Define metafield definitions in Shopify admin first, validate types before sending |
-| Pricing API | Not passing `productId`, assuming global pricing | Always include `productId` in request payload, validate product exists before calculation |
-| Next.js Dynamic Imports | Using `import()` for JSON in client components | Load JSON only server-side in API routes or Server Components, pass result to client |
-| localStorage Cart | Reading cart state during SSR | Use hydration-safe pattern (useEffect/useSyncExternalStore) to defer cart access |
+| Google Search Console | Not updating geo-targeting after adding Dutch content | Set target country to Netherlands in Search Console settings |
+| Facebook Sharing Debugger | Not testing OG tags before launch | Test every page type (homepage, category, product) with debugger, clear cache if needed |
+| Next.js redirects | Using redirect() function instead of next.config.js for removed routes | Use next.config.js redirects for permanent route changes, they're evaluated before rendering |
+| Sitemap submission | Submitting sitemap once and forgetting | Resubmit to GSC after any major changes (category removal, new products) |
+| Structured data | Adding multiple conflicting Product schemas | One Product schema per product page, validate with Rich Results Test |
+| Translation services | Not providing context/glossary to translators | Create terminology list with competitor references before translation |
 
 ## Performance Traps
 
-Patterns that work at small scale but fail as usage grows.
-
 | Trap | Symptoms | Prevention | When It Breaks |
 |------|----------|------------|----------------|
-| Static JSON imports for all matrices | Bundle size grows 50-100KB per product | Dynamic server-side loading with caching | 5+ products (bundle >500KB) |
-| No request deduplication for pricing API | Redundant identical API calls | Use SWR/React Query on client | 10+ concurrent users |
-| Loading full product catalog on every page | Slow navigation, high TTFB | Load only needed products, implement pagination | 50+ products |
-| No caching for pricing matrix reads | High disk I/O on API routes | In-memory cache (Map) with 5-min TTL | 100+ requests/min |
-| Recalculating cart totals on every render | UI feels sluggish, high CPU | Memoize with useMemo, only recalc on items change | 10+ items in cart |
-| No indexing on category lookups | O(n) scan through all products | Use Map for O(1) lookup by category | 100+ products |
-| Fetching pricing matrices for entire category | Slow category page load | Fetch matrices only when user interacts (lazy) | 20+ products per category |
+| Fetching metadata from database on every request | Slow TTFB, metadata streaming issues | Use 'use cache' directive or static metadata for non-dynamic pages | First user visit, impacts all bots |
+| Large Open Graph images (>1MB) | Slow social media preview generation, timeouts | Optimize OG images to ~100-200KB, 1200x630px | When sharing on social media |
+| Redirect chains (old URL → temp URL → final URL) | Slow page loads, potential redirect loops | Audit redirects, always redirect directly to final destination | Immediately, affects every redirect |
+| Not removing old URLs from sitemap | Wasted crawl budget, slower indexing of new content | Dynamic sitemap that only includes active pages | As site grows, at ~100+ removed pages |
+| Generating sitemap with 1000+ products synchronously | Timeout on sitemap.xml request | Use generateSitemaps for large sites, split into multiple sitemaps | At ~500+ products |
 
 ## Security Mistakes
 
-Domain-specific security issues beyond general web security.
-
 | Mistake | Risk | Prevention |
 |---------|------|------------|
-| Accepting untrusted pricing from client | Client can set arbitrary prices, order for $0.01 | Always recalculate price server-side before checkout, never trust client price |
-| No rate limiting on pricing API | DoS via excessive requests, server resource exhaustion | Implement rate limiting (10 requests/sec per IP) |
-| Exposing Shopify credentials in client code | Credential theft, unauthorized store access | Store credentials only in server-side env vars, never in client bundle |
-| No CSRF protection on checkout API | Attacker can create unauthorized draft orders | Use Next.js built-in CSRF protection, validate origin headers |
-| Storing sensitive cart data in localStorage | XSS can steal cart, customer privacy risk | Don't store PII in cart, use httpOnly cookies for session tokens |
-| Not sanitizing product options before Shopify | Injection attacks via custom attributes | Validate/sanitize all user input before passing to Shopify API |
+| Using unsanitized JSON.stringify in JSON-LD | XSS vulnerability via script injection | Replace `<` with `\\u003c` or use serialize-javascript package |
+| Exposing admin routes in sitemap | Admin pages indexed by Google, potential security scanning | Explicitly exclude /admin, /api from sitemap and robots.txt |
+| Not validating product data before structured data | Invalid schema markup, potential injection | Validate all data types, sanitize strings before JSON-LD insertion |
+| Including sensitive info in meta tags | Leaking internal IDs, prices, or structure | Review all metadata exports, never include internal-only data |
 
 ## UX Pitfalls
 
-Common user experience mistakes in this domain.
-
 | Pitfall | User Impact | Better Approach |
 |---------|-------------|-----------------|
-| Cart icon shows 0 then flashes to correct count | Looks broken, confusing, layout shift | Implement hydration placeholder (loading state during SSR) |
-| Pricing API is slow (>500ms) | Users don't know if dimensions are accepted | Add optimistic UI updates, show loading state immediately on input |
-| No feedback when adding to cart | User unsure if action worked | Show toast notification + cart icon bounce animation |
-| Category page doesn't indicate which products are in stock | User clicks unavailable product | Add stock status badges, gray out unavailable products |
-| No validation until API response | User enters 500cm width, waits 400ms, then gets error | Client-side validation with instant feedback for basic rules |
-| Blog posts and products mixed in search | Confusing results, user can't filter | Separate results by type with tab navigation |
-| Product URLs change when adding to categories | Bookmarks break, SEO penalty | Use stable product URLs, not nested under category |
+| Broken internal links after category removal | Users click category link, get 404 | Audit all internal links (footer, nav, content) before removing categories |
+| Language mismatch (English button in Dutch page) | Confusing experience, looks unprofessional | Complete translation including UI elements, buttons, form labels |
+| Poor 404 page after removed categories | Users get lost, high bounce rate | Create helpful 404 page in Dutch with links to main categories |
+| Social media previews show wrong language | Users see English title for Dutch page | Test OG tags with proper nl_NL locale |
+| Meta description doesn't match page content after translation | User expects one thing, gets another | Translate meta descriptions to match actual page content, not just literal translation |
 
 ## "Looks Done But Isn't" Checklist
 
-Things that appear complete but are missing critical pieces.
-
-- [ ] **Multi-product cart:** Works in dev, but missing integration tests for ID collision scenarios
-- [ ] **Category pages:** Render correctly, but missing 301 redirects for old single-product URLs
-- [ ] **Pricing API:** Returns correct values, but missing rate limiting and caching
-- [ ] **Product data:** Added new products, but missing Shopify variant ID mappings
-- [ ] **Route structure:** Works with sample data, but missing validation against reserved category slugs
-- [ ] **Cart persistence:** Uses localStorage, but missing hydration mismatch handling
-- [ ] **Checkout flow:** Creates draft orders, but missing custom dimension metadata in line items
-- [ ] **Pricing matrices:** Loaded dynamically, but missing error handling for missing/corrupt files
-- [ ] **Blog routing:** Posts render, but missing conflict prevention with product/category URLs
-- [ ] **SEO setup:** Pages indexed, but missing canonical URLs for products in multiple categories
+- [ ] **Dutch Translation:** Often missing UI elements - verify buttons, form validation, error messages all in Dutch
+- [ ] **301 Redirects:** Often missing product-level redirects - verify category AND individual product URLs redirect correctly
+- [ ] **Open Graph Tags:** Often missing locale or using wrong format - verify `nl_NL` with underscore in all OG tags
+- [ ] **Structured Data:** Often missing required properties - validate with Rich Results Test, not just schema validator
+- [ ] **Sitemap:** Often contains removed URLs - verify sitemap matches actual site structure, no 301s included
+- [ ] **Meta Descriptions:** Often duplicate across pages - verify each page type has unique description
+- [ ] **Internal Links:** Often still point to removed categories - search codebase for old category slugs
+- [ ] **Robots.txt:** Often has stale Disallow rules - verify only admin and API routes blocked
+- [ ] **Canonical Tags:** Often pointing to wrong domain - verify canonical URLs use production domain
+- [ ] **Title Templates:** Often not working in child pages - verify title format on every page type
 
 ## Recovery Strategies
 
-When pitfalls occur despite prevention, how to recover.
-
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Cart ID collisions | MEDIUM | 1. Fix ID generation logic, 2. Add migration script to deduplicate existing carts in localStorage (run on next cart access), 3. Add integration tests, 4. Deploy hotfix |
-| Route conflicts | HIGH | 1. Decide on new route structure (/categories vs /products/categories), 2. Set up 301 redirects for all old URLs, 3. Update all internal links, 4. Submit new sitemap to Google, 5. Monitor 404s for 2 weeks |
-| Bloated client bundle | LOW | 1. Remove static JSON imports, 2. Move matrix loading to API route, 3. Re-deploy (no data migration needed), 4. Verify bundle size in production |
-| Hydration mismatch | LOW | 1. Add useHydration hook, 2. Wrap cart components with hydration check, 3. Re-deploy (no breaking changes) |
-| Wrong pricing displayed | MEDIUM | 1. Add productId to API request, 2. Implement server-side product validation, 3. Add E2E tests for each product, 4. Deploy, 5. Manual QA all products |
-| Missing Shopify IDs | HIGH | 1. Audit all products in catalog, 2. Create mapping spreadsheet (catalog ID → Shopify variant ID), 3. Update product data structure, 4. Write migration script, 5. Test checkout for every product, 6. Deploy |
-| Pricing matrix loading race conditions | MEDIUM | 1. Implement in-memory cache for matrices, 2. Add request coalescing, 3. Deploy API changes, 4. Load test to verify fix |
+| Removed categories without redirects | MEDIUM | 1. Implement 301 redirects immediately 2. Submit updated sitemap 3. Request re-crawl in GSC 4. Monitor for 2-4 weeks for ranking recovery |
+| Poor Dutch translation live | HIGH | 1. Hire native translator urgently 2. Fix high-traffic pages first 3. Update in batches 4. May take months to recover brand trust |
+| Missing Open Graph tags | LOW | 1. Add OG tags 2. Use Facebook Debugger to clear cache 3. Effect is immediate for new shares |
+| Broken structured data | LOW | 1. Fix JSON-LD syntax 2. Validate with Rich Results Test 3. Request re-crawl 4. Rich snippets return in 1-2 weeks |
+| Metadata streaming breaking social bots | MEDIUM | 1. Add htmlLimitedBots config 2. Use static metadata for key pages 3. Clear social media caches 4. Effect immediate |
+| Sitemap includes removed URLs | LOW | 1. Update sitemap to exclude removed URLs 2. Resubmit to GSC 3. Effect within days as Google re-crawls |
+| Hreflang errors | MEDIUM | 1. Fix hreflang format/missing tags 2. Validate with hreflang validator 3. Wait 2-4 weeks for Google to reprocess 4. Monitor GSC for errors |
+| Duplicate meta descriptions | LOW | 1. Write unique descriptions per page 2. Deploy changes 3. Wait for re-crawl 4. CTR improves in 1-2 weeks |
 
 ## Pitfall-to-Phase Mapping
 
-How roadmap phases should address these pitfalls.
-
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
-| Hardcoded pricing matrix import | Phase 1: Product Catalog Foundation | Bundle analyzer shows <10KB increase per product added |
-| Cart ID collisions | Phase 1: Product Catalog Foundation | Integration test passes: different products with same dimensions create separate cart items |
-| Route conflicts (products/categories/blog) | Phase 1: Product Catalog Foundation | All URLs accessible without 404s, no Next.js build warnings |
-| Zustand hydration mismatch | Phase 1: Product Catalog Foundation | No React hydration warnings in console, cart icon doesn't flash |
-| Pricing API race conditions | Phase 2: Category Navigation | Load test with 50 concurrent users shows <200ms p95 response time |
-| Product data ID inconsistency | Phase 1: Product Catalog Foundation | TypeScript compile error if product missing shopify.variantId |
-| Pricing engine coupling | Phase 1: Product Catalog Foundation | ESLint rule prevents calculator importing from product module |
-| Bundle bloat from multiple matrices | Phase 1: Product Catalog Foundation | Lighthouse performance score stays >90 with 10+ products |
-| Missing Shopify metadata in draft orders | Phase 3: Checkout Experience | E2E test verifies custom dimensions appear in Shopify admin draft order |
-| Blog URL conflicts with products | Phase 4: Content & Blog | Unit test validates no blog slug matches product/category route |
+| Missing 301 redirects for removed categories | Phase 1: Category Cleanup | Test all old URLs return 301, verify redirect destinations in browser and GSC |
+| Metadata streaming breaking social bots | Phase 2: Dutch Content & Metadata | Test with Facebook/LinkedIn preview tools, verify OG tags in <head> |
+| Poor Dutch translation quality | Phase 2: Dutch Content & Metadata | Native speaker review, competitor comparison, user testing |
+| Open Graph locale format errors | Phase 2: Dutch Content & Metadata | Verify nl_NL with underscore in page source, test with social debuggers |
+| JSON-LD XSS vulnerability | Phase 3: Structured Data | Security audit of all JSON.stringify usage, validate escaping |
+| Hreflang tag mistakes | Phase 2: Dutch Content & Metadata | Validate with hreflang checker, GSC shows no hreflang errors |
+| Sitemap contains removed routes | Phase 1: Category Cleanup & Phase 4: Sitemap | Download sitemap.xml, verify no removed URLs, no 301 redirects |
+| Robots.txt blocking important pages | Phase 4: Sitemap & Robots.txt | Test with GSC robots.txt tester, verify all public pages allowed |
+| Duplicate/missing meta descriptions | Phase 2: Dutch Content & Metadata | Audit with SEO crawler (Screaming Frog), GSC shows no duplication warnings |
+| Next.js metadata duplication | Phase 2: Dutch Content & Metadata | View page source for all page types, check for duplicate tags |
 
 ## Sources
 
-### Next.js App Router & Routing
-- [App Router pitfalls: common Next.js mistakes and practical ways to avoid them](https://imidef.com/en/2026-02-11-app-router-pitfalls)
-- [Next.js Dynamic Route Segments in the App Router (2026 Guide) – TheLinuxCode](https://thelinuxcode.com/nextjs-dynamic-route-segments-in-the-app-router-2026-guide/)
-- [How to Handle Dynamic Routing in Next.js](https://oneuptime.com/blog/post/2026-01-24-nextjs-dynamic-routing/view)
-- [Error: You cannot define a static route with the same name as a dynamic route](https://www.omi.me/blogs/next-js-errors/error-you-cannot-define-a-static-route-with-the-same-name-as-a-dynamic-route-in-next-js-causes-and-how-to-fix)
+**Next.js & SEO:**
+- [Handling Redirects in Next.js Without Breaking SEO](https://medium.com/@sureshdotariya/handling-redirects-in-next-js-without-breaking-seo-2f8c754bf586)
+- [App Router pitfalls: common Next.js mistakes](https://imidef.com/en/2026-02-11-app-router-pitfalls)
+- [Next.js Official Docs: generateMetadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
+- [Next.js Official Docs: redirects](https://nextjs.org/docs/app/api-reference/config/next-config-js/redirects)
+- [Next.js Official Docs: sitemap.xml](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap)
+- [Next.js Official Docs: robots.txt](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots)
+- [Next.js Official Docs: JSON-LD](https://nextjs.org/docs/app/guides/json-ld)
 
-### State Management & Hydration
-- [Fixing React hydration errors when using Zustand persist with useSyncExternalStore](https://medium.com/@judemiracle/fixing-react-hydration-errors-when-using-zustand-persist-with-usesyncexternalstore-b6d7a40f2623)
-- [Fix Next.js 14 hydration error with Zustand state management](https://medium.com/@koalamango/fix-next-js-hydration-error-with-zustand-state-management-0ce51a0176ad)
-- [How to Fix "Hydration Mismatch" Errors in Next.js](https://oneuptime.com/blog/post/2026-01-24-fix-hydration-mismatch-errors-nextjs/view)
-- [NextJS + Zustand localStorage persist middleware causing hydration errors](https://github.com/pmndrs/zustand/discussions/1382)
+**Dutch SEO:**
+- [Dutch SEO Agency guide - IndigoExtra](https://www.indigoextra.com/blog/dutch-seo)
+- [Dutch SEO: Localizing Your Search Strategy - Wordbank](https://www.wordbank.com/blog/digital-marketing/dutch-seo/)
+- [Complete Guide for Doing SEO in Dutch - RankTracker](https://www.ranktracker.com/blog/a-complete-guide-for-doing-seo-in-dutch/)
+- [SEO in Netherlands - Awisee](https://awisee.com/blog/seo-netherlands/)
+- [Dutch Website SEO Key Strategies - SEM Global Tech](https://www.semglobaltech.com/blog/dutch-seo/dutch-website-seo-key-strategies-for-the-dutch-market/)
 
-### E-commerce Cart Patterns
-- [How to Build a Shopping Cart with Next.js and Zustand](https://hackernoon.com/how-to-build-a-shopping-cart-with-nextjs-and-zustand-state-management-with-typescript)
-- [Building a Next.js shopping cart app - LogRocket](https://blog.logrocket.com/building-a-next-js-shopping-cart-app/)
-- [No automatic re render of component when adding items in shopping cart](https://github.com/vercel/next.js/discussions/54335)
+**Ecommerce Category Removal:**
+- [301 Redirect Scenarios for Ecommerce - Volusion](https://www.volusion.com/blog/301-redirect-scenarios-and-best-practices-for-ecommerce/)
+- [Removed and out-of-stock products SEO - SiteGuru](https://www.siteguru.co/seo-academy/removed-products)
+- [Will Deleting Products Hurt SEO? - Meticulosity](https://www.meticulosity.com/blog/will-deleting-products-hurt-my-seo)
+- [301 vs 404: Best Practices for SEO](https://error404.atomseo.com/blog/301-vs-404-redirects)
+- [Complete Guide to Redirecting Deleted Pages - Intero Digital](https://www.interodigital.com/blog/the-complete-guide-to-redirecting-deleted-pages-301-404-or-410/)
 
-### Performance & Bundle Optimization
-- [Optimized package imports in Next.js - Barrel Files](https://vercel.com/blog/how-we-optimized-package-imports-in-next-js)
-- [Import a big json file only on SSR](https://github.com/vercel/next.js/discussions/23564)
-- [Next.js: The Complete Guide for 2026](https://devtoolbox.dedyn.io/blog/nextjs-complete-guide)
-- [Optimizing Next.js Performance: Bundles, Lazy Loading, and Images](https://www.catchmetrics.io/blog/optimizing-nextjs-performance-bundles-lazy-loading-and-images)
+**Open Graph & Hreflang:**
+- [Open Graph Protocol](https://ogp.me/)
+- [Yoast SEO OpenGraph Tags: Change og:locale - Yoast](https://developer.yoast.com/features/opengraph/api/changing-og-locale-output/)
+- [List of Hreflang Country & Language Codes - Martin Kůra](https://martinkura.com/list-hreflang-country-language-codes-attributes/)
+- [Study: 31% of international websites contain hreflang errors - Search Engine Land](https://searchengineland.com/study-31-of-international-websites-contain-hreflang-errors-395161)
+- [Hreflang: the ultimate guide - Yoast](https://yoast.com/hreflang-ultimate-guide/)
 
-### Shopify Integration
-- [Shopify Draft Orders: Complete Guide](https://www.revize.app/blog/shopify-draft-orders-guide)
-- [DraftOrderLineItem - GraphQL Admin](https://shopify.dev/docs/api/admin-graphql/latest/objects/draftorderlineitem)
-- [Shopify API 2026 - How to create a draft order using postman](https://www.beehexa.com/devdocs/shopify-api-how-to-create-a-draft-order-using-postman/)
+**Structured Data:**
+- [Implementing JSON-LD in Next.js for SEO - Wisp CMS](https://www.wisp.blog/blog/implementing-json-ld-in-nextjs-for-seo)
+- [Working With Structured Data in Next.js 14 - craigmadethis](https://craig.madethis.co.uk/2024/structured-data-next-14)
+- [Next.js GitHub Discussion: JSON-LD hydration issues #80088](https://github.com/vercel/next.js/discussions/80088)
 
-### E-commerce Migration
-- [eCommerce Migration Strategy: A Step-by-Step Guide](https://intexsoft.com/blog/ecommerce-migration-strategy-a-step-by-step-guide-to-successful-platform-upgrades/)
-- [E-commerce Migration Guide: Steps, Best Practices & Pitfalls to Avoid](https://amasty.com/blog/e-commerce-migration-guide/)
-- [eCommerce migration: 9 challenges for online stores](https://www.convertcart.com/blog/switching-ecommerce-platform)
-
-### API Patterns
-- [Next.js 15 Advanced Patterns: App Router, Server Actions, and Caching Strategies for 2026](https://johal.in/next-js-15-advanced-patterns-app-router-server-actions-and-caching-strategies-for-2026/)
-- [Next.js API Routes: The Ultimate Guide](https://makerkit.dev/blog/tutorials/nextjs-api-best-practices)
-- [React & Next.js Best Practices in 2026](https://fabwebstudio.com/blog/react-nextjs-best-practices-2026-performance-scale)
+**Next.js Metadata Issues:**
+- [Fixing Duplicate Meta Tag Issue in Next.js - Deni Apps](https://deniapps.com/blog/fixing-duplicate-meta-tag-issue-in-nextjs)
+- [generateMetadata renders incorrectly - GitHub Issue #82783](https://github.com/vercel/next.js/issues/82783)
+- [Next.js internationalization guide - LogRocket](https://blog.logrocket.com/complete-guide-internationalization-nextjs/)
 
 ---
-*Pitfalls research for: Pure Blinds Multi-Product Expansion*
-*Researched: 2026-02-13*
-*Confidence: HIGH (verified with current codebase analysis + 2026 Next.js patterns)*
+*Pitfalls research for: Dutch content & SEO for Next.js 15 App Router ecommerce webshop*
+*Researched: 2026-02-14*
+*Confidence level: HIGH (verified with official Next.js docs, multiple SEO sources, and Dutch-specific SEO guides)*

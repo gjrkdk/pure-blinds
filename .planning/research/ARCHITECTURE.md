@@ -1,14 +1,14 @@
-# Architecture Research: Multi-Product Catalog & Blog Integration
+# Architecture Research: Dutch Content & SEO Integration
 
-**Domain:** E-commerce Product Catalog with Custom Pricing
-**Researched:** 2026-02-13
+**Domain:** Dutch content & SEO integration in Next.js 15 App Router
+**Researched:** 2026-02-14
 **Confidence:** HIGH
 
 ## Executive Summary
 
-This research analyzes how to integrate multi-product catalog, category navigation, product-specific pricing matrices, and blog pages into the existing Next.js 15 App Router webshop while preserving the pure pricing engine architecture and existing cart/checkout flow.
+This research analyzes how Dutch content, metadata, structured data (JSON-LD), sitemap generation, robots.txt, OpenGraph tags, and category removal integrate with the existing Next.js 15 App Router architecture for Pure Blinds webshop.
 
-**Key Finding:** Next.js App Router's file-based routing naturally supports multi-product catalog architecture with dynamic routes. The existing pricing engine needs minimal modification—the primary change is loading product-specific pricing matrices instead of a single global matrix. Cart and checkout flows remain unchanged.
+**Key Finding:** Next.js 15's Metadata API and file-based metadata conventions (sitemap.ts, robots.ts) provide first-class SEO support without external packages. Dutch content can be implemented as single-locale inline content without i18n routing complexity. Build order is dependency-driven: data updates → route removal → content updates → SEO infrastructure.
 
 ## Current Architecture (Baseline)
 
@@ -18,7 +18,7 @@ This research analyzes how to integrate multi-product catalog, category navigati
 ┌──────────────────────────────────────────────────────────────┐
 │                    PRESENTATION LAYER                         │
 │  Next.js App Router Pages (Server Components + Client)       │
-│  /                    /products/[id]         /cart            │
+│  /                    /products/[...slug]     /cart           │
 │  └─ DimensionConfigurator (client)                            │
 ├──────────────────────────────────────────────────────────────┤
 │                     API LAYER                                 │
@@ -27,958 +27,674 @@ This research analyzes how to integrate multi-product catalog, category navigati
 ├──────────────────────────────────────────────────────────────┤
 │                   DOMAIN LOGIC LAYER                          │
 │  ┌─────────────┐  ┌────────────┐  ┌──────────────────┐      │
-│  │  Pricing    │  │    Cart    │  │    Shopify       │      │
-│  │  Engine     │  │   Store    │  │  Integration     │      │
-│  │ (pure fns)  │  │ (Zustand)  │  │ (Draft Orders)   │      │
+│  │  Pricing    │  │  Product   │  │    Cart          │      │
+│  │  Engine     │  │  Catalog   │  │   Store          │      │
+│  │             │  │            │  │  (Zustand)       │      │
 │  └─────────────┘  └────────────┘  └──────────────────┘      │
+│  ┌──────────────────┐  ┌──────────────────┐                  │
+│  │    Shopify       │  │    Blog          │                  │
+│  │  Integration     │  │   (Velite)       │                  │
+│  │  (Draft Orders)  │  │                  │                  │
+│  └──────────────────┘  └──────────────────┘                  │
 ├──────────────────────────────────────────────────────────────┤
 │                      DATA LAYER                               │
-│  pricing-matrix.json (single file)                            │
+│  data/products.json                                           │
+│  data/pricing/*.json                                          │
+│  content/posts/*.mdx (Velite)                                 │
 │  localStorage (cart state)                                    │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-### Key Constraints to Preserve
+### Current Metadata State
 
-1. **Pricing Engine Purity:** Zero external dependencies in `src/lib/pricing/` (no Shopify, no Next.js imports)
-2. **API Route Structure:** POST /api/pricing, POST /api/checkout, GET /api/health
-3. **Cart Functionality:** Zustand store with localStorage persistence remains unchanged
-4. **Shopify Checkout Flow:** Draft Order creation for checkout remains the same
-5. **Integer Cents:** All prices stored and calculated in integer cents
-6. **Rounding Strategy:** Math.ceil to nearest 10cm increment
+- **Root layout:** `lang="en"`, generic English title/description
+- **Page metadata:** Minimal or none on most routes
+- **Structured data:** None (no JSON-LD)
+- **Sitemap:** Not generated
+- **Robots.txt:** Not configured
+- **OpenGraph:** Not configured
 
-## Target Architecture: Multi-Product Catalog
+## Target Architecture: Dutch + SEO
 
 ### Enhanced System Structure
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    PRESENTATION LAYER                         │
-│  /                      [NEW ROUTES]                          │
-│  /products              ← Products overview (category cards)  │
-│  /products/rollerblinds ← Category listing page              │
-│  /products/[productId]  ← Product detail (MODIFIED)          │
-│  /blog                  ← Blog listing                        │
-│  /blog/[slug]           ← Blog post detail                    │
-│  /cart                  ← Cart page (UNCHANGED)               │
+┌─────────────────────────────────────────────────────────────┐
+│                    App Router Layer                          │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐                   │
+│  │ layout.ts│  │ page.tsx │  │ sitemap.ts│                   │
+│  │ (root)   │  │ (route)  │  │ robots.ts │                   │
+│  └────┬─────┘  └────┬─────┘  └────┬──────┘                   │
+│       │ metadata    │ generate     │ static                   │
+│       │ object      │ Metadata()   │ generation               │
+├───────┴─────────────┴──────────────┴──────────────────────────┤
+│                    Metadata API Layer                         │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Metadata Object / generateMetadata()                │    │
+│  │  - title, description, openGraph                     │    │
+│  │  - alternates (canonical, hreflang)                  │    │
+│  │  - robots, keywords                                  │    │
+│  └──────────────────────────────────────────────────────┘    │
 ├──────────────────────────────────────────────────────────────┤
-│                     API LAYER                                 │
-│  /api/pricing (POST)    ← MODIFIED: accepts productId        │
-│  /api/checkout (POST)   ← UNCHANGED                           │
-│  /api/health (GET)      ← UNCHANGED                           │
+│                    Content Layer                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐                   │
+│  │ Dutch    │  │ Product  │  │ Blog MDX │                   │
+│  │ Content  │  │ JSON     │  │ (Velite) │                   │
+│  │ (inline) │  │ Data     │  │          │                   │
+│  └──────────┘  └──────────┘  └──────────┘                   │
 ├──────────────────────────────────────────────────────────────┤
-│                   DOMAIN LOGIC LAYER                          │
-│  ┌─────────────┐  ┌────────────┐  ┌──────────────────┐      │
-│  │  Pricing    │  │   Product  │  │    Cart          │      │
-│  │  Engine     │  │   Data     │  │   Store          │      │
-│  │ (MODIFIED)  │  │   (NEW)    │  │ (UNCHANGED)      │      │
-│  └─────────────┘  └────────────┘  └──────────────────┘      │
-│  ┌──────────────────┐  ┌──────────────────┐                  │
-│  │    Shopify       │  │    Blog          │                  │
-│  │  Integration     │  │    Content       │                  │
-│  │  (UNCHANGED)     │  │    (NEW)         │                  │
-│  └──────────────────┘  └──────────────────┘                  │
-├──────────────────────────────────────────────────────────────┤
-│                      DATA LAYER                               │
-│  data/pricing/                                                │
-│    ├─ white-rollerblind.json  ← Product-specific matrices   │
-│    ├─ black-rollerblind.json                                 │
-│    └─ venetian-blinds-25mm.json                              │
-│  data/products.ts              ← Product catalog metadata    │
-│  content/blog/                 ← Blog posts (MDX or JSON)    │
-│  localStorage (cart state - UNCHANGED)                       │
+│                 Structured Data Layer                        │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  JSON-LD <script> tags in page components            │    │
+│  │  - Product schema (products)                         │    │
+│  │  - FAQPage schema (FAQ sections)                     │    │
+│  │  - LocalBusiness schema (root layout)                │    │
+│  │  - BreadcrumbList schema (breadcrumbs component)     │    │
+│  └──────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-## Integration Points: New vs Existing
+### Component Responsibilities
 
-### 1. Route Structure Integration
+| Component | Responsibility | Typical Implementation |
+|-----------|----------------|------------------------|
+| `layout.tsx` (root) | Global metadata, lang="nl", LocalBusiness JSON-LD | Static Metadata object + JSON-LD script tag |
+| `page.tsx` (routes) | Page-specific metadata, Dutch content, page-specific JSON-LD | generateMetadata() for dynamic routes, static Metadata for static routes |
+| `sitemap.ts` | Generate sitemap.xml with all routes | Export default function returning MetadataRoute.Sitemap array |
+| `robots.ts` | Generate robots.txt | Export default function returning Robots object |
+| Product catalog | Single source of truth for product data | JSON file with Dutch translations, imported by catalog utilities |
+| Blog posts (Velite) | MDX content with frontmatter | Velite schema with Dutch content fields |
+| Breadcrumbs component | BreadcrumbList JSON-LD | Client or server component with embedded JSON-LD |
 
-**NEW ROUTES:**
-
-```
-src/app/
-├── products/
-│   ├── page.tsx                    [NEW] Products overview with category cards
-│   ├── [category]/
-│   │   └── page.tsx                [NEW] Category listing page
-│   └── [productId]/
-│       └── page.tsx                [MODIFY] Product detail - now fetches product data
-├── blog/
-│   ├── page.tsx                    [NEW] Blog listing grid
-│   └── [slug]/
-│       └── page.tsx                [NEW] Individual blog post
-└── (existing routes unchanged)
-```
-
-**ROUTE INTEGRATION STRATEGY:**
-
-- `/products` becomes the overview/hub page (replaces need for direct product links)
-- `/products/rollerblinds` category page lists products in that category
-- `/products/[productId]` remains product detail but now accepts any product ID
-- Existing `/cart`, `/thank-you`, API routes remain unchanged
-- Header navigation updated: Add "Products" and "Blog" links
-
-**BREADCRUMB PATTERN:**
+## Recommended Project Structure
 
 ```
-Home > Products > Rollerblinds > White Rollerblind
-Home > Blog > [Post Title]
+src/
+├── app/
+│   ├── layout.tsx                    # MODIFY: lang="nl", global metadata, LocalBusiness JSON-LD
+│   ├── page.tsx                      # MODIFY: Dutch content, homepage metadata
+│   ├── sitemap.ts                    # NEW: Sitemap generation
+│   ├── robots.ts                     # NEW: Robots.txt generation
+│   ├── products/
+│   │   ├── page.tsx                  # MODIFY: Dutch content
+│   │   ├── roller-blinds/
+│   │   │   ├── page.tsx              # MODIFY: Dutch content, metadata
+│   │   │   ├── transparent-roller-blinds/
+│   │   │   │   └── page.tsx          # MODIFY: Dutch content, metadata
+│   │   │   └── blackout-roller-blinds/
+│   │   │       └── page.tsx          # MODIFY: Dutch content, metadata
+│   │   └── [...slug]/
+│   │       └── page.tsx              # MODIFY: generateMetadata(), Product JSON-LD
+│   ├── blog/
+│   │   ├── page.tsx                  # MODIFY: Dutch content, metadata
+│   │   └── [slug]/
+│   │       └── page.tsx              # MODIFY: generateMetadata(), Article JSON-LD
+│   ├── cart/
+│   │   └── page.tsx                  # MODIFY: Dutch content, noindex robots
+│   └── confirmation/
+│       └── page.tsx                  # MODIFY: Dutch content, noindex robots
+├── components/
+│   ├── layout/
+│   │   ├── breadcrumbs.tsx           # MODIFY: BreadcrumbList JSON-LD
+│   │   ├── header.tsx                # MODIFY: Dutch navigation labels
+│   │   └── footer.tsx                # MODIFY: Dutch footer content
+│   ├── home/
+│   │   ├── faq-section.tsx           # MODIFY: Dutch FAQs + FAQPage JSON-LD
+│   │   └── [other sections]          # MODIFY: Dutch content
+│   └── seo/                          # NEW: SEO utility components
+│       ├── json-ld.tsx               # JSON-LD wrapper component
+│       └── schema-generators.ts      # Schema generation utilities
+├── lib/
+│   ├── product/
+│   │   ├── catalog.ts                # MODIFY: Handle Dutch product data
+│   │   └── types.ts                  # MODIFY: Add Dutch fields to types
+│   ├── metadata/                     # NEW: Metadata utilities
+│   │   ├── generators.ts             # generateMetadata helpers
+│   │   ├── constants.ts              # Default metadata, site config
+│   │   └── types.ts                  # Metadata type definitions
+│   └── seo/                          # NEW: SEO utilities
+│       ├── structured-data.ts        # JSON-LD generation utilities
+│       └── sitemap-helpers.ts        # Sitemap generation helpers
+├── data/
+│   ├── products.json                 # MODIFY: Add Dutch names/descriptions, remove venetian/textiles
+│   ├── pricing/
+│   │   ├── roller-blind-white.json   # Keep
+│   │   ├── roller-blind-black.json   # Keep
+│   │   ├── [venetian-blinds-25mm.json] # REMOVE
+│   │   └── [custom-textile.json]     # REMOVE
+│   └── seo/                          # NEW: SEO data
+│       └── faqs.json                 # Dutch FAQ data (optional, or inline)
+└── content/
+    └── posts/
+        └── *.mdx                     # MODIFY: Dutch blog posts
 ```
 
-Implementation using Next.js App Router conventions:
-- Use `usePathname()` hook to build breadcrumb segments
-- Split path by `/` and map to human-readable labels
-- Category names stored in product metadata for breadcrumb labels
-
-### 2. Data Architecture Integration
-
-**PRODUCT DATA MODEL (NEW):**
-
-Location: `src/lib/product/types.ts`
-
-```typescript
-export interface Product {
-  id: string;                    // "white-rollerblind"
-  name: string;                  // "White Rollerblind"
-  category: string;              // "rollerblinds"
-  categoryDisplay: string;       // "Rollerblinds"
-  description: string;
-  details: ProductDetail[];
-  pricingMatrixPath: string;    // "data/pricing/white-rollerblind.json"
-  images?: ProductImage[];       // Future: product images
-}
-
-export interface ProductDetail {
-  label: string;
-  value: string;
-}
-
-export interface ProductImage {
-  url: string;
-  alt: string;
-}
-
-export interface Category {
-  id: string;                    // "rollerblinds"
-  name: string;                  // "Rollerblinds"
-  description: string;
-  productIds: string[];          // ["white-rollerblind", "black-rollerblind"]
-}
-```
-
-**PRODUCT DATA SOURCE (NEW):**
-
-Location: `src/lib/product/data.ts`
-
-```typescript
-const products: Record<string, Product> = {
-  "white-rollerblind": {
-    id: "white-rollerblind",
-    name: "White Rollerblind",
-    category: "rollerblinds",
-    categoryDisplay: "Rollerblinds",
-    pricingMatrixPath: "data/pricing/white-rollerblind.json",
-    // ... details
-  },
-  "black-rollerblind": {
-    id: "black-rollerblind",
-    name: "Black Rollerblind",
-    category: "rollerblinds",
-    categoryDisplay: "Rollerblinds",
-    pricingMatrixPath: "data/pricing/black-rollerblind.json",
-    // ... details
-  },
-};
-
-const categories: Record<string, Category> = {
-  "rollerblinds": {
-    id: "rollerblinds",
-    name: "Rollerblinds",
-    description: "Made-to-measure rollerblinds...",
-    productIds: ["white-rollerblind", "black-rollerblind"],
-  },
-};
-
-export function getProduct(productId: string): Product | undefined;
-export function getAllProducts(): Product[];
-export function getProductsByCategory(categoryId: string): Product[];
-export function getCategory(categoryId: string): Category | undefined;
-export function getAllCategories(): Category[];
-```
-
-**INTEGRATION WITH EXISTING PRODUCT DATA:**
-
-Current implementation already has `src/lib/product/data.ts` with basic product data. Enhancement path:
-
-1. Add `pricingMatrixPath` field to existing ProductData interface
-2. Add category metadata (Category interface and functions)
-3. Migrate existing products to new structure
-4. No breaking changes to existing `/products/[productId]` page
-
-### 3. Pricing Engine Integration
-
-**CURRENT IMPLEMENTATION:**
-
-```typescript
-// src/lib/pricing/calculator.ts
-import pricingData from '../../../data/pricing-matrix.json';
-const pricing = pricingData as PricingMatrixData;
-
-export function calculatePrice(width: number, height: number): PricingResponse {
-  // Uses global pricing matrix
-}
-```
-
-**MODIFIED IMPLEMENTATION:**
-
-```typescript
-// src/lib/pricing/calculator.ts
-export function calculatePrice(
-  width: number,
-  height: number,
-  pricingMatrix: PricingMatrixData  // NEW: accepts matrix as parameter
-): PricingResponse {
-  // Same logic, different matrix source
-}
-
-// NEW: Matrix loader utility
-export function loadPricingMatrix(matrixPath: string): PricingMatrixData {
-  const matrix = require(`../../../${matrixPath}`);
-  return matrix as PricingMatrixData;
-}
-```
-
-**API ROUTE MODIFICATION:**
-
-```typescript
-// src/app/api/pricing/route.ts (MODIFIED)
-import { calculatePrice, loadPricingMatrix } from "@/lib/pricing/calculator";
-import { getProduct } from "@/lib/product/data";
-
-export async function POST(request: Request) {
-  const body = await request.json();
-
-  // NEW: Validate productId
-  const { width, height, productId } = body;
-
-  if (!productId) {
-    return NextResponse.json({ error: "productId required" }, { status: 400 });
-  }
-
-  // NEW: Load product-specific matrix
-  const product = getProduct(productId);
-  if (!product) {
-    return NextResponse.json({ error: "Product not found" }, { status: 404 });
-  }
-
-  const pricingMatrix = loadPricingMatrix(product.pricingMatrixPath);
-
-  // Validate dimensions with Zod (unchanged)
-  const result = DimensionInputSchema.safeParse({ width, height });
-  if (!result.success) {
-    return NextResponse.json({ error: "Invalid dimensions", details: result.error.issues }, { status: 400 });
-  }
-
-  // NEW: Pass matrix to calculator
-  const pricingResponse = calculatePrice(result.data.width, result.data.height, pricingMatrix);
-
-  return NextResponse.json(pricingResponse, { status: 200 });
-}
-```
-
-**MIGRATION PATH:**
-
-1. Move `data/pricing-matrix.json` → `data/pricing/custom-textile.json` (original product)
-2. Create product-specific matrices: `white-rollerblind.json`, `black-rollerblind.json`
-3. Update `calculatePrice()` to accept matrix parameter (backward compatible via wrapper)
-4. Update API route to load product-specific matrix
-5. Update `DimensionConfigurator` to send `productId` in API request
-
-**PRICING ENGINE PURITY PRESERVED:**
-
-- `calculatePrice()` still has zero external dependencies
-- Matrix loading happens at API boundary, not in pricing logic
-- Calculator functions remain pure (same input → same output)
-- No Shopify dependencies introduced
-
-### 4. Component Integration
-
-**DIMENSION CONFIGURATOR (MODIFIED):**
-
-```typescript
-// src/components/dimension-configurator.tsx
-interface DimensionConfiguratorProps {
-  productId: string;      // Already exists
-  productName: string;    // Already exists
-}
-
-// CHANGE: Include productId in API request
-const response = await fetch('/api/pricing', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    width: widthNum,
-    height: heightNum,
-    productId,           // NEW: Send productId to API
-  })
-});
-```
-
-**CART STORE (UNCHANGED):**
-
-Cart already stores `productId` and `productName` per item. No changes needed.
-
-```typescript
-// src/lib/cart/types.ts - Already supports multiple products
-export interface CartItem {
-  id: string;           // Generated from productId + options
-  productId: string;    // Identifies which product
-  productName: string;
-  options: { width: number; height: number };
-  priceInCents: number;
-  quantity: number;
-}
-```
-
-**CHECKOUT FLOW (UNCHANGED):**
-
-`/api/checkout` receives cart items with `productId` and creates Draft Order line items. No changes needed—existing implementation already handles multiple products via cart items array.
-
-### 5. Blog Integration
-
-**BLOG ARCHITECTURE OPTIONS:**
-
-Two approaches evaluated:
-
-**Option A: MDX with @next/mdx (Recommended)**
-
-- Blog posts as `.mdx` files in `content/blog/`
-- Rich content support (React components in markdown)
-- Type-safe with Next.js built-in support
-- Server Components by default (no client JS)
-
-**Option B: JSON with Metadata**
-
-- Blog posts as structured JSON
-- Simpler for non-technical editors
-- Easier to integrate with headless CMS later
-- Requires custom renderer
-
-**Recommendation:** Option A (MDX) for v1.2—better developer experience, no need for CMS yet.
-
-**BLOG DATA STRUCTURE:**
-
-```
-content/blog/
-├── welcome-to-our-blog.mdx
-├── choosing-the-right-blinds.mdx
-└── installation-guide.mdx
-
-src/lib/blog/
-├── types.ts         (BlogPost interface)
-└── posts.ts         (getPost, getAllPosts utilities)
-```
-
-**BLOG POST METADATA:**
-
-```typescript
-// Frontmatter in MDX files
-export interface BlogPost {
-  slug: string;
-  title: string;
-  excerpt: string;
-  publishedAt: string;  // ISO date
-  author: string;
-  tags?: string[];
-  coverImage?: string;
-}
-```
-
-**BLOG PAGES:**
-
-```typescript
-// src/app/blog/page.tsx - Blog listing
-export default async function BlogPage() {
-  const posts = await getAllPosts();
-  return <BlogGrid posts={posts} />;
-}
-
-// src/app/blog/[slug]/page.tsx - Blog post detail
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const post = await getPost(slug);
-  if (!post) notFound();
-
-  return (
-    <article>
-      <h1>{post.title}</h1>
-      <MDXContent />
-    </article>
-  );
-}
-```
-
-**BLOG INTEGRATION POINTS:**
-
-- Header navigation: Add "Blog" link
-- Homepage: Optional "Latest Posts" section (future enhancement)
-- Product pages: Optional "Related Articles" (future enhancement)
-- Blog posts: No pricing or cart integration—pure content
-
-## Component Modification Matrix
-
-| Component | Status | Changes Required |
-|-----------|--------|------------------|
-| DimensionConfigurator | MODIFY | Send `productId` in pricing API request body |
-| /products/[productId]/page.tsx | MODIFY | Fetch product data via `getProduct(productId)` |
-| /api/pricing/route.ts | MODIFY | Accept `productId`, load product-specific matrix |
-| calculatePrice() | MODIFY | Accept `pricingMatrix` parameter |
-| CartStore | UNCHANGED | Already supports multiple products |
-| /api/checkout/route.ts | UNCHANGED | Already handles cart items array |
-| Header navigation | MODIFY | Add "Products" and "Blog" links |
-| Footer | MODIFY | Add product/blog links to Quick Links |
-| All other components | UNCHANGED | No modifications needed |
-
-**NEW COMPONENTS:**
-
-| Component | Purpose | Location |
-|-----------|---------|----------|
-| ProductsOverview | Category cards grid | /products/page.tsx |
-| CategoryPage | Product listing | /products/[category]/page.tsx |
-| ProductCard | Product preview card | src/components/product/product-card.tsx |
-| BlogGrid | Blog post grid | src/components/blog/blog-grid.tsx |
-| BlogPostCard | Blog preview card | src/components/blog/blog-post-card.tsx |
-| BlogPostLayout | Post detail layout | src/components/blog/blog-post-layout.tsx |
-
-## Data Flow Changes
-
-### Current: Single Product Pricing Flow
-
-```
-User enters dimensions
-  ↓
-DimensionConfigurator debounces
-  ↓
-POST /api/pricing { width, height }
-  ↓
-Load global pricing-matrix.json
-  ↓
-calculatePrice(width, height)
-  ↓
-Return { priceInCents, ... }
-```
-
-### New: Multi-Product Pricing Flow
-
-```
-User enters dimensions on product page
-  ↓
-DimensionConfigurator debounces
-  ↓
-POST /api/pricing { width, height, productId }  ← NEW: productId included
-  ↓
-getProduct(productId) → product.pricingMatrixPath  ← NEW: Look up matrix path
-  ↓
-loadPricingMatrix(path) → matrix                   ← NEW: Load product matrix
-  ↓
-calculatePrice(width, height, matrix)              ← NEW: Pass matrix
-  ↓
-Return { priceInCents, ... }
-```
-
-**KEY INSIGHT:** Only the matrix loading step changes. The calculation logic remains identical.
-
-### Cart to Checkout Flow (UNCHANGED)
-
-```
-User adds item to cart (productId stored)
-  ↓
-CartStore: addItem({ productId, productName, options, priceInCents })
-  ↓
-localStorage persistence (7-day TTL)
-  ↓
-User proceeds to checkout
-  ↓
-POST /api/checkout { items: [{ productId, productName, options, priceInCents, quantity }] }
-  ↓
-createDraftOrder(items) - maps to Shopify line items
-  ↓
-Return { invoiceUrl }
-  ↓
-Clear cart, redirect to Shopify checkout
-```
-
-**NO CHANGES NEEDED** - Cart already stores productId, checkout already handles multiple products.
+### Structure Rationale
+
+- **app/ follows Next.js 15 conventions:** Metadata files (sitemap.ts, robots.ts) at root level for automatic generation
+- **components/seo/ for reusable SEO logic:** JSON-LD wrapper, schema generators avoid duplication across pages
+- **lib/metadata/ centralizes metadata logic:** Shared metadata generation functions, constants, types
+- **lib/seo/ for structured data utilities:** Separate from metadata as it's injected differently (script tags vs meta tags)
+- **data/ remains single source of truth:** Product catalog modified with Dutch content, deprecated products removed
+- **No i18n routing needed:** Single Dutch locale, no multi-language routing complexity
 
 ## Architectural Patterns
 
-### Pattern 1: Dynamic Pricing Matrix Loading
+### Pattern 1: Metadata API Integration
 
-**What:** Load pricing matrices on-demand based on productId rather than bundling all matrices at build time.
+**What:** Next.js 15 Metadata API via static `metadata` object or dynamic `generateMetadata()` function
 
-**When to use:** When each product has a different pricing structure (dimensions, increments, or price points).
+**When to use:**
+- Static pages (homepage, category pages): Use `export const metadata: Metadata = {...}`
+- Dynamic pages (product details, blog posts): Use `export async function generateMetadata({ params }): Promise<Metadata> {...}`
 
 **Trade-offs:**
-- **Pro:** Reduces bundle size, matrices loaded only when needed
-- **Pro:** Easy to add new products without code changes
-- **Con:** Small runtime overhead to load JSON (negligible for files <50KB)
-- **Con:** Requires matrix path configuration in product metadata
+- **Pros:** Type-safe, automatic head tag generation, streaming support, no manual head management
+- **Cons:** Can't use both metadata object and generateMetadata in same file, requires Server Components
 
-**Implementation:**
-
+**Example:**
 ```typescript
-// Lazy loading with dynamic require
-export function loadPricingMatrix(matrixPath: string): PricingMatrixData {
-  try {
-    const matrix = require(`../../../${matrixPath}`);
-    return matrix as PricingMatrixData;
-  } catch (error) {
-    throw new Error(`Pricing matrix not found: ${matrixPath}`);
+// Static metadata (src/app/products/roller-blinds/page.tsx)
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Rolgordijnen op Maat | Pure Blinds',
+  description: 'Bestel rolgordijnen op maat online. Direct prijzen, premium kwaliteit.',
+  openGraph: {
+    title: 'Rolgordijnen op Maat | Pure Blinds',
+    description: 'Bestel rolgordijnen op maat online.',
+    images: ['/og-roller-blinds.jpg'],
+  },
+}
+
+// Dynamic metadata (src/app/products/[...slug]/page.tsx)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
+  const { slug } = await params
+  const productSlug = slug[slug.length - 1]
+  const product = getProductBySlug(productSlug)
+
+  if (!product) return {}
+
+  return {
+    title: `${product.name} | Pure Blinds`,
+    description: product.description,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [product.imageUrl || '/og-default.jpg'],
+      type: 'product',
+    },
+  }
+}
+```
+
+### Pattern 2: JSON-LD Structured Data Injection
+
+**What:** Render JSON-LD structured data as `<script type="application/ld+json">` tags within page components
+
+**When to use:**
+- Product pages: Product schema
+- FAQ sections: FAQPage schema
+- Root layout: LocalBusiness schema
+- Breadcrumbs: BreadcrumbList schema
+- Blog posts: Article schema
+
+**Trade-offs:**
+- **Pros:** Separate from metadata, flexible placement, multiple schemas per page, can be dynamic
+- **Cons:** XSS risk if not escaped properly, must manually ensure valid JSON, not part of Metadata API
+
+**Example:**
+```typescript
+// lib/seo/structured-data.ts
+export function generateProductSchema(product: Product, url: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description,
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'EUR',
+      lowPrice: '49.99',
+      highPrice: '299.99',
+      availability: 'https://schema.org/InStock',
+    },
+    brand: {
+      '@type': 'Brand',
+      name: 'Pure Blinds',
+    },
   }
 }
 
-// Alternative: Import mapping for build-time validation
-const MATRIX_MAP: Record<string, PricingMatrixData> = {
-  "white-rollerblind": require("../../../data/pricing/white-rollerblind.json"),
-  "black-rollerblind": require("../../../data/pricing/black-rollerblind.json"),
-};
-
-export function loadPricingMatrix(productId: string): PricingMatrixData {
-  if (!MATRIX_MAP[productId]) {
-    throw new Error(`No pricing matrix for product: ${productId}`);
-  }
-  return MATRIX_MAP[productId];
-}
-```
-
-**Recommendation:** Use import mapping for type safety and build-time validation.
-
-### Pattern 2: Category-First Navigation
-
-**What:** Organize products by category first, then individual products within categories.
-
-**When to use:** When products naturally cluster into 3-8 categories with multiple products each.
-
-**Trade-offs:**
-- **Pro:** Reduces cognitive load (users browse categories before products)
-- **Pro:** Scales well (can add products without overwhelming navigation)
-- **Pro:** SEO benefits (category pages rank for broader terms)
-- **Con:** Extra click to reach product (overview → category → product)
-- **Con:** May feel over-engineered for <10 total products
-
-**Implementation:**
-
-```
-URL Structure:
-/products                       (Overview - category cards)
-/products/rollerblinds          (Category page - product grid)
-/products/white-rollerblind     (Product detail)
-
-Navigation:
-Header: "Products" link → /products
-Products page: Category cards
-Category page: Product cards
-Product page: Breadcrumb navigation back
-```
-
-**Recommendation:** Use for v1.2 - prepares for catalog growth, matches user mental model.
-
-### Pattern 3: Blog as Separate Content Domain
-
-**What:** Blog content managed independently from product catalog, no tight coupling.
-
-**When to use:** Blog serves marketing/education, not product configuration.
-
-**Trade-offs:**
-- **Pro:** Clean separation of concerns
-- **Pro:** Easy to migrate blog to CMS later
-- **Pro:** Blog doesn't complicate product/pricing logic
-- **Con:** Missed opportunity for contextual product links in posts
-- **Con:** Duplicate metadata (SEO, images) between systems
-
-**Implementation:**
-
-```typescript
-// Blog has no dependencies on product catalog
-// content/blog/[slug].mdx files are self-contained
-
-// Optional: Link from blog post to product
-export default function BlogPost() {
+// components/seo/json-ld.tsx
+export function JsonLd({ data }: { data: object }) {
   return (
-    <article>
-      <p>Learn about our <Link href="/products/white-rollerblind">white rollerblinds</Link></p>
-    </article>
-  );
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data).replace(/</g, '\\u003c'),
+      }}
+    />
+  )
 }
 
-// Products do NOT link to blog posts (one-way relationship)
+// src/app/products/[...slug]/page.tsx
+import { JsonLd } from '@/components/seo/json-ld'
+import { generateProductSchema } from '@/lib/seo/structured-data'
+
+export default async function ProductPage({ params }: { params: Promise<{ slug: string[] }> }) {
+  const { slug } = await params
+  const product = getProductBySlug(slug[slug.length - 1])
+
+  const productSchema = generateProductSchema(product, `https://pureblinds.nl${getProductUrl(product)}`)
+
+  return (
+    <>
+      <JsonLd data={productSchema} />
+      {/* Page content */}
+    </>
+  )
+}
 ```
 
-**Recommendation:** Start with separation, add product→blog links in future if analytics show value.
+### Pattern 3: Sitemap Generation with Static Routes
 
-### Pattern 4: Server Components for Static Content
+**What:** Generate sitemap.xml programmatically using `sitemap.ts` file convention
 
-**What:** Use React Server Components (RSC) for product pages, category pages, blog pages—anything that doesn't need client state.
-
-**When to use:** Always, unless component needs event handlers, browser APIs, or real-time state.
+**When to use:**
+- All static routes (homepage, category pages, subcategory pages)
+- All product routes (from catalog)
+- All blog posts (from Velite)
 
 **Trade-offs:**
-- **Pro:** Zero client JavaScript for static content
-- **Pro:** Faster initial page load, better SEO
-- **Pro:** Direct data access (no API routes for reads)
-- **Con:** Cannot use hooks like useState, useEffect
-- **Con:** Must explicitly mark client components with 'use client'
+- **Pros:** Automatic XML generation, type-safe, integrates with build process, no external packages
+- **Cons:** Regenerates on every build (fine for static sites), manual route management
 
-**Implementation:**
-
+**Example:**
 ```typescript
-// Server Component (default in App Router)
-export default async function ProductsPage() {
-  const categories = getAllCategories();  // Direct data access
-  return <CategoryGrid categories={categories} />;
+// src/app/sitemap.ts
+import type { MetadataRoute } from 'next'
+import { getAllProducts, getProductUrl } from '@/lib/product/catalog'
+import { posts } from '@/.velite'
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://pureblinds.nl'
+
+  // Static routes
+  const staticRoutes: MetadataRoute.Sitemap = [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/products`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/products/roller-blinds`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/products/roller-blinds/transparent-roller-blinds`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/products/roller-blinds/blackout-roller-blinds`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+  ]
+
+  // Product routes
+  const products = getAllProducts().filter(p =>
+    p.category === 'roller-blinds' // Exclude removed categories
+  )
+  const productRoutes: MetadataRoute.Sitemap = products.map(product => ({
+    url: `${baseUrl}${getProductUrl(product)}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }))
+
+  // Blog routes
+  const blogRoutes: MetadataRoute.Sitemap = posts.map(post => ({
+    url: `${baseUrl}${post.permalink}`,
+    lastModified: new Date(post.date),
+    changeFrequency: 'yearly' as const,
+    priority: 0.5,
+  }))
+
+  return [...staticRoutes, ...productRoutes, ...blogRoutes]
+}
+```
+
+### Pattern 4: Dutch Content Without i18n Routing
+
+**What:** Single-locale Dutch content stored inline in components and data files, no routing-based internationalization
+
+**When to use:**
+- Single target market (Netherlands)
+- No multi-language requirements
+- Simpler architecture preferred
+
+**Trade-offs:**
+- **Pros:** No i18n library, no routing complexity, simpler build, faster page loads, easier debugging
+- **Cons:** Difficult to add second language later, Dutch content hardcoded in components
+- **Migration cost:** Low initially, medium-high if internationalization needed later
+
+**Example:**
+```typescript
+// data/products.json (Dutch names/descriptions)
+{
+  "id": "roller-blind-white",
+  "name": "Wit Rolgordijn",
+  "description": "Strak wit rolgordijn op maat gemaakt. Voer je gewenste breedte en hoogte in voor een directe prijsopgave.",
+  "category": "roller-blinds",
+  "subcategory": "transparent-roller-blinds",
+  "details": [
+    { "label": "Materiaal", "value": "Stof" },
+    { "label": "Kleur", "value": "Wit" },
+    { "label": "Afmetingen", "value": "10–200 cm (breedte & hoogte)" },
+    { "label": "Productietijd", "value": "3–5 werkdagen" }
+  ]
 }
 
-// Client Component (only where needed)
-'use client'
-export default function DimensionConfigurator({ productId }: Props) {
-  const [width, setWidth] = useState('');  // Requires client
-  // ...
+// src/app/products/roller-blinds/page.tsx (inline Dutch)
+export default function RollerBlindsPage() {
+  return (
+    <div>
+      <h1>Rolgordijnen</h1>
+      <p>Kies uit ons assortiment rolgordijnen op maat. Verkrijgbaar in transparante en verduisterende uitvoeringen.</p>
+    </div>
+  )
 }
 ```
 
-**Recommendation:** Follow Next.js App Router defaults - server first, client only when needed.
+## Data Flow
 
-## Anti-Patterns to Avoid
+### SEO Metadata Flow
 
-### Anti-Pattern 1: Global Pricing Configuration in Client Code
-
-**What people do:** Import all pricing matrices into client components for "offline" calculation.
-
-**Why it's wrong:**
-- Exposes all pricing data to browser (security risk, competitive intelligence leak)
-- Bloats client bundle (400 price points × N products)
-- Makes price updates require client deployment
-
-**Do this instead:** Keep pricing calculation server-side, client only sends dimensions and productId.
-
-```typescript
-// ❌ WRONG
-'use client'
-import allMatrices from '@/data/pricing/all-matrices.json';
-function calculateLocally(width, height, productId) {
-  return allMatrices[productId][width][height];
-}
-
-// ✅ CORRECT
-'use client'
-async function fetchPrice(width, height, productId) {
-  const response = await fetch('/api/pricing', {
-    method: 'POST',
-    body: JSON.stringify({ width, height, productId })
-  });
-  return response.json();
-}
+```
+Page Component Request
+    ↓
+Next.js evaluates metadata export
+    ↓
+Static metadata object OR generateMetadata() called
+    ↓
+Metadata API generates <head> tags
+    ↓ (parallel)
+HTML sent to client with meta tags in <head>
 ```
 
-### Anti-Pattern 2: Category Slug as Product Identifier
+### Structured Data Flow
 
-**What people do:** Use URL structure `/products/rollerblinds/white` where category is part of product identity.
-
-**Why it's wrong:**
-- Products can't move between categories without URL breaking
-- Requires complex routing logic to extract both category and product
-- Breaks if product belongs to multiple categories
-
-**Do this instead:** Use productId as canonical identifier, category in URL for navigation UX only.
-
-```typescript
-// ❌ WRONG - productId depends on category
-/products/rollerblinds/white-blind
-product.id = "rollerblinds/white-blind"  // Coupled to category
-
-// ✅ CORRECT - productId is independent
-/products/white-rollerblind
-product.id = "white-rollerblind"
-product.category = "rollerblinds"  // Separate field
+```
+Page Component Render (Server Component)
+    ↓
+JSON-LD generation function called with data
+    ↓
+JsonLd component renders <script> tag
+    ↓
+<script> included in HTML sent to client
+    ↓
+Search engine crawlers parse JSON-LD
 ```
 
-### Anti-Pattern 3: Nested Category Routes
+### Sitemap Generation Flow
 
-**What people do:** Create deeply nested routes `/products/[category]/[subcategory]/[productId]` for taxonomy.
-
-**Why it's wrong:**
-- Overcomplicated routing for <20 products
-- Poor UX (too many clicks to reach product)
-- Hard to maintain as taxonomy evolves
-- Not needed until 100+ products
-
-**Do this instead:** Two-level hierarchy maximum: overview → category → product.
-
-```typescript
-// ❌ WRONG - unnecessary nesting
-/products/window-treatments/rollerblinds/light/white-rollerblind
-
-// ✅ CORRECT - flat product IDs
-/products/white-rollerblind
-(breadcrumb shows: Products > Rollerblinds > White Rollerblind)
+```
+Build time: next build
+    ↓
+sitemap.ts exports default function called
+    ↓
+Function queries product catalog, blog posts
+    ↓
+Returns array of route objects
+    ↓
+Next.js generates /sitemap.xml
+    ↓
+Available at https://domain.com/sitemap.xml
 ```
 
-### Anti-Pattern 4: Mixing Blog Posts with Product Routes
+### Key Data Flows
 
-**What people do:** Put blog posts under `/products/guides/[slug]` to "keep content together."
-
-**Why it's wrong:**
-- Confuses users (is this a product or article?)
-- Breaks semantic URLs (guides aren't products)
-- Complicates routing logic (need to distinguish product vs post)
-- Hurts SEO (mixed content types in same sitemap section)
-
-**Do this instead:** Separate `/blog` and `/products` top-level routes.
-
-```typescript
-// ❌ WRONG - content type confusion
-/products/guides/choosing-blinds
-/products/white-rollerblind
-(are these both products?)
-
-// ✅ CORRECT - clear content types
-/blog/choosing-blinds
-/products/white-rollerblind
-```
-
-## Build Order Recommendation
-
-Based on dependencies and risk, recommended implementation order:
-
-### Phase 1: Product Data Foundation (Low Risk)
-**Goal:** Set up multi-product data model without breaking existing functionality.
-
-**Tasks:**
-1. Create `src/lib/product/types.ts` with Product and Category interfaces
-2. Enhance `src/lib/product/data.ts` with category support and `pricingMatrixPath` field
-3. Split `data/pricing-matrix.json` into product-specific files in `data/pricing/`
-4. Add `getAllCategories()`, `getCategory()` helper functions
-5. Verify existing product page still works with enhanced data model
-
-**Acceptance:** `/products/[productId]` page loads product data correctly for all products.
-
-**Why first:** Zero risk to existing functionality, establishes foundation for everything else.
-
-### Phase 2: Pricing Engine Multi-Product Support (Medium Risk)
-**Goal:** Enable per-product pricing matrices without breaking existing calculator logic.
-
-**Tasks:**
-1. Modify `calculatePrice()` to accept `pricingMatrix` parameter
-2. Create `loadPricingMatrix()` utility function
-3. Update `/api/pricing` route to accept `productId` and load product-specific matrix
-4. Update `DimensionConfigurator` to send `productId` in API request
-5. Add tests for multi-product pricing calculation
-
-**Acceptance:** Pricing works correctly for all products, existing cart/checkout unaffected.
-
-**Why second:** Core business logic change, must be solid before building UI on top.
-
-### Phase 3: Product Navigation Routes (Low Risk)
-**Goal:** Add products overview and category listing pages.
-
-**Tasks:**
-1. Create `/products/page.tsx` - category cards overview
-2. Create `/products/[category]/page.tsx` - product listing for category
-3. Build `ProductCard` component for product previews
-4. Add breadcrumb component for navigation
-5. Update header navigation to include "Products" link
-
-**Acceptance:** Users can browse categories and navigate to product detail pages.
-
-**Why third:** UI layer on top of solid data foundation, easy to iterate on design.
-
-### Phase 4: Blog Foundation (Low Risk, Independent)
-**Goal:** Add blog listing and post pages with placeholder content.
-
-**Tasks:**
-1. Create `content/blog/` directory with 3 sample MDX posts
-2. Create `src/lib/blog/` utilities for fetching posts
-3. Create `/blog/page.tsx` - blog listing grid
-4. Create `/blog/[slug]/page.tsx` - blog post detail
-5. Build `BlogPostCard` and `BlogPostLayout` components
-6. Update header navigation to include "Blog" link
-
-**Acceptance:** Blog pages render with sample content, navigation works.
-
-**Why fourth:** Independent of product changes, can be built in parallel if needed.
-
-### Phase 5: Polish & Metadata (Low Risk)
-**Goal:** Improve UX, SEO, and navigation consistency.
-
-**Tasks:**
-1. Add dynamic metadata (title, description) for all new pages
-2. Rename `/thank-you` to `/confirmation` (URL migration)
-3. Update footer links to include product categories and blog
-4. Add product images placeholders to product cards
-5. Improve breadcrumb styling and mobile responsiveness
-
-**Acceptance:** All pages have proper SEO metadata, navigation is consistent.
-
-**Why last:** Polish layer, doesn't block functionality, easy to adjust based on testing.
+1. **Product metadata generation:** Product page renders → generateMetadata() reads product from catalog → returns Metadata object → Next.js generates meta tags
+2. **Product schema injection:** Product page renders → generateProductSchema() creates schema object → JsonLd component renders script tag → included in HTML
+3. **Sitemap compilation:** Build runs → sitemap.ts queries catalog + Velite posts → returns unified route list → Next.js generates XML
+4. **Dutch content rendering:** Component imports from JSON catalog or uses inline Dutch strings → renders to client
 
 ## Scaling Considerations
 
 | Scale | Architecture Adjustments |
 |-------|--------------------------|
-| 5-20 products | Current architecture is ideal. Single-level categories, JSON-based pricing matrices, server-side product data all perform excellently. No changes needed. |
-| 20-100 products | Consider category hierarchy (2 levels max), implement product search, add filtering/sorting on category pages. Pricing matrices still fine as JSON. Consider dynamic imports for matrices to reduce memory. |
-| 100-500 products | Move product catalog to database (Postgres, MongoDB), implement full-text search (Algolia, Meilisearch), add pagination to category pages. Pricing matrices may need database with caching layer. |
-| 500+ products | Add product search infrastructure, implement CDN for product images, consider static site generation (ISR) for product pages, evaluate edge caching for pricing API. May need dedicated pricing service. |
+| 0-1k products | Current approach: Static JSON catalog, build-time sitemap generation |
+| 1k-10k products | Incremental Static Regeneration (ISR) for product pages, split sitemap using generateSitemaps() |
+| 10k+ products | Database-backed catalog, dynamic sitemap generation, consider CDN caching |
 
 ### Scaling Priorities
 
-1. **First bottleneck: Product data loading** - Around 50+ products, loading all product data into memory becomes inefficient. Solution: Paginate category pages, add search/filtering, lazy load product details.
+1. **First bottleneck:** Build time for sitemap with large product catalog
+   - **Fix:** Use `generateSitemaps()` to create multiple sitemap files (sitemap index)
+   - **Example:** `/sitemap/0.xml`, `/sitemap/1.xml`, etc.
+2. **Second bottleneck:** JSON catalog size in client bundles
+   - **Fix:** Move to server-only imports, use database for product queries
+   - **Note:** Already server-side with current architecture, but JSON parsed at build time
 
-2. **Second bottleneck: Pricing matrix storage** - Around 100+ products with unique matrices, JSON files become hard to manage. Solution: Move matrices to database with Redis caching, versioning system for price updates.
+## Anti-Patterns
 
-3. **Third bottleneck: Client bundle size** - Product images and components increase bundle. Solution: Dynamic imports, image optimization with next/image, code splitting by route.
+### Anti-Pattern 1: Reusing English Metadata for All Pages
 
-**For v1.2 (5-10 products):** Current architecture is over-sufficient. No scaling changes needed.
+**What people do:** Set metadata once in root layout, don't override in child routes
+**Why it's wrong:** Generic metadata doesn't help SEO, missed opportunity for targeted keywords
+**Do this instead:** Every route should have specific, descriptive metadata matching Dutch content
 
-## Migration Strategy from Current Architecture
+### Anti-Pattern 2: Mixing i18n Library with Single-Locale Content
 
-### Step 1: Backward Compatible Product Data
+**What people do:** Install next-intl or react-i18next for single Dutch locale
+**Why it's wrong:** Adds complexity, bundle size, slower builds for zero benefit when not supporting multiple languages
+**Do this instead:** Use inline Dutch content, JSON with Dutch values, simple approach
 
+### Anti-Pattern 3: Manual Meta Tag Management
+
+**What people do:** Bypass Metadata API, use `<Head>` or manual `<meta>` tags in components
+**Why it's wrong:** Breaks Next.js optimization, streaming, type safety, automatic deduplication
+**Do this instead:** Always use Metadata API (metadata object or generateMetadata())
+
+### Anti-Pattern 4: Generating JSON-LD at Client Side
+
+**What people do:** Create JSON-LD in client components or useEffect hooks
+**Why it's wrong:** Search engines may not execute JavaScript, slower indexing, not in initial HTML
+**Do this instead:** Render JSON-LD in Server Components so it's in initial HTML response
+
+### Anti-Pattern 5: Forgetting noindex for Non-Public Pages
+
+**What people do:** Leave cart, checkout, confirmation pages indexable
+**Why it's wrong:** Wastes crawl budget, creates thin content, confuses users in search results
+**Do this instead:** Add `robots: { index: false, follow: false }` to metadata for private pages
+
+**Example:**
 ```typescript
-// Current: src/lib/product/data.ts (simplified)
-export function getProduct(productId: string): ProductData | undefined {
-  return products[productId];
-}
-
-// Enhanced: Add pricingMatrixPath without breaking existing usage
-export interface ProductData {
-  id: string;
-  name: string;
-  description: string;
-  category?: string;              // Add category (optional for backward compat)
-  pricingMatrixPath?: string;     // Add matrix path (optional)
-  details: ProductDetail[];
+// src/app/cart/page.tsx
+export const metadata: Metadata = {
+  title: 'Winkelwagen | Pure Blinds',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 ```
 
-### Step 2: Graceful Pricing Engine Migration
+### Anti-Pattern 6: Not Escaping JSON-LD Content
 
-```typescript
-// Option A: Wrapper function (no breaking changes)
-export function calculatePrice(width: number, height: number): PricingResponse {
-  const matrix = require('../../../data/pricing-matrix.json');
-  return calculatePriceWithMatrix(width, height, matrix);
-}
+**What people do:** Use `dangerouslySetInnerHTML` with user input or unescaped content
+**Why it's wrong:** XSS vulnerability, security risk
+**Do this instead:** Always escape `<` characters: `JSON.stringify(data).replace(/</g, '\\u003c')`
 
-export function calculatePriceWithMatrix(
-  width: number,
-  height: number,
-  matrix: PricingMatrixData
-): PricingResponse {
-  // Core calculation logic
-}
+## Integration Points
 
-// Option B: Default parameter (backward compatible)
-export function calculatePrice(
-  width: number,
-  height: number,
-  matrix: PricingMatrixData = defaultMatrix
-): PricingResponse {
-  // ...
-}
-```
+### External Services
 
-### Step 3: API Route Versioning (if needed)
+| Service | Integration Pattern | Notes |
+|---------|---------------------|-------|
+| Google Search Console | Submit sitemap.xml | After deployment, submit https://pureblinds.nl/sitemap.xml |
+| Schema.org validators | Test JSON-LD | Use Rich Results Test, Schema Markup Validator |
+| OpenGraph debuggers | Test OG tags | Facebook Sharing Debugger, LinkedIn Post Inspector |
 
-If breaking changes are unavoidable:
+### Internal Boundaries
 
-```typescript
-// Keep old endpoint for existing clients
-// /api/pricing (POST) - single matrix, no productId
+| Boundary | Communication | Notes |
+|----------|---------------|-------|
+| Metadata API ↔ Product Catalog | Direct import | Product data imported in generateMetadata(), synchronous |
+| Sitemap ↔ Product Catalog | Direct import | Catalog queried at build time, must be pure function |
+| Sitemap ↔ Velite Blog | Import from .velite output | Posts array imported, type-safe |
+| JSON-LD ↔ Components | Function call | Schema generators called with component data |
+| Root Layout ↔ Child Pages | Metadata inheritance | Child metadata merged with parent, can override |
 
-// Add new endpoint for multi-product
-// /api/pricing/v2 (POST) - requires productId
+## Migration Strategy for Category Removal
 
-// Or: Accept both formats in single endpoint
-export async function POST(request: Request) {
-  const body = await request.json();
+### Affected Integration Points
 
-  if ('productId' in body) {
-    // New multi-product flow
-  } else {
-    // Legacy single-product flow (default matrix)
-  }
-}
-```
+1. **Product catalog (data/products.json):**
+   - Remove venetian-blinds and textiles entries
+   - Update filters in sitemap generation
 
-**Recommendation:** Use backward compatible wrapper functions. Avoid API versioning unless absolutely necessary.
+2. **Route files:**
+   - Delete `/src/app/products/venetian-blinds/`
+   - Delete `/src/app/products/textiles/`
 
-## Integration Testing Strategy
+3. **Sitemap generation:**
+   - Filter products: `getAllProducts().filter(p => p.category === 'roller-blinds')`
 
-**Key Integration Points to Test:**
+4. **Pricing files:**
+   - Remove `/data/pricing/venetian-blinds-25mm.json`
+   - Remove `/data/pricing/custom-textile.json`
 
-1. **Multi-product pricing:** Verify correct matrix loaded per product
-2. **Cart with mixed products:** Add multiple products with different pricing to cart
-3. **Checkout with mixed products:** Create Draft Order with products from different categories
-4. **Navigation flows:** Products overview → category → product → cart → checkout
-5. **Blog independence:** Blog pages load without interfering with product/cart state
+5. **Type definitions:**
+   - Update category type unions if hardcoded
 
-**Critical Test Cases:**
+### Safe Removal Order
 
-```typescript
-// Test: Different products have different prices for same dimensions
-test('white and black rollerblinds have different prices', async () => {
-  const whitePrice = await fetchPrice(100, 100, 'white-rollerblind');
-  const blackPrice = await fetchPrice(100, 100, 'black-rollerblind');
-  expect(whitePrice).not.toBe(blackPrice);
-});
+1. Remove route files (prevents 200 responses)
+2. Update product catalog (removes data source)
+3. Update sitemap filter (prevents orphaned URLs)
+4. Remove pricing files (cleanup)
+5. Test build, verify sitemap excludes removed categories
 
-// Test: Cart handles multiple products correctly
-test('cart stores multiple products with different IDs', () => {
-  addItem({ productId: 'white-rollerblind', options: { width: 100, height: 100 }, priceInCents: 5000 });
-  addItem({ productId: 'black-rollerblind', options: { width: 100, height: 100 }, priceInCents: 6000 });
-  expect(cartStore.items).toHaveLength(2);
-  expect(cartStore.getTotalPrice()).toBe(11000);
-});
+## Build Order Recommendations
 
-// Test: Pricing matrix not found error handling
-test('API returns 404 for unknown product', async () => {
-  const response = await fetch('/api/pricing', {
-    method: 'POST',
-    body: JSON.stringify({ width: 100, height: 100, productId: 'unknown' })
-  });
-  expect(response.status).toBe(404);
-});
-```
+Based on dependency analysis, recommended implementation order:
+
+### Phase 1: Foundation (No Dependencies)
+1. **Root layout lang change:** `<html lang="nl">` (single line change)
+2. **Create lib/metadata/constants.ts:** Site-wide metadata defaults, base URL
+3. **Create lib/seo/structured-data.ts:** Schema generator utilities
+4. **Create components/seo/json-ld.tsx:** JSON-LD wrapper component
+
+### Phase 2: Data Layer (Depends on Phase 1 constants)
+5. **Update data/products.json:** Dutch names, descriptions; remove venetian-blinds, textiles
+6. **Remove deprecated pricing files:** venetian-blinds-25mm.json, custom-textile.json
+7. **Update lib/product/types.ts:** Ensure types match Dutch data structure
+
+### Phase 3: Route Removal (Depends on Phase 2 data)
+8. **Delete deprecated routes:** /products/venetian-blinds/, /products/textiles/
+9. **Test product catalog functions:** Verify no references to removed categories
+
+### Phase 4: Static Routes Content (Depends on Phase 2 data)
+10. **Update homepage (/):** Dutch content, metadata, LocalBusiness JSON-LD
+11. **Update products overview (/products):** Dutch content, metadata
+12. **Update category page (/products/roller-blinds):** Dutch content, metadata
+13. **Update subcategory pages:** transparent-roller-blinds, blackout-roller-blinds
+
+### Phase 5: Dynamic Routes Metadata (Depends on Phase 4)
+14. **Update product detail page:** generateMetadata(), Product JSON-LD
+15. **Update blog index:** Dutch content, metadata
+16. **Update blog post page:** generateMetadata(), Article JSON-LD (optional)
+
+### Phase 6: Components (Depends on Phase 4 content)
+17. **Update Header:** Dutch navigation labels
+18. **Update Footer:** Dutch footer content
+19. **Update Breadcrumbs:** Dutch labels, BreadcrumbList JSON-LD
+20. **Update FAQ section:** Dutch FAQs, FAQPage JSON-LD
+21. **Update other home sections:** Dutch content
+
+### Phase 7: SEO Infrastructure (Depends on all previous phases)
+22. **Create sitemap.ts:** Generate from catalog + blog posts
+23. **Create robots.ts:** Configure crawling rules
+24. **Add noindex to cart/confirmation:** Prevent indexing
+
+### Phase 8: Polish (Depends on Phase 7)
+25. **Add OpenGraph images:** opengraph-image.jpg files per route (optional)
+26. **Test all metadata:** Validate with tools
+27. **Test all JSON-LD:** Validate with Rich Results Test
+
+### Dependency Rationale
+
+- **Phase 1 before 2:** Constants needed by data updates
+- **Phase 2 before 3:** Data must be updated before routes removed (prevents broken references)
+- **Phase 3 before 4:** Clean slate before content updates
+- **Phase 4 before 5:** Static route patterns inform dynamic route patterns
+- **Phase 5 before 6:** Components reference routes, better to have route metadata ready
+- **Phase 6 before 7:** Sitemap needs all routes finalized
+- **Phase 7 before 8:** Infrastructure must exist before optimization
+
+### Critical Path
+
+**Fastest path to working Dutch site with SEO:**
+Phase 1 (#1) → Phase 2 (#5, #6) → Phase 3 (#8) → Phase 4 (#10-13) → Phase 7 (#22, #23)
+
+This gives:
+- Dutch language attribute
+- Dutch product data
+- Removed deprecated categories
+- Dutch static pages
+- Sitemap and robots.txt
+
+Remaining phases (5, 6, 8) are enhancements that can be done incrementally.
 
 ## Sources
 
-### Next.js App Router Architecture
-- [Next.js 15 App Router Complete Guide](https://medium.com/@livenapps/next-js-15-app-router-a-complete-senior-level-guide-0554a2b820f7)
-- [Next.js Architecture in 2026 — Server-First Patterns](https://www.yogijs.tech/blog/nextjs-project-architecture-app-router)
-- [Next.js 15 Advanced Patterns: Caching Strategies for 2026](https://johal.in/next-js-15-advanced-patterns-app-router-server-actions-and-caching-strategies-for-2026/)
+**Next.js 15 Metadata API:**
+- [Functions: generateMetadata | Next.js](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
+- [Getting Started: Metadata and OG images | Next.js](https://nextjs.org/docs/app/getting-started/metadata-and-og-images)
+- [Next.js 15 SEO: Complete Guide to Metadata & Optimization](https://www.digitalapplied.com/blog/nextjs-seo-guide)
 
-### Dynamic Routes & Navigation
-- [Next.js Dynamic Route Segments Guide](https://thelinuxcode.com/nextjs-dynamic-route-segments-in-the-app-router-2026-guide/)
-- [How to Handle Dynamic Routing in Next.js](https://oneuptime.com/blog/post/2026-01-24-nextjs-dynamic-routing/view)
-- [Next.js Official: Dynamic Routes](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes)
+**Sitemap Generation:**
+- [Metadata Files: sitemap.xml | Next.js](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap)
+- [Functions: generateSitemaps | Next.js](https://nextjs.org/docs/app/api-reference/functions/generate-sitemaps)
 
-### Breadcrumb Implementation
-- [Building Dynamic Breadcrumbs in Next.js App Router](https://jeremykreutzbender.com/blog/app-router-dynamic-breadcrumbs)
-- [Creating a Dynamic Breadcrumb Component in Next.js](https://medium.com/@kcabading/creating-a-breadcrumb-component-in-a-next-js-app-router-a0ea24cdb91a)
-- [Breadcrumb Navigation Ecommerce: SEO and UX Benefits](https://alienroad.com/seo/breadcrumb-navigation-ecommerce/)
+**Robots.txt:**
+- [Metadata Files: robots.txt | Next.js](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots)
 
-### MDX & Blog Integration
-- [Next.js Official: MDX Guide](https://nextjs.org/docs/app/guides/mdx)
-- [Building a blog with Next.js 15 and React Server Components](https://maxleiter.com/blog/build-a-blog-with-nextjs-13)
-- [A Minimal MDX Blog App with Next.js 15 and React 19](https://www.mdxblog.io/blog/a-minimal-mdx-blog-with-nextjs-15-and-react-19)
+**JSON-LD Structured Data:**
+- [Guides: JSON-LD | Next.js](https://nextjs.org/docs/app/guides/json-ld)
+- [JSON‑LD in Next.js 15 App Router: product, blog and breadcrumb schemas](https://medium.com/@sureshdotariya/json-ld-in-next-js-15-app-router-product-blog-and-breadcrumb-schemas-f752b7422c4f)
 
-### Data Fetching & Caching
-- [Next.js Official: Fetching Data](https://nextjs.org/docs/app/getting-started/fetching-data)
-- [Data Fetching Patterns and Best Practices](https://nextjs.org/docs/14/app/building-your-application/data-fetching/patterns)
-- [How to Load Data from a File in Next.js](https://vercel.com/kb/guide/loading-static-file-nextjs-api-route)
+**OpenGraph Images:**
+- [Metadata Files: opengraph-image and twitter-image | Next.js](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/opengraph-image)
+
+**Internationalization:**
+- [Guides: Internationalization | Next.js](https://nextjs.org/docs/pages/guides/internationalization)
+- [Next.js App Router internationalization (i18n)](https://next-intl.dev/docs/getting-started/app-router)
+
+**Hreflang and Locale Metadata:**
+- [How to Use Canonical Tags and Hreflang for in Next.js 15](https://www.buildwithmatija.com/blog/nextjs-advanced-seo-multilingual-canonical-tags)
+- [Next.js 15 SEO: Complete Guide to Metadata & Optimization](https://www.digitalapplied.com/blog/nextjs-seo-guide)
 
 ---
-*Architecture research for: Pure Blinds Multi-Product Catalog*
-*Researched: 2026-02-13*
+*Architecture research for: Dutch content & SEO integration in Next.js 15 App Router*
+*Researched: 2026-02-14*
