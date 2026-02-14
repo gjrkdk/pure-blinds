@@ -5,6 +5,7 @@
 - ✅ **v1.0 MVP** - Phases 1-5 (shipped 2026-01-31)
 - ✅ **v1.1 Design Homepage** - Phases 6-10 (shipped 2026-02-10)
 - ✅ **v1.2 Product Catalog & Navigation** - Phases 11-14 (shipped 2026-02-13)
+- 🚧 **v1.3 Dutch Content & SEO** - Phases 15-18 (in progress)
 
 ## Phases
 
@@ -127,7 +128,77 @@ Plans:
 
 </details>
 
+### 🚧 v1.3 Dutch Content & SEO (In Progress)
+
+**Milestone Goal:** Transform the placeholder webshop into a real Dutch-language rollerblind store that ranks in Google.nl
+
+#### Phase 15: Category Cleanup & Redirects
+**Goal**: Remove non-rollerblind categories with proper 301 redirects to prevent SEO damage
+**Depends on**: Phase 14
+**Requirements**: CLEAN-01, CLEAN-02, CLEAN-03, CLEAN-04
+**Success Criteria** (what must be TRUE):
+  1. Venetian blinds category completely removed (routes, data, pricing, navigation)
+  2. Textiles category completely removed (routes, data, pricing, navigation)
+  3. All removed category and product routes return 301 redirects to relevant destinations
+  4. Navigation menu displays only rollerblinds category
+  5. Product catalog JSON contains only rollerblinds products (2 products remaining)
+**Plans**: TBD
+
+Plans:
+- [ ] 15-01: TBD
+
+#### Phase 16: Dutch Content & Metadata
+**Goal**: Native-quality Dutch content across all pages with unique meta tags for social sharing and SEO
+**Depends on**: Phase 15
+**Requirements**: HOME-01, HOME-02, HOME-03, HOME-04, HOME-05, HOME-06, HOME-07, PROD-01, PROD-02, PROD-03, PROD-04, PROD-05, UI-01, UI-02, UI-03, UI-04, BLOG-01, BLOG-02, SEO-01, SEO-02, SEO-03
+**Success Criteria** (what must be TRUE):
+  1. Root layout html lang attribute is "nl-NL"
+  2. Homepage displays Dutch copy in all sections (hero, about, services, how it works, FAQ, contact)
+  3. Category and subcategory pages display Dutch introductory copy (250-300 words for main, 150-200 for subs)
+  4. Product pages display Dutch descriptions, features, and configurator labels
+  5. Navigation, footer, cart, and breadcrumbs displayed in Dutch
+  6. Every page has unique Dutch meta title (50-60 chars) and description (150-160 chars)
+  7. Open Graph tags configured with nl_NL locale on all pages
+  8. Blog post "Welk rolgordijn voor welke kamer?" published in Dutch (800-1500 words)
+  9. English sample blog posts replaced with Dutch content or removed
+**Plans**: TBD
+
+Plans:
+- [ ] 16-01: TBD
+
+#### Phase 17: Structured Data
+**Goal**: Schema.org JSON-LD markup for rich search results eligibility
+**Depends on**: Phase 16
+**Requirements**: SEO-04, SEO-05
+**Success Criteria** (what must be TRUE):
+  1. Product schema (JSON-LD) implemented on product detail pages with EUR price and availability
+  2. FAQPage schema (JSON-LD) implemented on homepage FAQ section
+  3. JSON-LD markup properly escaped to prevent XSS vulnerabilities
+  4. All schema markup validates in Google Rich Results Test
+**Plans**: TBD
+
+Plans:
+- [ ] 17-01: TBD
+
+#### Phase 18: Sitemap & Robots
+**Goal**: Search engine crawling infrastructure with dynamic sitemap and robots.txt
+**Depends on**: Phase 17
+**Requirements**: SEO-06, SEO-07, SEO-08
+**Success Criteria** (what must be TRUE):
+  1. sitemap.xml generated dynamically from product catalog and blog posts
+  2. robots.txt configured with appropriate crawling rules
+  3. Cart and confirmation pages marked with noindex robots meta
+  4. Sitemap excludes removed categories and products
+  5. Sitemap accessible at /sitemap.xml and referenced in robots.txt
+**Plans**: TBD
+
+Plans:
+- [ ] 18-01: TBD
+
 ## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 15 → 16 → 17 → 18
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -145,6 +216,10 @@ Plans:
 | 12. Category Navigation & Product Expansion | v1.2 | 2/2 | Complete | 2026-02-13 |
 | 13. Blog Foundation & Content Marketing | v1.2 | 1/1 | Complete | 2026-02-13 |
 | 14. Polish & URL Migration | v1.2 | 1/1 | Complete | 2026-02-13 |
+| 15. Category Cleanup & Redirects | v1.3 | 0/TBD | Not started | - |
+| 16. Dutch Content & Metadata | v1.3 | 0/TBD | Not started | - |
+| 17. Structured Data | v1.3 | 0/TBD | Not started | - |
+| 18. Sitemap & Robots | v1.3 | 0/TBD | Not started | - |
 
 ---
-*Last updated: 2026-02-13 after v1.2 milestone completion*
+*Last updated: 2026-02-14 after v1.3 roadmap creation*
