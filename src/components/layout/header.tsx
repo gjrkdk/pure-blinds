@@ -28,9 +28,9 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-      <div className="mx-auto max-w-3xl px-4 pt-4">
+      <div className="mx-auto max-w-3xl px-4 pt-3">
         <div
-          className={`pointer-events-auto rounded-full bg-background/90 backdrop-blur-md shadow-lg shadow-black/[0.03] border border-border/50 transition-all duration-300 px-5 py-3 flex items-center justify-between ${
+          className={`pointer-events-auto rounded-full bg-background/90 backdrop-blur-md shadow-lg shadow-black/[0.03] border border-border/50 transition-all duration-300 px-4 py-2 flex items-center justify-between ${
             scrolled ? "shadow-xl shadow-black/[0.06]" : ""
           }`}
         >
@@ -42,7 +42,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -54,7 +54,7 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
             <CartIcon />
           </div>
 
