@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-02-14)
 
 Milestone: v1.3 Dutch Content & SEO — SHIPPED 2026-02-14
 Status: All milestones complete, planning next
-Last activity: 2026-02-14 — v1.3 milestone archived
+Last activity: 2026-02-14 - Completed quick task 10: Deployment vercel
 
 Progress: [██████████████████████] 100% (4 milestones shipped)
 
@@ -60,6 +60,7 @@ None.
 | 6 | Restructure product URLs to full hierarchical paths | 2026-02-14 | d8ba85c |
 | 7 | Reduce spacing in navigation header | 2026-02-14 | 77239b2 |
 | 9 | Translate product URL slugs and breadcrumbs to Dutch | 2026-02-14 | b4140c9 |
+| 10 | Deployment vercel | 2026-02-14 | a92a5e8 |
 
 ## Session Continuity
 
