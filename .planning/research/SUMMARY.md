@@ -1,302 +1,296 @@
 # Project Research Summary
 
-**Project:** Pure Blinds Multi-Product Catalog Expansion
-**Domain:** Custom Textile E-commerce Platform
-**Researched:** 2026-02-13
+**Project:** Pure Blinds - Dutch Rolgordijnen E-commerce Webshop
+**Domain:** Dutch SEO & Content Localization for Next.js 15 E-commerce
+**Researched:** 2026-02-14
 **Confidence:** HIGH
 
 ## Executive Summary
 
-Pure Blinds is expanding from a single-product custom textile shop to a multi-product catalog with categories and blog functionality. The existing Next.js 15 App Router stack is already well-suited for this expansion—no major framework changes are needed. The core challenge is making the pricing engine flexible enough to support multiple products without breaking its portability or the existing cart/checkout flow.
+Pure Blinds is transforming from a placeholder English site to a competitive Dutch rolgordijnen (roller blinds) webshop. The research reveals that success in this market requires three critical elements: native-quality Dutch content with informal "je" tone, comprehensive SEO infrastructure using Next.js 15's built-in features, and proper category cleanup with 301 redirects before any content changes.
 
-The recommended approach is evolutionary rather than revolutionary: keep the pure pricing engine architecture, refactor it to accept product-specific pricing matrices as parameters (not hardcoded imports), establish a clean product data model with proper Shopify ID mapping, and add Velite for type-safe blog content management. The existing cart, checkout, and Shopify integration require minimal changes—they already support multiple products through the productId field.
+The recommended approach is to leverage Next.js 15's native capabilities (Metadata API, sitemap.ts, robots.ts) without external SEO packages, implement Dutch content as single-locale inline text (no i18n routing complexity), and structure work in a dependency-driven order: data cleanup first, then content translation, then SEO infrastructure. This avoids the common pitfall of removing categories without redirects or launching with machine-translated Dutch that destroys trust.
 
-The primary risks are (1) coupling the pricing engine to product catalog logic, destroying portability, (2) cart ID collisions when multiple products share dimensions, and (3) hydration mismatches when cart state loads from localStorage. All three are preventable by addressing architectural foundations in Phase 1 before scaling the catalog. Secondary risks include bundle bloat from importing all pricing matrices client-side (solution: server-side matrix loading) and route conflicts between products/categories (solution: validate against reserved slugs).
+The key risk is translation quality. The Dutch market has zero tolerance for poor translation - 90%+ of searches are in Dutch, but machine-translated content is worse than good English. Native speaker review is non-negotiable. Secondary risks include metadata streaming breaking social media bots and missing 301 redirects causing SEO damage when removing venetian-blinds and textiles categories.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The existing Next.js 15 stack is ideal for this expansion. No major dependencies are needed for the multi-product catalog—the App Router's dynamic routes, Server Components, and built-in metadata APIs handle all requirements. For the blog, Velite is recommended over abandoned Contentlayer for type-safe MDX content management with Zod validation.
+**NO external dependencies required** for SEO functionality. Next.js 15 (already installed as v16.1.6) provides native built-in APIs for all required functionality: Metadata API for meta tags, file conventions for sitemap.xml and robots.txt, native JSON-LD support for structured data. This is a major simplification over older approaches that required next-seo, next-sitemap, or i18n frameworks.
 
 **Core technologies:**
-- **Next.js 15 App Router** (existing) — Dynamic routes for products/categories, Server Components for catalog pages, built-in SEO
-- **Velite ^0.1.0** (new) — Type-safe MDX blog content with Zod schemas, active maintenance, replaces abandoned Contentlayer
-- **Reading-time ^1.5.0** (optional) — Calculate blog post reading time for improved UX
-- **Date-fns ^3.3.1** (optional) — Modular date formatting for blog post dates
+- Next.js 16.1.6 (existing): Metadata API, sitemap/robots.ts conventions — already installed, zero changes needed
+- schema-dts (v1.1.5, dev dependency only): TypeScript types for Schema.org JSON-LD — Google-maintained, compile-time validation, zero runtime cost
+- No i18n framework: Single Dutch locale, inline content — avoids next-intl complexity for single-language site
 
-**What NOT to add:**
-- Contentlayer (abandoned by maintainer)
-- Database/CMS for product data (JSON files scale to 100+ products)
-- Redux or complex state management (Zustand already sufficient)
-- Separate API routes per product (use dynamic matrix loading)
+**Critical decision:** Do NOT add next-intl, next-sitemap, or react-schemaorg. Next.js native features are superior for single-language sites. The only recommended addition is schema-dts as a dev dependency for type-safe structured data authoring.
 
 ### Expected Features
 
 **Must have (table stakes):**
-- Category overview page with category cards (hub for browsing)
-- Category listing pages with product grids (2-column responsive)
-- Breadcrumb navigation (Home > Category > Product for context)
-- Product cards with images, names, descriptions, and CTAs
-- Multiple pricing matrices per product (each product has unique pricing)
-- Blog listing page with post grid and metadata
-- Blog post detail pages with full content
+- Dutch homepage hero with "Rolgordijnen op maat" value proposition — every Dutch webshop starts here
+- Product type differentiation (transparant vs verduisterend) — market standard, customers expect to choose
+- Measurement instructions (inmeetinstructies) — custom products require clear "op de dag" vs "in de dag" guidance
+- Free color samples offer (gratis kleurstalen) — industry standard trust builder, all competitors offer this
+- Delivery time transparency (7-14 werkdagen) — custom products need clear expectations
+- FAQ section with domain-specific questions — customers research extensively before buying custom blinds
+- Trust signals (Thuiswinkel Waarborg reference) — 91% recognition rate, 64% find webshops more trustworthy
+- Price transparency ("tot 40% goedkoper") — competitive market emphasizes value pricing
 
-**Should have (competitive advantage):**
-- Product sorting by price/popularity once catalog grows (defer until 10+ products)
-- Blog categories/tags for content organization (manual tagging in v1.x)
-- Newsletter signup CTA on blog posts (high-value lead capture)
-- Load More button for pagination (better UX than infinite scroll)
+**Should have (competitive differentiators):**
+- Direct-from-factory messaging — builds trust through transparency, justifies pricing
+- Room-specific guidance (slaapkamer, badkamer, dakraam) — helps customers make informed choices
+- Sustainability messaging (isolerende eigenschappen) — 2026 trend: natural materials, energy efficiency
+- Blog content: buying guides ("Welk rolgordijn voor welke kamer?") — educational approach builds authority
+- Step-by-step configurator explanation — reduces anxiety about custom ordering process
 
-**Defer (v2+ anti-features):**
-- Product reviews/ratings (wait for 10+ real reviews to avoid empty states)
-- Advanced filtering (only 2-3 products per category initially, creates friction)
-- Wishlist/favorites (adds authentication complexity, doesn't validate core value)
-- Blog comments (moderation overhead, typically 3-7% engagement)
-- Quick-add to cart from category page (doesn't work for custom dimension products)
+**Defer (v2+):**
+- Live chat support — Dutch market prefers email/phone, requires staffing
+- Virtual room visualizer — high complexity, low conversion impact for blinds
+- Product reviews — new shop has no reviews yet, empty sections hurt trust
+- Multi-language support — Netherlands-only market is sufficient, avoid splitting focus
+
+**Anti-features (commonly requested, but problematic):**
+- Real-time price comparison widgets — drives customers away before value is established
+- Hyper-local SEO (per-city landing pages) — thin content penalty risk, maintenance burden
+- Blog posts about unrelated topics — dilutes domain authority for rolgordijnen keywords
 
 ### Architecture Approach
 
-The architecture is layered with clear separation: pricing engine remains pure (zero dependencies, accepts matrices as parameters), product module handles business logic (catalog data, matrix path mapping), and API routes orchestrate between them. Category navigation follows a two-level hierarchy (overview → category → product) to avoid over-engineering for small catalogs. Blog content lives separately from product logic to enable future CMS migration.
+Next.js 15 App Router's Metadata API and file-based metadata conventions provide first-class SEO support without external packages. Dutch content implemented as single-locale inline content (components + JSON data) without i18n routing complexity. Build order is dependency-driven: data updates → route removal → content updates → SEO infrastructure. This prevents broken references and ensures clean architecture.
 
 **Major components:**
-1. **Product Data Layer** — TypeScript interfaces for products/categories, JSON-based catalog, separate Shopify variant ID mapping to prevent checkout failures
-2. **Pricing Engine (refactored)** — Accepts `pricingMatrix` parameter instead of static import, maintains zero external dependencies, stays portable
-3. **API Routes** — `/api/pricing` modified to accept `productId`, load product-specific matrix, pass to calculator; `/api/checkout` unchanged
-4. **Category Navigation** — `/products` overview, `/products/[category]` listings, `/products/[productId]` detail (no nesting beyond 2 levels)
-5. **Blog Layer** — Velite-processed MDX in `content/blog/`, independent from product catalog, optional product links in posts
+1. Metadata API Layer — Static `metadata` object for static pages, `generateMetadata()` for dynamic routes; hierarchical merging from root to page level
+2. Content Layer — Dutch content in data/products.json for product catalog, inline Dutch in page components for static content
+3. Structured Data Layer — JSON-LD `<script>` tags in page components using schema-dts types; Product schema for products, FAQPage for FAQ, LocalBusiness for root layout
+4. SEO Infrastructure — sitemap.ts generates sitemap.xml from catalog + blog at build time, robots.ts configures crawling rules
+5. Product Catalog — data/products.json remains single source of truth; modified with Dutch translations, venetian-blinds and textiles categories removed
 
-**Data flow changes:**
-- Current: `POST /api/pricing {width, height}` → load global matrix → calculate
-- New: `POST /api/pricing {width, height, productId}` → lookup product → load product matrix → calculate
-- Cart/checkout: **unchanged** (already supports multiple products via `productId` field)
+**Critical pattern:** Use static metadata for critical pages (homepage, main categories) to avoid metadata streaming issues with social media bots. Reserve `generateMetadata()` for truly dynamic content (product details, blog posts).
 
 ### Critical Pitfalls
 
-1. **Hardcoded pricing matrix imports** — Static imports bundle all matrices client-side, bloating bundle 50-100KB per product. **Solution:** Refactor calculator to accept matrix parameter, load matrices server-side in API route, use in-memory cache with 5-min TTL.
+1. **Removing product categories without 301 redirects** — Deleting venetian-blinds and textiles routes without redirects causes loss of search rankings, broken backlinks, and poor UX. Google may interpret sudden 404 spike as quality issue. MUST implement 301 redirects in next.config.js BEFORE removing routes, redirect to relevant pages (not homepage), and update sitemap immediately. Address in Phase 1 before any other changes.
 
-2. **Cart ID collisions** — If cart ID generation only hashes dimensions (not productId), different products with same dimensions merge incorrectly. **Solution:** Audit `generateCartItemId()` to ensure productId is included in hash, add integration test for multiple products with identical dimensions.
+2. **Dutch translation quality destroying trust** — Machine translation creates unnatural phrasing, grammar errors (de/het articles), wrong terminology, and formal/informal mismatch (u vs je). 90%+ of Dutch searches are in Dutch, but poor Dutch is worse than good English. MUST use native Dutch speaker (Netherlands, not Belgium), create terminology glossary, reference competitor websites, and test with native speakers before launch. Non-negotiable for ecommerce trust. Address in Phase 2 during content creation.
 
-3. **Route conflicts** — `/products/[productId]` and `/products/rollerblinds` (category) coexist now, but if you add a product with ID "rollerblinds", Next.js has ambiguous routes. **Solution:** Validate product IDs against reserved category slugs, or use separate prefixes (`/products/[productId]` vs `/categories/[slug]`).
+3. **Metadata streaming breaking social media bots** — Next.js 15 streams metadata after initial HTML, but Facebook/LinkedIn/WhatsApp bots are HTML-limited and can't execute JavaScript. Open Graph tags end up in `<body>` instead of `<head>`, causing broken social preview cards. MUST use static metadata object (not `generateMetadata`) for critical pages, configure `htmlLimitedBots` in next.config.js to block streaming for social bots, and test with Facebook Sharing Debugger before launch. Address in Phase 2 when implementing meta tags.
 
-4. **Zustand localStorage hydration mismatch** — Server renders with empty cart, client hydrates from localStorage, React throws "Text content does not match" errors. **Solution:** Implement `useHydration()` hook to defer cart rendering until client-side, show placeholder during SSR.
+4. **Open Graph locale format breaking social sharing** — Using `nl-NL` (hyphen) instead of `nl_NL` (underscore) causes Facebook/LinkedIn to ignore locale metadata. Open Graph protocol requires underscore format, unlike hreflang which uses hyphen. MUST use `locale: 'nl_NL'` in openGraph object and use `property="og:locale"` not `name="og:locale"` in meta tags. Validate with social media debuggers. Address in Phase 2.
 
-5. **Product data ID inconsistency** — Mixing semantic IDs ("white-rollerblind") with Shopify IDs breaks checkout when Draft Order creation can't map to variant IDs. **Solution:** Add explicit `shopify.variantId` field to product data, separate catalog IDs from integration IDs.
+5. **Structured data XSS vulnerability** — Direct `JSON.stringify()` in JSON-LD `<script>` tags without sanitization creates XSS risk if product data contains `</script>` injection. MUST replace `<` with `\\u003c` using `.replace(/</g, '\\u003c')` or use serialize-javascript package. Never inject raw user input without validation. Address in Phase 3 when implementing Schema.org markup.
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure prioritizes architectural foundations before UI expansion to avoid refactoring under pressure.
+Based on research, suggested phase structure:
 
-### Phase 1: Product Catalog Foundation
-**Rationale:** Establish multi-product data model and pricing architecture before building UI. Fixing architectural issues after catalog expansion is high-risk and breaks existing functionality.
-
-**Delivers:**
-- Product data model with categories and `pricingMatrixPath` field
-- Refactored pricing engine accepting matrices as parameters
-- Split pricing matrices into product-specific JSON files
-- Updated `/api/pricing` to accept `productId` and load correct matrix
-- Cart ID generation verified to prevent collisions
-
-**Addresses:**
-- Must-have feature: Multiple pricing matrices per product
-- Architecture: Clean separation between pricing engine and product catalog
-
-**Avoids:**
-- Pitfall 1: Hardcoded pricing matrix imports
-- Pitfall 2: Cart ID collisions
-- Pitfall 4: Hydration mismatches (fix cart rendering)
-- Pitfall 5: Product data ID inconsistency
-- Pitfall 6: Breaking pricing engine portability
-
-**Research flag:** LOW PRIORITY — Standard Next.js patterns, well-documented refactoring
-
-### Phase 2: Category Navigation & Product Expansion
-**Rationale:** Build catalog UI on top of solid data foundation. Two-level hierarchy (overview → category → product) scales to 50+ products without over-engineering.
+### Phase 1: Category Cleanup & Route Restructuring
+**Rationale:** MUST come first to prevent SEO damage. Removing categories without proper redirects loses rankings and creates poor UX. Data layer must be clean before content updates to avoid broken references.
 
 **Delivers:**
-- Products overview page (`/products`) with category cards
-- Category listing pages (`/products/[category]`) with product grids
-- ProductCard component for reusable product previews
-- Breadcrumb navigation component
-- Header navigation updated with "Products" link
+- Removed venetian-blinds and textiles categories from product catalog
+- 301 redirects configured in next.config.js for all removed routes
+- Updated sitemap filter to exclude removed categories
+- Clean data foundation for Dutch content
 
 **Addresses:**
-- Must-have: Category overview page, product grids, breadcrumbs
-- Should-have: Hover states, responsive layout
+- Pitfall #1 (missing 301 redirects)
+- Pitfall #7 (sitemap contains removed routes)
+- Clean slate for content translation
 
 **Avoids:**
-- Pitfall 3: Route conflicts (validate product IDs against "rollerblinds" slug)
-- Pitfall 7: Over-engineering with nested categories
+- Loss of search engine rankings
+- Broken backlinks from external sites
+- Wasted crawl budget on removed pages
+- 404 errors for users with bookmarks
 
-**Research flag:** LOW PRIORITY — Standard e-commerce patterns, extensive documentation available
+**Research flag:** Standard pattern (well-documented 301 redirect implementation), skip research-phase.
 
-### Phase 3: Blog Foundation & Content Marketing
-**Rationale:** Independent from product catalog, can be built in parallel after Phase 1. Blog drives SEO and user education without complicating pricing/cart logic.
+### Phase 2: Dutch Content & Metadata
+**Rationale:** Content quality is non-negotiable for ecommerce trust. All pages need unique Dutch content and metadata before SEO infrastructure to ensure social bots get proper tags. Static metadata for critical pages prevents streaming issues.
 
 **Delivers:**
-- Velite integration for MDX blog posts
-- Blog listing page (`/blog`) with post grid
-- Blog post detail pages (`/blog/[slug]`)
-- BlogPostCard and BlogPostLayout components
-- 3 sample blog posts (buying guides, care instructions)
+- Root layout lang="nl-NL" attribute
+- Homepage Dutch copy (hero, about, services sections)
+- Category/subcategory Dutch copy (rolgordijnen, transparante, verduisterende)
+- Product page template Dutch copy
+- FAQ Dutch content (8-12 questions)
+- Dutch meta tags (title, description) for all pages
+- Open Graph tags with nl_NL locale
+- Blog post: "Welk rolgordijn voor welke kamer?" buying guide
 
 **Addresses:**
-- Must-have: Blog listing page, post detail pages, metadata
-- Should-have: Newsletter signup CTA
+- Must-have features: Dutch homepage, product differentiation, FAQ, trust signals
+- Pitfall #3 (translation quality) — native speaker review required
+- Pitfall #2 (metadata streaming) — static metadata for critical pages
+- Pitfall #4 (Open Graph locale) — nl_NL with underscore
+- Pitfall #9 (duplicate meta descriptions) — unique descriptions per page
+
+**Uses:**
+- Next.js Metadata API (built-in)
+- Competitor content patterns from FEATURES.md research
+- Tone of voice: friendly "je", helpful, clear
 
 **Avoids:**
-- Anti-feature: Blog comments (defer to v2+)
-- Pitfall: URL conflicts with products (validate blog slugs don't match routes)
+- Machine-translated Dutch destroying trust
+- Generic metadata hurting SEO
+- Social media preview failures
+- Language mismatch confusing users
 
-**Research flag:** LOW PRIORITY — Velite documentation clear, MDX patterns established
+**Research flag:** Content-focused phase, no technical research needed. Translation quality verification required (native speaker review).
 
-### Phase 4: Polish & Metadata
-**Rationale:** SEO and UX improvements after core functionality validates. Non-blocking enhancements.
+### Phase 3: Structured Data & Rich Snippets
+**Rationale:** After content is stable, add Schema.org markup for rich search results. Requires finalized Dutch content to populate schema fields. Technical implementation using schema-dts for type safety.
 
 **Delivers:**
-- Dynamic metadata (title, description, OG images) for all pages
-- Footer links updated with product categories and blog
-- Product placeholder images added to cards
-- Breadcrumb styling and mobile responsiveness improvements
-- URL migration: `/thank-you` → `/confirmation` with 301 redirect
+- schema-dts installed (dev dependency)
+- Product schema for product pages (price in EUR, availability)
+- FAQPage schema for FAQ section
+- LocalBusiness schema in root layout (GEO optimization)
+- BreadcrumbList schema in breadcrumbs component
+- JSON-LD wrapper component with XSS protection
 
 **Addresses:**
-- Should-have: SEO metadata, consistent navigation
-- UX improvements from PITFALLS research
+- Competitive feature: structured data for rich results eligibility
+- Pitfall #5 (JSON-LD XSS) — proper escaping with .replace(/</g, '\\u003c')
+- SEO enhancement through rich snippets
+
+**Uses:**
+- schema-dts types (Google-maintained)
+- Next.js JSON-LD pattern (script tags in components)
+
+**Implements:**
+- Structured Data Layer from architecture (Pattern 2: JSON-LD Injection)
 
 **Avoids:**
-- Missing metadata hurting SEO
-- Inconsistent navigation confusing users
+- XSS vulnerability through unescaped JSON
+- Invalid schema markup hurting SEO
+- Missing required schema properties
 
-**Research flag:** SKIP — Standard Next.js metadata APIs, no research needed
+**Research flag:** Standard pattern (well-documented Schema.org implementation), skip research-phase. Validate with Rich Results Test during implementation.
+
+### Phase 4: Sitemap & Robots.txt
+**Rationale:** After all routes and content are finalized, generate sitemap and configure crawling rules. Depends on product catalog cleanup (Phase 1) and content finalization (Phase 2). Ensures search engines crawl efficiently.
+
+**Delivers:**
+- sitemap.ts generating sitemap.xml from catalog + blog
+- robots.txt via robots.ts with crawling rules
+- noindex robots meta for cart/confirmation pages
+- Sitemap submitted to Google Search Console
+
+**Addresses:**
+- SEO infrastructure requirement
+- Pitfall #7 (sitemap contains removed routes) — filter excludes removed categories
+- Pitfall #8 (robots.txt blocking pages) — only block admin/api routes
+
+**Uses:**
+- Next.js sitemap.ts file convention (built-in)
+- Next.js robots.ts file convention (built-in)
+- MetadataRoute types for type safety
+
+**Implements:**
+- SEO Infrastructure from architecture (Pattern 3: Sitemap Generation)
+
+**Avoids:**
+- Outdated sitemap wasting crawl budget
+- Accidentally blocking public pages
+- Missing sitemap reference in robots.txt
+
+**Research flag:** Standard pattern (Next.js file conventions), skip research-phase.
 
 ### Phase Ordering Rationale
 
-- **Phase 1 first** because it establishes the architectural foundation. Refactoring pricing engine after building catalog UI is high-risk and touches every component. Cart ID collision bugs are silent data corruption that breaks checkout.
+1. **Phase 1 before Phase 2:** Data layer must be clean before content updates to prevent broken references. Redirects must be in place before announcing Dutch launch to preserve SEO equity.
 
-- **Phase 2 second** because category navigation depends on Phase 1's product data model and pricing refactor. Building UI before data layer is stable causes thrash and rework.
+2. **Phase 2 before Phase 3:** Structured data requires finalized Dutch content to populate schema fields. No point generating schemas for placeholder English content.
 
-- **Phase 3 independent** and can run parallel to Phase 2 if needed—blog has zero dependencies on product/pricing logic. However, sequential is safer for solo dev to avoid context switching.
+3. **Phase 3 before Phase 4:** Sitemap should include structured data pages so rich results can be crawled. Though not strictly dependent, logical to finalize on-page SEO before submission infrastructure.
 
-- **Phase 4 last** because it's polish that doesn't block user value. Can be done incrementally or deferred if timeline pressure increases.
+4. **Critical path:** Phase 1 → Phase 2 → Phase 4 provides working Dutch site with SEO. Phase 3 (structured data) is enhancement that can be done in parallel or after Phase 4 if needed.
 
-**Key dependency chain:** Phase 1 (data/pricing) → Phase 2 (UI) → Phase 4 (polish). Phase 3 (blog) only depends on Phase 1 being complete for consistent navigation patterns.
+5. **Dependency diagram:**
+   ```
+   Phase 1 (Data Cleanup)
+       ↓
+   Phase 2 (Dutch Content) ← must wait for clean data
+       ↓
+   Phase 3 (Structured Data) ← must wait for Dutch content
+       ↓
+   Phase 4 (Sitemap/Robots) ← must wait for finalized routes
+   ```
+
+6. **Pitfall avoidance:** This order prevents all 10 critical pitfalls discovered in research by addressing foundational issues (redirects, data cleanup) before building on top (content, SEO).
 
 ### Research Flags
 
-**Needs deeper research during planning:**
-- None — all phases use well-documented patterns with official Next.js support
+**Phases likely needing deeper research during planning:**
+- None — all phases use standard Next.js patterns and well-documented SEO practices
 
-**Standard patterns (skip `/gsd:research-phase`):**
-- **Phase 1:** Pricing engine refactoring is project-specific but architecturally straightforward
-- **Phase 2:** E-commerce category pages have 15+ years of established patterns
-- **Phase 3:** Next.js MDX and Velite have clear official documentation
-- **Phase 4:** Metadata API is built into Next.js 15, well-documented
+**Phases with standard patterns (skip research-phase):**
+- **Phase 1:** Standard 301 redirect implementation in next.config.js, documented in Next.js guides
+- **Phase 2:** Content translation (requires native speaker, not technical research) + standard Metadata API usage
+- **Phase 3:** Schema.org markup follows official examples, schema-dts has comprehensive documentation
+- **Phase 4:** Next.js file conventions for sitemap.ts and robots.ts are well-documented
 
-**When to use `/gsd:research-phase`:**
-- If adding payment processing beyond Shopify checkout (complex integrations)
-- If implementing advanced features like product comparison (sparse documentation)
-- If scaling beyond 100+ products (database migration research needed)
+**Validation during implementation:**
+- Phase 2: Native Dutch speaker review required (content quality, not research)
+- Phase 2: Test with Facebook Sharing Debugger, LinkedIn Post Inspector (validation, not research)
+- Phase 3: Test with Google Rich Results Test, Schema Markup Validator (validation, not research)
+- Phase 4: Test with Google Search Console robots.txt tester (validation, not research)
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Next.js 15 capabilities verified from official docs, Velite is active with production usage, Contentlayer abandonment confirmed by maintainer |
-| Features | HIGH | E-commerce category page patterns have 15+ years of research (Baymard Institute studies), table stakes identified from competitor analysis |
-| Architecture | HIGH | Current codebase reviewed, pricing engine portability verified, multi-product patterns standard in App Router |
-| Pitfalls | HIGH | Based on actual codebase analysis + 2026 Next.js patterns, hydration issues documented with solutions |
+| Stack | HIGH | Next.js 15 built-in features verified in official docs (v16.1.6 released 2026-02-11), schema-dts verified on npm (v1.1.5 Google-maintained) |
+| Features | MEDIUM-HIGH | Based on competitor analysis of 7+ Dutch rolgordijnen webshops, Dutch SEO expert sources, and industry patterns. Content patterns consistent across market. |
+| Architecture | HIGH | Next.js 15 App Router patterns verified in official docs, metadata API stable since v13.2.0, file conventions since v13.3.0. Single-locale approach well-established. |
+| Pitfalls | HIGH | Verified with official Next.js docs, multiple Dutch SEO sources, ecommerce category removal guides, and GitHub issues for metadata streaming bug. |
 
 **Overall confidence:** HIGH
 
-The research is grounded in official Next.js 15 documentation, current codebase analysis, and established e-commerce patterns. Velite is the only "newer" recommendation (vs. abandoned Contentlayer), but it's actively maintained and proven in production.
+Research is based on official documentation (Next.js, Schema.org, Open Graph protocol), verified npm packages, multiple Dutch SEO expert sources, and competitive analysis of established Dutch webshops. The stack recommendations are conservative (use built-in features) and architecture patterns are standard for Next.js 15.
 
 ### Gaps to Address
 
-**No critical gaps.** Minor areas to validate during implementation:
+**Translation quality validation:** Research identified that translation quality is critical, but cannot be validated until content is written. **Resolution:** Budget for native Dutch speaker review in Phase 2, use competitor sites as reference for terminology and tone.
 
-- **Shopify variant ID mapping:** Need to verify existing products have correct Shopify IDs in production store (audit during Phase 1 kickoff)
-- **Cart ID generation logic:** Need to inspect actual `generateCartItemId()` implementation to confirm productId inclusion (test during Phase 1)
-- **Pricing matrix sizes:** If matrices exceed 50KB, may need compression (unlikely based on current 20cm increments)
-- **Blog post volume:** If planning 50+ posts at launch, reconsider JSON vs database (unlikely, start with 3-5 posts)
+**Social media bot behavior:** Metadata streaming pitfall is based on known Next.js 15 issue, but social bot behavior can vary. **Resolution:** Test with Facebook Sharing Debugger, LinkedIn Post Inspector during Phase 2 implementation. Use static metadata approach for critical pages as preventive measure.
 
-All gaps are implementation details, not architectural unknowns. They can be addressed during phase execution without blocking progress.
+**Redirect destination mapping:** Research recommends redirecting removed categories to relevant pages, but specific mapping depends on existing backlink profile. **Resolution:** Check Google Search Console for indexed pages and backlinks during Phase 1 planning to determine optimal redirect destinations.
+
+**Blog content volume:** Research suggests starting with 1 blog post, but optimal volume for SEO unclear. **Resolution:** Launch with 1 comprehensive buying guide in Phase 2, add additional posts in future phases based on analytics (search queries, FAQ patterns).
+
+**GEO optimization scope:** LocalBusiness schema recommended for Netherlands targeting, but unclear if Google Mijn Bedrijf (Google My Business) integration is needed. **Resolution:** Defer Google Mijn Bedrijf to future phase, implement LocalBusiness schema in Phase 3 as foundation for future local SEO.
 
 ## Sources
 
-### Primary Sources (HIGH confidence)
+### Primary (HIGH confidence)
+- [Next.js Official Docs: Metadata API](https://nextjs.org/docs/app/getting-started/metadata-and-og-images) — Complete metadata guide (2026-02-11)
+- [Next.js Official Docs: generateMetadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) — Full API specification
+- [Next.js Official Docs: sitemap.xml](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) — File convention and types
+- [Next.js Official Docs: robots.txt](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) — File convention and types
+- [Next.js Official Docs: JSON-LD](https://nextjs.org/docs/app/guides/json-ld) — Recommended patterns
+- [schema-dts npm](https://www.npmjs.com/package/schema-dts) — v1.1.5, Google-maintained
+- [Open Graph Protocol](https://ogp.me/) — Official OG tag specification
 
-**Next.js 15 Official Documentation:**
-- [Next.js App Router](https://nextjs.org/docs/app) — App Router overview, Server Components
-- [Dynamic Routes](https://nextjs.org/docs/app/api-reference/file-conventions/dynamic-routes) — Multi-product routing patterns
-- [generateMetadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) — SEO metadata
-- [MDX Guide](https://nextjs.org/docs/app/guides/mdx) — Official MDX support
-- [Sitemap](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) — Sitemap generation
-- [Image Component](https://nextjs.org/docs/app/api-reference/components/image) — Image optimization
+### Secondary (MEDIUM confidence)
+- [Veneta.com](https://www.veneta.com/rolgordijnen/) — Dutch rolgordijnen competitor content patterns
+- [Raamdecoratie.com](https://www.raamdecoratie.com/) — Competitor analysis for tone/features
+- [123Jaloezie.nl](https://www.123jaloezie.nl/) — Price-focused competitor positioning
+- [SEO voor webshops 2026 - Ranking Masters](https://rankingmasters.nl/seo-webshops) — Dutch SEO best practices
+- [SEO Structuur - Ranking Masters](https://rankingmasters.nl/seo-structuur/) — Category page optimization
+- [Verbeter SEO Categoriepagina's - IMU](https://imu.nl/internet-marketing-kennisbank/webshop-marketing/seo-webwinkel-categoriepaginas/) — 250-300 word guideline
+- [Thuiswinkel Waarborg](https://www.thuiswinkel.org/en/trust/trustmarks/thuiswinkel-waarborg/) — Trust badge recognition (91%)
+- [301 Redirect Best Practices - Volusion](https://www.volusion.com/blog/301-redirect-scenarios-and-best-practices-for-ecommerce/)
+- [App Router pitfalls - imidef](https://imidef.com/en/2026-02-11-app-router-pitfalls) — Metadata streaming issue
 
-**Stack Research (Velite & Content Management):**
-- [Contentlayer Abandonment Status](https://www.wisp.blog/blog/contentlayer-has-been-abandoned-what-are-the-alternatives) — Confirmed abandoned
-- [Refactoring Contentlayer to Velite](https://www.mikevpeeren.nl/blog/refactoring-contentlayer-to-velite) — Migration guide
-- [Integrating Velite in Next.js](https://nooc.me/en/posts/integrate-a-blog-in-nextjs-with-velite) — Implementation patterns
-- [gray-matter npm](https://www.npmjs.com/package/gray-matter) — Frontmatter parsing
-- [date-fns](https://date-fns.org/) — Date formatting library
-- [reading-time npm](https://www.npmjs.com/package/reading-time) — Reading time calculation
-
-**E-commerce Patterns (Baymard Institute & Industry Research):**
-- [E-commerce Category Page Design Best Practices](https://www.invespcro.com/blog/ecommerce-category-page-design/) — User expectations
-- [Product Lists & Filtering UX Research](https://baymard.com/research/ecommerce-product-lists) — Original UX study
-- [E-commerce Breadcrumbs Study](https://baymard.com/blog/ecommerce-breadcrumbs) — 68% get it wrong
-- [Ecommerce Product Filters Best Practices](https://thegood.com/insights/ecommerce-product-filters/) — When to add filtering
-- [Product Card Design Study](https://www.heyinnovations.com/resources/product-card) — M-commerce optimization
-
-### Secondary Sources (MEDIUM confidence)
-
-**Next.js Architecture & Patterns:**
-- [Next.js 15 Complete Senior-Level Guide](https://medium.com/@livenapps/next-js-15-app-router-a-complete-senior-level-guide-0554a2b820f7)
-- [Next.js Architecture 2026 — Server-First Patterns](https://www.yogijs.tech/blog/nextjs-project-architecture-app-router)
-- [Next.js 15 Advanced Patterns: Caching Strategies](https://johal.in/next-js-15-advanced-patterns-app-router-server-actions-and-caching-strategies-for-2026/)
-- [Dynamic Routing Guide](https://thelinuxcode.com/nextjs-dynamic-route-segments-in-the-app-router-2026-guide/)
-- [Handling Dynamic Routing in Next.js](https://oneuptime.com/blog/post/2026-01-24-nextjs-dynamic-routing/view)
-
-**Zustand & State Management:**
-- [Fixing React Hydration Errors with Zustand Persist](https://medium.com/@judemiracle/fixing-react-hydration-errors-when-using-zustand-persist-with-usesyncexternalstore-b6d7a40f2623)
-- [Fix Next.js 14 Hydration Error with Zustand](https://medium.com/@koalamango/fix-next-js-hydration-error-with-zustand-state-management-0ce51a0176ad)
-- [NextJS + Zustand localStorage Hydration Errors](https://github.com/pmndrs/zustand/discussions/1382)
-- [How to Fix Hydration Mismatch Errors](https://oneuptime.com/blog/post/2026-01-24-fix-hydration-mismatch-errors-nextjs/view)
-
-**Shopify Integration:**
-- [Shopify Draft Orders Complete Guide](https://www.revize.app/blog/shopify-draft-orders-guide)
-- [DraftOrderLineItem GraphQL Admin](https://shopify.dev/docs/api/admin-graphql/latest/objects/draftorderlineitem)
-- [Create Draft Order with Postman](https://www.beehexa.com/devdocs/shopify-api-how-to-create-a-draft-order-using-postman/)
-
-**Breadcrumb Implementation:**
-- [Building Dynamic Breadcrumbs in Next.js App Router](https://jeremykreutzbender.com/blog/app-router-dynamic-breadcrumbs)
-- [Creating Breadcrumb Component in Next.js](https://medium.com/@kcabading/creating-a-breadcrumb-component-in-a-next-js-app-router-a0ea24cdb91a)
-- [Breadcrumb Navigation Ecommerce SEO](https://alienroad.com/seo/breadcrumb-navigation-ecommerce/)
-
-**MDX & Blog Integration:**
-- [Building a Blog with Next.js 15 and RSC](https://maxleiter.com/blog/build-a-blog-with-nextjs-13)
-- [Minimal MDX Blog with Next.js 15](https://www.mdxblog.io/blog/a-minimal-mdx-blog-with-nextjs-15-and-react-19)
-
-### Tertiary Sources (Context & Validation)
-
-**E-commerce Migration & Pitfalls:**
-- [App Router Pitfalls: Common Next.js Mistakes](https://imidef.com/en/2026-02-11-app-router-pitfalls)
-- [eCommerce Migration Strategy Guide](https://intexsoft.com/blog/ecommerce-migration-strategy-a-step-by-step-guide-to-successful-platform-upgrades/)
-- [E-commerce Migration Pitfalls to Avoid](https://amasty.com/blog/e-commerce-migration-guide/)
-
-**Performance & Optimization:**
-- [Optimized Package Imports in Next.js](https://vercel.com/blog/how-we-optimized-package-imports-in-next-js)
-- [Import Big JSON Files Only on SSR](https://github.com/vercel/next.js/discussions/23564)
-- [Optimizing Next.js Performance](https://www.catchmetrics.io/blog/optimizing-nextjs-performance-bundles-lazy-loading-and-images)
-
-**Shopping Cart Patterns:**
-- [Build Shopping Cart with Next.js and Zustand](https://hackernoon.com/how-to-build-a-shopping-cart-with-nextjs-and-zustand-state-management-with-typescript)
-- [Building Next.js Shopping Cart App](https://blog.logrocket.com/building-a-next-js-shopping-cart-app/)
-- [Shopping Cart Re-render Issues](https://github.com/vercel/next.js/discussions/54335)
+### Tertiary (LOW confidence)
+- [Dutch SEO Guide - IndigoExtra](https://www.indigoextra.com/blog/dutch-seo) — General Dutch SEO advice
+- [Complete Guide for Dutch SEO - RankTracker](https://www.ranktracker.com/blog/a-complete-guide-for-doing-seo-in-dutch/) — Industry insights
+- [Next.js 15 SEO Guide - Digital Applied](https://www.digitalapplied.com/blog/nextjs-seo-guide) — Community practices
 
 ---
-
-**Research completed:** 2026-02-13
-**Ready for roadmap:** Yes
-**Next step:** Create ROADMAP.md with 4 phases based on implications above
+*Research completed: 2026-02-14*
+*Ready for roadmap: yes*
