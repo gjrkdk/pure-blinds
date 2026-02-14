@@ -22,3 +22,14 @@ export function getProductsByCategory(category: string): Product[] {
 export function getProductsBySubcategory(category: string, subcategory: string): Product[] {
   return catalog.products.filter((p) => p.category === category && p.subcategory === subcategory);
 }
+
+export function getProductBySlug(slug: string): Product | undefined {
+  return catalog.products.find((p) => p.slug === slug);
+}
+
+export function getProductUrl(product: Product): string {
+  if (product.subcategory) {
+    return `/products/${product.category}/${product.subcategory}/${product.slug}`;
+  }
+  return `/products/${product.category}/${product.slug}`;
+}
