@@ -3,13 +3,13 @@
   "lastUpdated": "2026-02-13",
   "products": [
     {
-      "id": "rollerblinds-white",
+      "id": "roller-blind-white",
       "name": "White Rollerblind",
-      "slug": "white-rollerblind",
-      "category": "rollerblinds",
-      "subcategory": "transparent",
+      "slug": "roller-blind-white",
+      "category": "roller-blinds",
+      "subcategory": "transparent-roller-blinds",
       "description": "Clean white rollerblind made to measure. Enter your desired width and height to get an instant price quote.",
-      "pricingMatrixPath": "/data/pricing/rollerblinds-white.json",
+      "pricingMatrixPath": "/data/pricing/roller-blind-white.json",
       "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_WHITE",
       "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_WHITE",
       "details": [
@@ -23,13 +23,13 @@
       ]
     },
     {
-      "id": "rollerblinds-black",
+      "id": "roller-blind-black",
       "name": "Black Rollerblind",
-      "slug": "black-rollerblind",
-      "category": "rollerblinds",
-      "subcategory": "blackout",
+      "slug": "roller-blind-black",
+      "category": "roller-blinds",
+      "subcategory": "blackout-roller-blinds",
       "description": "Sleek black rollerblind made to measure. Enter your desired width and height to get an instant price quote.",
-      "pricingMatrixPath": "/data/pricing/rollerblinds-black.json",
+      "pricingMatrixPath": "/data/pricing/roller-blind-black.json",
       "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_BLACK",
       "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_BLACK",
       "details": [
