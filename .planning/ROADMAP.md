@@ -179,11 +179,11 @@ Plans:
   2. FAQPage schema (JSON-LD) implemented on homepage FAQ section
   3. JSON-LD markup properly escaped to prevent XSS vulnerabilities
   4. All schema markup validates in Google Rich Results Test
-**Plans**: 2 plans
+**Plans**: 2 plans ✅
 
 Plans:
-- [ ] 17-01-PLAN.md — Schema infrastructure (JsonLd component + builders) and homepage Organization + FAQPage schemas
-- [ ] 17-02-PLAN.md — Product, BlogPosting, and BreadcrumbList schemas on detail pages
+- [x] 17-01-PLAN.md — Schema infrastructure (JsonLd component + builders) and homepage Organization + FAQPage schemas
+- [x] 17-02-PLAN.md — Product, BlogPosting, and BreadcrumbList schemas on detail pages
 
 #### Phase 18: Sitemap & Robots
 **Goal**: Search engine crawling infrastructure with dynamic sitemap and robots.txt
@@ -223,8 +223,8 @@ Phases execute in numeric order: 15 → 16 → 17 → 18
 | 14. Polish & URL Migration | v1.2 | 1/1 | Complete | 2026-02-13 |
 | 15. Category Cleanup & Redirects | v1.3 | 2/2 | Complete | 2026-02-14 |
 | 16. Dutch Content & Metadata | v1.3 | 4/4 | Complete | 2026-02-14 |
-| 17. Structured Data | v1.3 | 0/TBD | Not started | - |
+| 17. Structured Data | v1.3 | 2/2 | Complete | 2026-02-14 |
 | 18. Sitemap & Robots | v1.3 | 0/TBD | Not started | - |
 
 ---
-*Last updated: 2026-02-14 after Phase 16 completion*
+*Last updated: 2026-02-14 after Phase 17 completion*
