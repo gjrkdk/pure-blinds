@@ -15,18 +15,6 @@ const categories: Category[] = [
     description: "Made-to-measure roller blinds in transparent and blackout options",
     href: "/products/roller-blinds",
   },
-  {
-    id: "venetian-blinds",
-    name: "Venetian Blinds",
-    description: "Classic venetian blinds in various sizes",
-    href: "/products/venetian-blinds",
-  },
-  {
-    id: "textiles",
-    name: "Textiles",
-    description: "Premium custom-dimension textiles",
-    href: "/products/textiles",
-  },
 ];
 
 export default function ProductsPage() {

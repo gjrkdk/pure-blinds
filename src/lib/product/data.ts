@@ -4,14 +4,14 @@
  */
 
 import { getAllProducts, getProductsByCategory as getCatalogProductsByCategory } from './catalog';
-import type { Product } from './types';
+import type { Product, Category } from './types';
 
 // Legacy type alias for backward compatibility
 export interface ProductData {
   id: string;
   name: string;
   description: string;
-  category?: string;
+  category?: Category;
   details: {
     label: string;
     value: string;
@@ -38,6 +38,6 @@ export function getAllProductIds(): string[] {
   return getAllProducts().map((p) => p.id);
 }
 
-export function getProductsByCategory(category: string): ProductData[] {
+export function getProductsByCategory(category: Category): ProductData[] {
   return getCatalogProductsByCategory(category).map(toProductData);
 }
