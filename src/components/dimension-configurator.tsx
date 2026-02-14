@@ -35,9 +35,9 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
     if (value === '') return undefined
 
     const numValue = parseInt(value, 10)
-    if (isNaN(numValue)) return 'Enter a whole number'
-    if (numValue < 10) return 'Minimum 10cm'
-    if (numValue > 200) return 'Maximum 200cm'
+    if (isNaN(numValue)) return 'Voer een geheel getal in'
+    if (numValue < 10) return 'Minimaal 10 cm'
+    if (numValue > 200) return 'Maximaal 200 cm'
 
     return undefined
   }
@@ -126,16 +126,16 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
             }
             setPrice(null)
           } else if (response.status === 404) {
-            setError('Product pricing unavailable')
+            setError('Productprijs niet beschikbaar')
             setPrice(null)
           } else {
-            setError('Unable to calculate price')
+            setError('Kan prijs niet berekenen')
             setPrice(null)
           }
         }
       } catch (err) {
         if (!ignore) {
-          setError('Unable to calculate price')
+          setError('Kan prijs niet berekenen')
           setPrice(null)
         }
       } finally {
@@ -183,7 +183,7 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
         {/* Width input */}
         <div>
           <label htmlFor="width" className="block text-sm font-medium text-foreground mb-2">
-            Width (cm)
+            Breedte (cm)
           </label>
           <input
             type="text"
@@ -197,7 +197,7 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
             className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors ${
               fieldErrors.width ? 'border-red-500' : 'border-border'
             }`}
-            placeholder="e.g., 100"
+            placeholder="bijv. 100"
           />
           {fieldErrors.width && (
             <p id="width-error" className="text-red-500 text-sm mt-1">
@@ -209,7 +209,7 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
         {/* Height input */}
         <div>
           <label htmlFor="height" className="block text-sm font-medium text-foreground mb-2">
-            Height (cm)
+            Hoogte (cm)
           </label>
           <input
             type="text"
@@ -223,7 +223,7 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
             className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors ${
               fieldErrors.height ? 'border-red-500' : 'border-border'
             }`}
-            placeholder="e.g., 150"
+            placeholder="bijv. 150"
           />
           {fieldErrors.height && (
             <p id="height-error" className="text-red-500 text-sm mt-1">
@@ -236,16 +236,16 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
       {/* Price display */}
       <div className="mt-6">
         {loading ? (
-          <p className="text-2xl font-semibold text-muted">Calculating...</p>
+          <p className="text-2xl font-semibold text-muted">Berekenen...</p>
         ) : error ? (
           <p className="text-2xl font-semibold text-red-500">{error}</p>
         ) : price !== null ? (
           <div>
-            <p className="text-sm text-muted mb-1">Price</p>
+            <p className="text-sm text-muted mb-1">Prijs</p>
             <p className="text-3xl font-semibold text-foreground">{formatPrice(price)}</p>
           </div>
         ) : (
-          <p className="text-sm text-muted">Enter dimensions to see price</p>
+          <p className="text-sm text-muted">Voer afmetingen in om de prijs te zien</p>
         )}
       </div>
 
@@ -256,7 +256,7 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
           disabled={!canAddToCart}
           className="w-full bg-accent text-accent-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {addedFeedback ? 'Added to Cart!' : 'Add to Cart'}
+          {addedFeedback ? 'Toegevoegd!' : 'Toevoegen aan winkelwagen'}
         </button>
       </div>
     </div>

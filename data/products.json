@@ -4,43 +4,43 @@
   "products": [
     {
       "id": "roller-blind-white",
-      "name": "White Rollerblind",
+      "name": "Wit Rolgordijn",
       "slug": "roller-blind-white",
       "category": "roller-blinds",
       "subcategory": "transparent-roller-blinds",
-      "description": "Clean white rollerblind made to measure. Enter your desired width and height to get an instant price quote.",
+      "description": "Strak wit rolgordijn op maat gemaakt. Voer uw gewenste breedte en hoogte in voor een directe prijsopgave.",
       "pricingMatrixPath": "/data/pricing/roller-blind-white.json",
       "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_WHITE",
       "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_WHITE",
       "details": [
-        { "label": "Slat material", "value": "Fabric" },
-        { "label": "Color", "value": "White" },
-        { "label": "Dimensions", "value": "10–200 cm (width & height)" },
-        { "label": "Production time", "value": "3–5 business days" },
-        { "label": "Mounting", "value": "Inside or outside recess" },
-        { "label": "Operation", "value": "Chain-operated" },
-        { "label": "Care", "value": "Wipe clean with damp cloth" }
+        { "label": "Materiaal", "value": "Stof" },
+        { "label": "Kleur", "value": "Wit" },
+        { "label": "Afmetingen", "value": "10–200 cm (breedte & hoogte)" },
+        { "label": "Productietijd", "value": "3–5 werkdagen" },
+        { "label": "Montage", "value": "In of buiten de dag" },
+        { "label": "Bediening", "value": "Kettingbediening" },
+        { "label": "Onderhoud", "value": "Afneembaar met vochtige doek" }
       ]
     },
     {
       "id": "roller-blind-black",
-      "name": "Black Rollerblind",
+      "name": "Zwart Rolgordijn",
       "slug": "roller-blind-black",
       "category": "roller-blinds",
       "subcategory": "blackout-roller-blinds",
-      "description": "Sleek black rollerblind made to measure. Enter your desired width and height to get an instant price quote.",
+      "description": "Stijlvol zwart rolgordijn op maat gemaakt. Voer uw gewenste breedte en hoogte in voor een directe prijsopgave.",
       "pricingMatrixPath": "/data/pricing/roller-blind-black.json",
       "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_BLACK",
       "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_BLACK",
       "details": [
-        { "label": "Slat material", "value": "Fabric" },
-        { "label": "Color", "value": "Black" },
-        { "label": "Dimensions", "value": "10–200 cm (width & height)" },
-        { "label": "Production time", "value": "3–5 business days" },
-        { "label": "Mounting", "value": "Inside or outside recess" },
-        { "label": "Operation", "value": "Chain-operated" },
-        { "label": "Blackout", "value": "Yes - blocks 99% of light" },
-        { "label": "Care", "value": "Wipe clean with damp cloth" }
+        { "label": "Materiaal", "value": "Stof" },
+        { "label": "Kleur", "value": "Zwart" },
+        { "label": "Afmetingen", "value": "10–200 cm (breedte & hoogte)" },
+        { "label": "Productietijd", "value": "3–5 werkdagen" },
+        { "label": "Montage", "value": "In of buiten de dag" },
+        { "label": "Bediening", "value": "Kettingbediening" },
+        { "label": "Verduisterend", "value": "Ja - blokkeert 99% van het licht" },
+        { "label": "Onderhoud", "value": "Afneembaar met vochtige doek" }
       ]
     }
   ]
