@@ -53,10 +53,10 @@ export function RemoveDialog({
       className="max-w-sm border border-border p-8 shadow-sm backdrop:bg-foreground/40"
     >
       <h2 id="remove-dialog-title" className="text-base font-medium text-foreground">
-        Remove from cart?
+        Verwijderen uit winkelwagen?
       </h2>
       <p id="remove-dialog-description" className="mt-2 text-sm text-muted">
-        Remove {productName} from your cart?
+        {productName} verwijderen uit uw winkelwagen?
       </p>
       <div className="mt-6 flex gap-3">
         <button
@@ -64,14 +64,14 @@ export function RemoveDialog({
           onClick={onCancel}
           className="flex-1 border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-surface"
         >
-          Cancel
+          Annuleren
         </button>
         <button
           type="button"
           onClick={onConfirm}
           className="flex-1 bg-foreground px-4 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-80"
         >
-          Remove
+          Verwijderen
         </button>
       </div>
     </dialog>

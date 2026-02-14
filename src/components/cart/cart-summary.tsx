@@ -41,11 +41,11 @@ export function CartSummary() {
         clearCart();
         window.location.href = data.invoiceUrl;
       } else {
-        setError(data.error || 'Unable to process checkout. Please try again.');
+        setError(data.error || 'Kan bestelling niet verwerken. Probeer het opnieuw.');
         setLoading(false);
       }
     } catch {
-      setError('Unable to process checkout. Please try again.');
+      setError('Kan bestelling niet verwerken. Probeer het opnieuw.');
       setLoading(false);
     }
   };
@@ -53,26 +53,26 @@ export function CartSummary() {
   return (
     <div className="border border-border p-6 sm:p-8 lg:sticky lg:top-8">
       <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-        Order Summary
+        Besteloverzicht
       </h2>
 
       <div className="mt-6 space-y-3 border-b border-border pb-6">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted">
-            Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})
+            Subtotaal ({itemCount} {itemCount === 1 ? 'artikel' : 'artikelen'})
           </span>
           <span className="font-medium text-foreground">
             {formatPrice(totalPrice)}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm">
-          <span className="text-muted">Shipping</span>
-          <span className="text-muted">Calculated at checkout</span>
+          <span className="text-muted">Verzending</span>
+          <span className="text-muted">Berekend bij afrekenen</span>
         </div>
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <span className="text-sm font-medium text-foreground">Total</span>
+        <span className="text-sm font-medium text-foreground">Totaal</span>
         <span className="text-lg font-medium text-foreground">
           {formatPrice(totalPrice)}
         </span>
@@ -86,10 +86,10 @@ export function CartSummary() {
         {loading ? (
           <span className="flex items-center justify-center gap-2">
             <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-accent-foreground border-t-transparent"></span>
-            Preparing checkout...
+            Bestelling voorbereiden...
           </span>
         ) : (
-          'Proceed to Checkout'
+          'Afrekenen'
         )}
       </button>
 

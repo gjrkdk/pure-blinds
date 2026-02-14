@@ -44,7 +44,7 @@ export function CartItem({ item }: CartItemProps) {
             {item.options.width} &times; {item.options.height} cm
           </p>
           <p className="mt-0.5 text-sm text-muted">
-            {formatPrice(item.priceInCents)} each
+            {formatPrice(item.priceInCents)} per stuk
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export function CartItem({ item }: CartItemProps) {
               onClick={handleRemoveClick}
               className="text-sm text-muted transition-colors hover:text-foreground"
             >
-              Remove
+              Verwijderen
             </button>
           </div>
 

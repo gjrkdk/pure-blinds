@@ -1,4 +1,18 @@
+import type { Metadata } from 'next'
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: 'Bestelling Bevestigd | Pure Blinds',
+  description: 'Uw bestelling voor rolgordijnen op maat is bevestigd. Bekijk de volgende stappen.',
+  openGraph: {
+    locale: 'nl_NL',
+    type: 'website',
+    title: 'Bestelling Bevestigd | Pure Blinds',
+    description: 'Uw bestelling voor rolgordijnen op maat is bevestigd.',
+    siteName: 'Pure Blinds',
+  },
+  robots: { index: false },
+}
 
 export default async function ConfirmationPage({
   searchParams,
@@ -29,43 +43,43 @@ export default async function ConfirmationPage({
         </div>
 
         <h1 className="mt-8 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-          Thank you for your order
+          Bedankt voor uw bestelling
         </h1>
 
         {order_id && (
           <p className="mt-3 font-mono text-sm text-muted">
-            Order {order_id}
+            Bestelling {order_id}
           </p>
         )}
 
         <p className="mt-4 text-base text-muted">
-          Your custom roller blind is on its way to being made.
+          Uw rolgordijn op maat wordt nu geproduceerd.
         </p>
 
         {/* What happens next */}
         <div className="mx-auto mt-14 max-w-sm text-left">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-            What happens next
+            Wat er nu gebeurt
           </h2>
           <ol className="mt-6 space-y-5">
             {[
               {
                 step: "01",
-                title: "Order confirmation",
+                title: "Bevestiging",
                 description:
-                  "You'll receive an email with your order details shortly.",
+                  "U ontvangt binnenkort een e-mail met uw bestelgegevens.",
               },
               {
                 step: "02",
-                title: "Production",
+                title: "Productie",
                 description:
-                  "Your roller blind is cut to your exact dimensions and finished.",
+                  "Uw rolgordijn wordt op uw exacte maten gesneden en afgewerkt.",
               },
               {
                 step: "03",
-                title: "Shipping",
+                title: "Verzending",
                 description:
-                  "Once ready, your order is packed and shipped to your address.",
+                  "Zodra gereed wordt uw bestelling ingepakt en naar uw adres verzonden.",
               },
             ].map((item) => (
               <li key={item.step} className="flex gap-4">
@@ -89,7 +103,7 @@ export default async function ConfirmationPage({
           href="/"
           className="mt-14 inline-flex items-center gap-2 bg-accent px-8 py-3.5 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
         >
-          Back to home
+          Terug naar home
         </Link>
       </div>
     </div>
