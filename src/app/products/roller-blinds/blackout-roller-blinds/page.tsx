@@ -3,7 +3,10 @@ import Breadcrumbs from "@/components/layout/breadcrumbs";
 import { getProductsBySubcategory, getProductUrl } from "@/lib/product/catalog";
 
 export default function BlackoutRollerBlindsPage() {
-  const products = getProductsBySubcategory("roller-blinds", "blackout-roller-blinds");
+  const products = getProductsBySubcategory(
+    "roller-blinds",
+    "blackout-roller-blinds",
+  );
   const displayName = "Blackout Roller Blinds";
 
   return (
@@ -27,7 +30,8 @@ export default function BlackoutRollerBlindsPage() {
             {displayName}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Browse our collection of blackout roller blinds. Block up to 99% of light for complete darkness and privacy.
+            Browse our collection of blackout roller blinds. Block up to 99% of
+            light for complete darkness and privacy.
           </p>
         </div>
 
@@ -41,7 +45,7 @@ export default function BlackoutRollerBlindsPage() {
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-surface">
                 {/* Product image placeholder */}
-                <div className="flex aspect-[4/3] items-center justify-center rounded-2xl bg-white shadow-lifted">
+                <div className="flex aspect-4/3 items-center justify-center rounded-2xl bg-white shadow-lifted">
                   <span className="text-sm text-muted">Product Image</span>
                 </div>
 

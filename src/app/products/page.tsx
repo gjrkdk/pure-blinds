@@ -1,19 +1,36 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
+
+export const metadata: Metadata = {
+  title: "Producten | Pure Blinds",
+  description: "Bekijk ons assortiment rolgordijnen op maat. Elk product wordt op uw exacte afmetingen gemaakt met directe online prijsberekening.",
+  openGraph: {
+    locale: "nl_NL",
+    type: "website",
+    title: "Producten | Pure Blinds",
+    description: "Bekijk ons assortiment rolgordijnen op maat. Elk product wordt op uw exacte afmetingen gemaakt met directe online prijsberekening.",
+    siteName: "Pure Blinds",
+  },
+};
 
 interface Category {
   id: string;
   name: string;
   description: string;
   href: string;
+  image?: string;
 }
 
 const categories: Category[] = [
   {
     id: "roller-blinds",
-    name: "Roller Blinds",
-    description: "Made-to-measure roller blinds in transparent and blackout options",
+    name: "Rolgordijnen",
+    description:
+      "Rolgordijnen op maat in transparante en verduisterende uitvoeringen",
     href: "/products/roller-blinds",
+    image: "/png/rolgordijn-keuken.png",
   },
 ];
 
@@ -24,22 +41,20 @@ export default function ProductsPage() {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: "Products", current: true },
+            { label: "Producten", current: true },
           ]}
         />
 
         {/* Page header */}
         <div className="mb-12">
           <p className="text-sm font-semibold uppercase tracking-wider text-muted">
-            Browse Products
+            Bekijk producten
           </p>
           <h1 className="mt-2 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-            Our Products
+            Onze producten
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Explore our range of made-to-measure window treatments. Each
-            product is custom-crafted to your exact dimensions with instant
-            pricing.
+            Ontdek ons assortiment raamdecoratie op maat. Elk product wordt op uw exacte afmetingen gemaakt met directe online prijsberekening.
           </p>
         </div>
 
@@ -52,11 +67,22 @@ export default function ProductsPage() {
               className="group block transition-transform duration-200 hover:-translate-y-1"
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-surface">
-                {/* Category image placeholder */}
-                <div className="flex aspect-[4/3] items-center justify-center bg-white shadow-lifted">
-                  <span className="text-sm font-medium text-muted">
-                    {category.name}
-                  </span>
+                {/* Category image */}
+                <div className="relative aspect-4/3 bg-white shadow-lifted">
+                  {category.image ? (
+                    <Image
+                      src={category.image}
+                      alt={category.name}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <span className="text-sm font-medium text-muted">
+                        {category.name}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Category info */}
@@ -68,7 +94,7 @@ export default function ProductsPage() {
                     {category.description}
                   </p>
                   <div className="mt-4 flex items-center gap-2 text-sm font-medium text-foreground">
-                    View products
+                    Bekijk producten
                     <svg
                       width="14"
                       height="14"

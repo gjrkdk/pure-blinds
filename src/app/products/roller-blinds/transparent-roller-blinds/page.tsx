@@ -1,10 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
 import { getProductsBySubcategory, getProductUrl } from "@/lib/product/catalog";
 
+export const metadata: Metadata = {
+  title: "Transparante Rolgordijnen op Maat | Pure Blinds",
+  description: "Transparante rolgordijnen op maat die natuurlijk licht doorlaten met privacy. Ideaal voor woonkamer, keuken en kantoor. Bestel online met directe prijsopgave.",
+  openGraph: {
+    locale: "nl_NL",
+    type: "website",
+    title: "Transparante Rolgordijnen op Maat | Pure Blinds",
+    description: "Transparante rolgordijnen op maat die natuurlijk licht doorlaten met privacy. Ideaal voor woonkamer, keuken en kantoor. Bestel online met directe prijsopgave.",
+    siteName: "Pure Blinds",
+  },
+};
+
 export default function TransparentRollerBlindsPage() {
   const products = getProductsBySubcategory("roller-blinds", "transparent-roller-blinds");
-  const displayName = "Transparent Roller Blinds";
+  const displayName = "Transparante Rolgordijnen";
 
   return (
     <div className="px-6 py-12 sm:py-16">
@@ -12,8 +25,8 @@ export default function TransparentRollerBlindsPage() {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: "Products", href: "/products" },
-            { label: "Roller Blinds", href: "/products/roller-blinds" },
+            { label: "Producten", href: "/products" },
+            { label: "Rolgordijnen", href: "/products/roller-blinds" },
             { label: displayName, current: true },
           ]}
         />
@@ -27,7 +40,10 @@ export default function TransparentRollerBlindsPage() {
             {displayName}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Browse our collection of transparent roller blinds. Light-filtering options that let natural light through while providing privacy.
+            Transparante rolgordijnen op maat zijn de perfecte keuze wanneer u natuurlijk licht wilt behouden terwijl u toch privacy creëert. Deze lichtdoorlatende rolgordijnen filteren het zonlicht op een subtiele manier, waardoor uw ruimte aangenaam verlicht blijft zonder verblinding of inkijk van buitenaf. Ideaal voor woonkamers waar u overdag graag een lichte en open sfeer ervaart, keukens waar natuurlijk licht essentieel is voor een prettige werkplek, of thuiskantoren waar u schermreflecties wilt voorkomen zonder de ruimte te verduisteren.
+          </p>
+          <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
+            Onze transparante rolgordijnen worden op maat gemaakt uit kwalitatieve stoffen die duurzaam en onderhoudsvriendelijk zijn. Met de eenvoudige kettingbediening bepaalt u zelf exact hoeveel licht u toelaat, van volledig open tot volledig gesloten. Bestellen is eenvoudig: voer uw gewenste afmetingen in, zie direct de prijs, en ontvang binnen enkele werkdagen uw maatwerk rolgordijn thuisbezorgd.
           </p>
         </div>
 
@@ -42,7 +58,7 @@ export default function TransparentRollerBlindsPage() {
               <div className="overflow-hidden rounded-2xl border border-border bg-surface">
                 {/* Product image placeholder */}
                 <div className="flex aspect-[4/3] items-center justify-center rounded-2xl bg-white shadow-lifted">
-                  <span className="text-sm text-muted">Product Image</span>
+                  <span className="text-sm text-muted">Productafbeelding</span>
                 </div>
 
                 {/* Product info */}
@@ -54,7 +70,7 @@ export default function TransparentRollerBlindsPage() {
                     {product.description}
                   </p>
                   <div className="mt-4 flex items-center gap-2 text-sm font-medium text-foreground">
-                    Configure
+                    Configureer
                     <svg
                       width="14"
                       height="14"

@@ -1,7 +1,30 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import DimensionConfigurator from "@/components/dimension-configurator";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
 import { getProductBySlug, getAllProducts, getProductUrl } from "@/lib/product/catalog";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const productSlug = slug[slug.length - 1];
+  const product = getProductBySlug(productSlug);
+
+  if (!product) {
+    return {};
+  }
+
+  return {
+    title: `${product.name} op Maat | Pure Blinds`,
+    description: product.description,
+    openGraph: {
+      locale: 'nl_NL',
+      type: 'website',
+      title: product.name,
+      description: product.description,
+      siteName: 'Pure Blinds',
+    },
+  };
+}
 
 export function generateStaticParams() {
   const products = getAllProducts();
@@ -42,7 +65,7 @@ export default async function ProductPage({
   // Build breadcrumbs based on whether product has subcategory
   const breadcrumbItems: Array<{ label: string; href?: string; current?: boolean }> = [
     { label: "Home", href: "/" },
-    { label: "Products", href: "/products" },
+    { label: "Producten", href: "/products" },
     {
       label: formatCategoryName(product.category),
       href: `/products/${product.category}`,
@@ -87,7 +110,7 @@ export default async function ProductPage({
           <div className="lg:pt-2">
             <div className="border border-border p-8 sm:p-10">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-                Product Details
+                Productdetails
               </h2>
               <dl className="mt-6 space-y-5">
                 {product.details.map((detail) => (
@@ -103,14 +126,14 @@ export default async function ProductPage({
 
             <div className="mt-6 border border-border p-8 sm:p-10">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-                How It Works
+                Hoe het werkt
               </h2>
               <ol className="mt-6 space-y-4">
                 {[
-                  "Enter your desired width and height",
-                  "See your price calculated instantly",
-                  "Add to cart and proceed to checkout",
-                  "Your roller blind is produced and shipped",
+                  "Voer uw gewenste breedte en hoogte in",
+                  "Bekijk direct uw berekende prijs",
+                  "Voeg toe aan winkelwagen en bestel",
+                  "Uw rolgordijn wordt geproduceerd en verzonden",
                 ].map((step, i) => (
                   <li key={i} className="flex gap-3 text-sm">
                     <span className="flex-none font-mono text-xs text-muted">
