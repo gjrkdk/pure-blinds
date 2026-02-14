@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v1.2 complete (shipped 2026-02-13)
 Status: Between milestones
-Last activity: 2026-02-14 - Completed quick task 5: Restructure categories - rollerblinds as main category
+Last activity: 2026-02-14 - Completed quick task 6: Restructure product URLs to full hierarchical paths
 
 Progress: 3 milestones shipped (v1.0, v1.1, v1.2)
 
@@ -56,13 +56,14 @@ None active.
 | 3 | Add category page with white and black rollerblinds categories | 2026-02-12 | c98a510 | [3-add-category-page-with-white-and-black-r](./quick/3-add-category-page-with-white-and-black-r/) |
 | 4 | Change category page from white/black to transparent/blackout | 2026-02-14 | f6b5383 | [4-change-category-page-from-white-black-to](./quick/4-change-category-page-from-white-black-to/) |
 | 5 | Restructure categories - rollerblinds as main category | 2026-02-14 | d70f986 | [5-restructure-categories-rollerblinds-as-m](./quick/5-restructure-categories-rollerblinds-as-m/) |
+| 6 | Restructure product URLs to full hierarchical paths | 2026-02-14 | d8ba85c | [6-restructure-product-urls-to-full-hierarc](./quick/6-restructure-product-urls-to-full-hierarc/) |
 
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed quick task 5 (rollerblinds category hierarchy)
+Stopped at: Completed quick task 6 (hierarchical product URLs)
 Resume file: None
 Next step: `/gsd:new-milestone` to start next milestone
 
 ---
-*Last updated: 2026-02-14 after quick task 5 completion*
+*Last updated: 2026-02-14 after quick task 6 completion*
