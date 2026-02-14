@@ -10,6 +10,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://pureblinds.nl'),
   title: "Rolgordijnen op Maat | Pure Blinds",
   description:
     "Bestel rolgordijnen op maat online. Directe prijsberekening, premium materialen, geleverd aan huis. Gratis advies en snelle levering door heel Nederland.",
