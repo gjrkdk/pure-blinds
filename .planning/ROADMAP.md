@@ -195,10 +195,10 @@ Plans:
   3. Cart and confirmation pages marked with noindex robots meta
   4. Sitemap excludes removed categories and products
   5. Sitemap accessible at /sitemap.xml and referenced in robots.txt
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 18-01: TBD
+- [ ] 18-01-PLAN.md — Dynamic sitemap.xml, robots.txt, and metadataBase configuration
 
 ## Progress
 
@@ -224,7 +224,7 @@ Phases execute in numeric order: 15 → 16 → 17 → 18
 | 15. Category Cleanup & Redirects | v1.3 | 2/2 | Complete | 2026-02-14 |
 | 16. Dutch Content & Metadata | v1.3 | 4/4 | Complete | 2026-02-14 |
 | 17. Structured Data | v1.3 | 2/2 | Complete | 2026-02-14 |
-| 18. Sitemap & Robots | v1.3 | 0/TBD | Not started | - |
+| 18. Sitemap & Robots | v1.3 | 0/1 | Not started | - |
 
 ---
 *Last updated: 2026-02-14 after Phase 17 completion*
