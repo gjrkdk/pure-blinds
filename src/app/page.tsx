@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { AboutSection } from "@/components/home/about-section";
 import { ServicesAccordion } from "@/components/home/services-accordion";
-import { WorkSection } from "@/components/home/work-section";
-import { TestimonialsSection } from "@/components/home/testimonials-section";
+import { HowItWorksSection } from "@/components/home/how-it-works-section";
+
 import { FaqSection } from "@/components/home/faq-section";
 import { ContactSection } from "@/components/home/contact-section";
 
@@ -107,11 +107,8 @@ export default function Home() {
       {/* Services */}
       <ServicesAccordion />
 
-      {/* Our Work */}
-      <WorkSection />
-
-      {/* Testimonials */}
-      <TestimonialsSection />
+      {/* How It Works */}
+      <HowItWorksSection />
 
       {/* FAQ */}
       <FaqSection />
