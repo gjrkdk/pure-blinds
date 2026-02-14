@@ -39,7 +39,7 @@ export default async function ConfirmationPage({
         )}
 
         <p className="mt-4 text-base text-muted">
-          Your custom textile is on its way to being made.
+          Your custom roller blind is on its way to being made.
         </p>
 
         {/* What happens next */}
@@ -59,7 +59,7 @@ export default async function ConfirmationPage({
                 step: "02",
                 title: "Production",
                 description:
-                  "Your textile is cut to your exact dimensions and finished.",
+                  "Your roller blind is cut to your exact dimensions and finished.",
               },
               {
                 step: "03",

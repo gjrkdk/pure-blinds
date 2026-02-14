@@ -14,7 +14,11 @@ export function Footer() {
         <div className="flex flex-col gap-10 sm:flex-row sm:justify-between sm:items-start">
           {/* Brand */}
           <p className="flex items-center gap-3 text-2xl font-bold tracking-tight text-accent-foreground">
-            <img src="/logo-inverted.svg" alt="Pure Blinds" className="h-8 w-8" />
+            <img
+              src="/svg/logo-inverted.svg"
+              alt="Pure Blinds"
+              className="h-8 w-8"
+            />
             Pure Blinds
           </p>
 
@@ -41,7 +45,7 @@ export function Footer() {
                   >
                     {link.label}
                   </a>
-                )
+                ),
               )}
             </nav>
           </div>
@@ -54,7 +58,7 @@ export function Footer() {
           <p className="text-xs text-neutral-500">
             &copy; {new Date().getFullYear()} Pure Blinds. All rights reserved.
           </p>
-          <p className="text-xs text-neutral-500">Custom dimension textiles</p>
+          <p className="text-xs text-neutral-500">Custom dimension roller blinds</p>
         </div>
       </div>
     </footer>
