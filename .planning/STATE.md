@@ -5,25 +5,25 @@
 See: .planning/PROJECT.md (updated 2026-02-14)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Phase 16 - Dutch Content & Metadata
+**Current focus:** Phase 17 - Structured Data
 
 ## Current Position
 
-Phase: 16 of 18 (Dutch Content & Metadata)
+Phase: 17 of 18 (Structured Data)
 Plan: Ready to plan
-Status: Phase 15 complete, ready for Phase 16
-Last activity: 2026-02-14 — Phase 15 execution complete
+Status: Phase 16 complete, ready for Phase 17
+Last activity: 2026-02-14 — Phase 16 execution complete
 
-Progress: [████████████████▒░░░] 83% (15/18 phases complete)
+Progress: [██████████████████▒░] 89% (16/18 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 22
+- Total plans completed: 26
 - Average duration: 61 min (excluding v1.0 baseline)
 - Total v1.1 execution time: 465s (7m 45s)
 - Total v1.2 execution time: 1,481s (24m 41s)
-- Total v1.3 execution time: 394s (6m 34s)
+- Total v1.3 execution time: ~700s (~11.7m)
 
 **By Milestone:**
 
@@ -32,15 +32,16 @@ Progress: [████████████████▒░░░] 83% (15
 | v1.0 MVP | 1-5 | 9 | ~3 days | ~53 min |
 | v1.1 Homepage | 6-10 | 5 | 465s (7.75m) | 93s |
 | v1.2 Catalog | 11-14 | 6 | 1,481s (24.7m) | 247s |
-| v1.3 Dutch/SEO | 15-18 | 2 | 394s (6.6m) | 197s |
+| v1.3 Dutch/SEO | 15-18 | 6 | ~700s (11.7m) | ~117s |
 
 **Recent Trend:**
-- Last 3 plans: 93s, 205s, 189s
-- Trend: Stable (cleanup work efficient)
+- Last 3 plans: 205s, 189s, ~300s (phase 16 parallel)
+- Trend: Stable
 
 *Updated after each plan completion*
 | Phase 15 P01 | 205 | 2 tasks | 8 files |
 | Phase 15 P02 | 189 | 2 tasks | 10 files |
+| Phase 16 P01-04 | ~300 | 8 tasks | 25+ files |
 
 ## Accumulated Context
 
@@ -55,6 +56,7 @@ Recent decisions affecting v1.3:
 - [Phase 14]: 308 permanent redirect for URL migration — SEO-friendly URL changes
 - [Phase 15]: Use 301 redirects via statusCode property — explicit SEO control over permanent:true default 308
 - [Phase 15]: Literal union types for Category/Subcategory — compile-time enforcement of roller-blinds-only catalog
+- [Phase 16]: Cart layout.tsx for metadata on client component pages — Next.js pattern for metadata on 'use client' pages
 
 ### Pending Todos
 
@@ -81,9 +83,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Phase 15 execution complete (verified, passed)
+Stopped at: Phase 16 execution complete (verified, passed)
 Resume file: None
-Next step: /gsd:plan-phase 16
+Next step: /gsd:plan-phase 17
 
 ---
-*Last updated: 2026-02-14 after Phase 15 execution complete*
+*Last updated: 2026-02-14 after Phase 16 execution complete*
