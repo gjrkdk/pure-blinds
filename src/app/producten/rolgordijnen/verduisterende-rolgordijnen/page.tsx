@@ -4,20 +4,25 @@ import Breadcrumbs from "@/components/layout/breadcrumbs";
 import { getProductsBySubcategory, getProductUrl } from "@/lib/product/catalog";
 
 export const metadata: Metadata = {
-  title: "Transparante Rolgordijnen op Maat | Pure Blinds",
-  description: "Transparante rolgordijnen op maat die natuurlijk licht doorlaten met privacy. Ideaal voor woonkamer, keuken en kantoor. Bestel online met directe prijsopgave.",
+  title: "Verduisterende Rolgordijnen op Maat | Pure Blinds",
+  description:
+    "Verduisterende rolgordijnen op maat die 99% van het licht blokkeren. Ideaal voor slaapkamers en kinderkamers. Bestel online met directe prijsopgave.",
   openGraph: {
     locale: "nl_NL",
     type: "website",
-    title: "Transparante Rolgordijnen op Maat | Pure Blinds",
-    description: "Transparante rolgordijnen op maat die natuurlijk licht doorlaten met privacy. Ideaal voor woonkamer, keuken en kantoor. Bestel online met directe prijsopgave.",
+    title: "Verduisterende Rolgordijnen op Maat | Pure Blinds",
+    description:
+      "Verduisterende rolgordijnen op maat die 99% van het licht blokkeren. Ideaal voor slaapkamers en kinderkamers.",
     siteName: "Pure Blinds",
   },
 };
 
-export default function TransparentRollerBlindsPage() {
-  const products = getProductsBySubcategory("roller-blinds", "transparent-roller-blinds");
-  const displayName = "Transparante Rolgordijnen";
+export default function BlackoutRollerBlindsPage() {
+  const products = getProductsBySubcategory(
+    "rolgordijnen",
+    "verduisterende-rolgordijnen",
+  );
+  const displayName = "Verduisterende Rolgordijnen";
 
   return (
     <div className="px-6 py-12 sm:py-16">
@@ -25,8 +30,8 @@ export default function TransparentRollerBlindsPage() {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: "Producten", href: "/products" },
-            { label: "Rolgordijnen", href: "/products/roller-blinds" },
+            { label: "Producten", href: "/producten" },
+            { label: "Rolgordijnen", href: "/producten/rolgordijnen" },
             { label: displayName, current: true },
           ]}
         />
@@ -40,10 +45,10 @@ export default function TransparentRollerBlindsPage() {
             {displayName}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Transparante rolgordijnen op maat zijn de perfecte keuze wanneer u natuurlijk licht wilt behouden terwijl u toch privacy creëert. Deze lichtdoorlatende rolgordijnen filteren het zonlicht op een subtiele manier, waardoor uw ruimte aangenaam verlicht blijft zonder verblinding of inkijk van buitenaf. Ideaal voor woonkamers waar u overdag graag een lichte en open sfeer ervaart, keukens waar natuurlijk licht essentieel is voor een prettige werkplek, of thuiskantoren waar u schermreflecties wilt voorkomen zonder de ruimte te verduisteren.
+            Verduisterende rolgordijnen op maat zijn de ultieme oplossing wanneer u volledige controle wilt over de lichtinval in uw ruimte. Deze rolgordijnen blokkeren tot 99% van het binnenkomende licht, waardoor ze bij uitstek geschikt zijn voor slaapkamers, kinderkamers en thuisbioscopen. Een donkere slaapomgeving stimuleert de aanmaak van melatonine, het slaaphormoon, en draagt zo bij aan een diepere en betere nachtrust. Ook voor mensen die in ploegendienst werken en overdag moeten slapen, zijn verduisterende rolgordijnen onmisbaar.
           </p>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Onze transparante rolgordijnen worden op maat gemaakt uit kwalitatieve stoffen die duurzaam en onderhoudsvriendelijk zijn. Met de eenvoudige kettingbediening bepaalt u zelf exact hoeveel licht u toelaat, van volledig open tot volledig gesloten. Bestellen is eenvoudig: voer uw gewenste afmetingen in, zie direct de prijs, en ontvang binnen enkele werkdagen uw maatwerk rolgordijn thuisbezorgd.
+            Naast de uitstekende lichtblokkerende werking bieden onze verduisterende rolgordijnen ook extra isolatie. De dikkere stof houdt in de winter de warmte binnen en in de zomer de hitte buiten, wat kan bijdragen aan een lager energieverbruik. De kettingbediening maakt het eenvoudig om het gordijn op elke gewenste hoogte te plaatsen. Bestel eenvoudig online: voer uw maten in, bekijk direct de prijs, en ontvang uw maatwerk rolgordijn binnen enkele werkdagen thuisbezorgd.
           </p>
         </div>
 
@@ -57,7 +62,7 @@ export default function TransparentRollerBlindsPage() {
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-surface">
                 {/* Product image placeholder */}
-                <div className="flex aspect-[4/3] items-center justify-center rounded-2xl bg-white shadow-lifted">
+                <div className="flex aspect-4/3 items-center justify-center rounded-2xl bg-white shadow-lifted">
                   <span className="text-sm text-muted">Productafbeelding</span>
                 </div>
 

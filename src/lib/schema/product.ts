@@ -12,7 +12,7 @@ export function buildProductSchema(
   const minPrice = (minPriceCents / 100).toFixed(2);
 
   // Build product URL with full hierarchical path
-  const productUrl = `${baseUrl}/products/${product.category}/${product.subcategory}/${product.slug}`;
+  const productUrl = `${baseUrl}/producten/${product.category}/${product.subcategory}/${product.slug}`;
 
   return {
     '@context': 'https://schema.org',

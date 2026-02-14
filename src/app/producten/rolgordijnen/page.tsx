@@ -5,12 +5,14 @@ import Breadcrumbs from "@/components/layout/breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Rolgordijnen op Maat | Pure Blinds",
-  description: "Ontdek ons assortiment rolgordijnen op maat. Transparante en verduisterende uitvoeringen met directe prijsberekening en snelle levering.",
+  description:
+    "Ontdek ons assortiment rolgordijnen op maat. Transparante en verduisterende uitvoeringen met directe prijsberekening en snelle levering.",
   openGraph: {
     locale: "nl_NL",
     type: "website",
     title: "Rolgordijnen op Maat | Pure Blinds",
-    description: "Ontdek ons assortiment rolgordijnen op maat. Transparante en verduisterende uitvoeringen met directe prijsberekening en snelle levering.",
+    description:
+      "Ontdek ons assortiment rolgordijnen op maat. Transparante en verduisterende uitvoeringen met directe prijsberekening en snelle levering.",
     siteName: "Pure Blinds",
   },
 };
@@ -25,18 +27,19 @@ interface Subcategory {
 
 const subcategories: Subcategory[] = [
   {
-    id: "transparent-roller-blinds",
+    id: "transparante-rolgordijnen",
     name: "Transparante Rolgordijnen",
     description:
       "Lichtdoorlatende rolgordijnen die natuurlijk licht doorlaten met privacy",
-    href: "/products/roller-blinds/transparent-roller-blinds",
+    href: "/producten/rolgordijnen/transparante-rolgordijnen",
     image: "/png/transparant-rolgordijn-keuken.png",
   },
   {
-    id: "blackout-roller-blinds",
+    id: "verduisterende-rolgordijnen",
     name: "Verduisterende Rolgordijnen",
-    description: "Blokkeert tot 99% van het licht voor complete duisternis en privacy",
-    href: "/products/roller-blinds/blackout-roller-blinds",
+    description:
+      "Blokkeert tot 99% van het licht voor complete duisternis en privacy",
+    href: "/producten/rolgordijnen/verduisterende-rolgordijnen",
     image: "/png/verduisterend-rolgordijn-slaapkamer.png",
   },
 ];
@@ -48,7 +51,7 @@ export default function RollerBlindsPage() {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: "Producten", href: "/products" },
+            { label: "Producten", href: "/producten" },
             { label: "Rolgordijnen", current: true },
           ]}
         />
@@ -61,14 +64,32 @@ export default function RollerBlindsPage() {
           <h1 className="mt-2 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
             Rolgordijnen op Maat
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Ontdek de mogelijkheden van rolgordijnen op maat, perfect afgestemd op uw wensen en interieur. Of u nu kiest voor een transparante uitvoering die het zonlicht zacht filtert, of voor een verduisterend rolgordijn dat complete duisternis biedt — bij Pure Blinds vindt u altijd de ideale oplossing voor uw ramen.
+          <p className="mt-4 text-base leading-relaxed text-muted">
+            Ontdek de mogelijkheden van rolgordijnen op maat, perfect afgestemd
+            op uw wensen en interieur. Of u nu kiest voor een transparante
+            uitvoering die het zonlicht zacht filtert, of voor een verduisterend
+            rolgordijn dat complete duisternis biedt, bij Pure Blinds vindt u
+            altijd de ideale oplossing voor uw ramen.
           </p>
-          <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Onze rolgordijnen worden vervaardigd uit hoogwaardige stoffen en zijn verkrijgbaar in stijlvolle kleuren die passen bij elke ruimte. Van de woonkamer tot de slaapkamer, van de keuken tot de thuiswerkplek — met een rolgordijn op maat creëert u niet alleen de gewenste lichtinval en privacy, maar voegt u ook een verfijnde afwerking toe aan uw interieur. Dankzij de eenvoudige kettingbediening regelt u moeiteloos hoeveel licht u binnenlaat.
+          <p className="mt-4 text-base leading-relaxed text-muted">
+            Onze rolgordijnen worden vervaardigd uit hoogwaardige stoffen en
+            zijn verkrijgbaar in stijlvolle kleuren die passen bij elke ruimte.
+            Van de woonkamer tot de slaapkamer, van de keuken tot de
+            thuiswerkplek met een rolgordijn op maat creëert u niet alleen de
+            gewenste lichtinval en privacy, maar voegt u ook een verfijnde
+            afwerking toe aan uw interieur. Dankzij de eenvoudige
+            kettingbediening regelt u moeiteloos hoeveel licht u binnenlaat.
           </p>
-          <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Bestellen bij Pure Blinds is verrassend eenvoudig. U voert uw gewenste breedte en hoogte in, en onze slimme prijscalculator toont direct de exacte prijs voor uw maatwerk rolgordijn. Geen verrassingen achteraf, maar volledige transparantie vanaf het eerste moment. Na uw bestelling gaan wij direct aan de slag met de productie, en binnen 3 tot 5 werkdagen ontvangt u uw rolgordijn thuisbezorgd. Montage is eenvoudig — zowel binnen als buiten de dag mogelijk — en onderhoud vraagt weinig aandacht. Een vochtige doek is voldoende om uw rolgordijn er jarenlang prachtig uit te laten zien.
+          <p className="mt-4 text-base leading-relaxed text-muted">
+            Bestellen bij Pure Blinds is verrassend eenvoudig. U voert uw
+            gewenste breedte en hoogte in, en onze slimme prijscalculator toont
+            direct de exacte prijs voor uw maatwerk rolgordijn. Geen
+            verrassingen achteraf, maar volledige transparantie vanaf het eerste
+            moment. Na uw bestelling gaan wij direct aan de slag met de
+            productie, en binnen 3 tot 5 werkdagen ontvangt u uw rolgordijn
+            thuisbezorgd. Montage is eenvoudig zowel binnen als buiten de dag
+            mogelijk en onderhoud vraagt weinig aandacht. Een vochtige doek is
+            voldoende om uw rolgordijn er jarenlang prachtig uit te laten zien.
           </p>
         </div>
 

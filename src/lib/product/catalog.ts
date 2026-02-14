@@ -29,7 +29,7 @@ export function getProductBySlug(slug: string): Product | undefined {
 
 export function getProductUrl(product: Product): string {
   if (product.subcategory) {
-    return `/products/${product.category}/${product.subcategory}/${product.slug}`;
+    return `/producten/${product.category}/${product.subcategory}/${product.slug}`;
   }
-  return `/products/${product.category}/${product.slug}`;
+  return `/producten/${product.category}/${product.slug}`;
 }
