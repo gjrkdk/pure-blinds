@@ -10,9 +10,17 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Custom Roller Blinds — Made to Measure",
+  title: "Rolgordijnen op Maat | Pure Blinds",
   description:
-    "Order custom roller blinds online. Instant pricing, premium materials, delivered to your door.",
+    "Bestel rolgordijnen op maat online. Directe prijsberekening, premium materialen, geleverd aan huis. Gratis advies en snelle levering door heel Nederland.",
+  openGraph: {
+    locale: "nl_NL",
+    type: "website",
+    title: "Rolgordijnen op Maat | Pure Blinds",
+    description:
+      "Bestel rolgordijnen op maat online. Directe prijsberekening, premium materialen, geleverd aan huis. Gratis advies en snelle levering door heel Nederland.",
+    siteName: "Pure Blinds",
+  },
 };
 
 export default function RootLayout({
@@ -21,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="nl-NL">
       <body
         className={`${jakarta.variable} antialiased flex min-h-screen flex-col`}
       >
