@@ -18,3 +18,7 @@ export function getAllProducts(): Product[] {
 export function getProductsByCategory(category: string): Product[] {
   return catalog.products.filter((p) => p.category === category);
 }
+
+export function getProductsBySubcategory(category: string, subcategory: string): Product[] {
+  return catalog.products.filter((p) => p.category === category && p.subcategory === subcategory);
+}
