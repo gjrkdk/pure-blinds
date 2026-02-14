@@ -18,7 +18,7 @@ export function Header() {
   }, []);
 
   const navLinks = [
-    { href: "/products", label: "Products" },
+    { href: "/products", label: "Producten" },
     { href: "/blog", label: "Blog" },
   ];
 
@@ -38,7 +38,11 @@ export function Header() {
             href="/"
             className="flex items-center gap-2 text-base font-bold tracking-tight text-foreground hover:text-muted transition-colors"
           >
-            <img src="/logo.svg" alt="Pure Blinds" className="h-6 w-6" />
+            <img
+              src="/svg/logo-icon.svg"
+              alt="Pure Blinds"
+              className="h-6 w-6"
+            />
             Pure Blinds
           </Link>
 
@@ -63,7 +67,7 @@ export function Header() {
           <button
             className="md:hidden flex flex-col items-center justify-center w-8 h-8 gap-1.5 focus:outline-none"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
+            aria-label="Menu openen"
           >
             <span
               className={`w-5 h-0.5 bg-foreground transition-all duration-300 ${

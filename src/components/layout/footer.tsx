@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export function Footer() {
   const links = [
-    { label: "Roller Blinds", href: "/products/roller-blinds" },
+    { label: "Rolgordijnen", href: "/products/roller-blinds" },
     { label: "Blog", href: "/blog" },
-    { label: "About us", href: "#about" },
+    { label: "Over ons", href: "#about" },
     { label: "Contact", href: "#contact" },
   ];
 
@@ -15,7 +15,7 @@ export function Footer() {
           {/* Brand */}
           <p className="flex items-center gap-3 text-2xl font-bold tracking-tight text-accent-foreground">
             <img
-              src="/svg/logo-inverted.svg"
+              src="/svg/logo-icon-inverted.svg"
               alt="Pure Blinds"
               className="h-8 w-8"
             />
@@ -25,7 +25,7 @@ export function Footer() {
           {/* Quick links */}
           <div>
             <h3 className="text-sm font-semibold text-accent-foreground">
-              Quick links
+              Snelle links
             </h3>
             <nav className="mt-4 grid grid-cols-2 gap-x-16 gap-y-2">
               {links.map((link) =>
@@ -56,9 +56,11 @@ export function Footer() {
       <div className="mx-auto max-w-5xl px-6">
         <div className="flex flex-col items-center justify-between gap-4 border-t border-neutral-800 py-6 sm:flex-row">
           <p className="text-xs text-neutral-500">
-            &copy; {new Date().getFullYear()} Pure Blinds. All rights reserved.
+            &copy; {new Date().getFullYear()} Pure Blinds. Alle rechten voorbehouden.
           </p>
-          <p className="text-xs text-neutral-500">Custom dimension roller blinds</p>
+          <p className="text-xs text-neutral-500">
+            Rolgordijnen op maat
+          </p>
         </div>
       </div>
     </footer>
