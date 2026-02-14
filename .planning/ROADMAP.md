@@ -179,10 +179,11 @@ Plans:
   2. FAQPage schema (JSON-LD) implemented on homepage FAQ section
   3. JSON-LD markup properly escaped to prevent XSS vulnerabilities
   4. All schema markup validates in Google Rich Results Test
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 17-01: TBD
+- [ ] 17-01-PLAN.md — Schema infrastructure (JsonLd component + builders) and homepage Organization + FAQPage schemas
+- [ ] 17-02-PLAN.md — Product, BlogPosting, and BreadcrumbList schemas on detail pages
 
 #### Phase 18: Sitemap & Robots
 **Goal**: Search engine crawling infrastructure with dynamic sitemap and robots.txt
