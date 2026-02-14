@@ -145,8 +145,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 15-01-PLAN.md — Redirects, data/route cleanup, TypeScript type narrowing, cart migration, products page, footer
-- [ ] 15-02-PLAN.md — Codebase-wide text audit replacing textile/venetian references with roller blinds
+- [x] 15-01-PLAN.md — Redirects, data/route cleanup, TypeScript type narrowing, cart migration, products page, footer
+- [x] 15-02-PLAN.md — Codebase-wide text audit replacing textile/venetian references with roller blinds
 
 #### Phase 16: Dutch Content & Metadata
 **Goal**: Native-quality Dutch content across all pages with unique meta tags for social sharing and SEO
@@ -217,10 +217,10 @@ Phases execute in numeric order: 15 → 16 → 17 → 18
 | 12. Category Navigation & Product Expansion | v1.2 | 2/2 | Complete | 2026-02-13 |
 | 13. Blog Foundation & Content Marketing | v1.2 | 1/1 | Complete | 2026-02-13 |
 | 14. Polish & URL Migration | v1.2 | 1/1 | Complete | 2026-02-13 |
-| 15. Category Cleanup & Redirects | v1.3 | 0/2 | Not started | - |
+| 15. Category Cleanup & Redirects | v1.3 | 2/2 | Complete | 2026-02-14 |
 | 16. Dutch Content & Metadata | v1.3 | 0/TBD | Not started | - |
 | 17. Structured Data | v1.3 | 0/TBD | Not started | - |
 | 18. Sitemap & Robots | v1.3 | 0/TBD | Not started | - |
 
 ---
-*Last updated: 2026-02-14 after v1.3 roadmap creation*
+*Last updated: 2026-02-14 after Phase 15 completion*
