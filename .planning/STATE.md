@@ -10,20 +10,20 @@ See: .planning/PROJECT.md (updated 2026-02-14)
 ## Current Position
 
 Phase: 17 of 18 (Structured Data)
-Plan: Ready to plan
-Status: Phase 16 complete, ready for Phase 17
-Last activity: 2026-02-14 — Phase 16 execution complete
+Plan: 01 of 02
+Status: Plan 17-01 complete, ready for 17-02
+Last activity: 2026-02-14 — Plan 17-01 execution complete
 
 Progress: [██████████████████▒░] 89% (16/18 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 26
+- Total plans completed: 27
 - Average duration: 61 min (excluding v1.0 baseline)
 - Total v1.1 execution time: 465s (7m 45s)
 - Total v1.2 execution time: 1,481s (24m 41s)
-- Total v1.3 execution time: ~700s (~11.7m)
+- Total v1.3 execution time: ~914s (~15.2m)
 
 **By Milestone:**
 
@@ -32,16 +32,17 @@ Progress: [██████████████████▒░] 89% (16
 | v1.0 MVP | 1-5 | 9 | ~3 days | ~53 min |
 | v1.1 Homepage | 6-10 | 5 | 465s (7.75m) | 93s |
 | v1.2 Catalog | 11-14 | 6 | 1,481s (24.7m) | 247s |
-| v1.3 Dutch/SEO | 15-18 | 6 | ~700s (11.7m) | ~117s |
+| v1.3 Dutch/SEO | 15-18 | 7 | ~914s (15.2m) | ~131s |
 
 **Recent Trend:**
-- Last 3 plans: 205s, 189s, ~300s (phase 16 parallel)
+- Last 3 plans: 189s, ~300s (phase 16 parallel), 214s (phase 17-01)
 - Trend: Stable
 
 *Updated after each plan completion*
 | Phase 15 P01 | 205 | 2 tasks | 8 files |
 | Phase 15 P02 | 189 | 2 tasks | 10 files |
 | Phase 16 P01-04 | ~300 | 8 tasks | 25+ files |
+| Phase 17 P01 | 214 | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -57,6 +58,8 @@ Recent decisions affecting v1.3:
 - [Phase 15]: Use 301 redirects via statusCode property — explicit SEO control over permanent:true default 308
 - [Phase 15]: Literal union types for Category/Subcategory — compile-time enforcement of roller-blinds-only catalog
 - [Phase 16]: Cart layout.tsx for metadata on client component pages — Next.js pattern for metadata on 'use client' pages
+- [Phase 17-01]: Use schema-dts for type-safe Schema.org JSON-LD generation
+- [Phase 17-01]: Extract FAQ data to shared data file for client/server component access
 
 ### Pending Todos
 
@@ -83,9 +86,9 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Phase 16 execution complete (verified, passed)
+Stopped at: Completed 17-01-PLAN.md
 Resume file: None
-Next step: /gsd:plan-phase 17
+Next step: Execute 17-02-PLAN.md
 
 ---
-*Last updated: 2026-02-14 after Phase 16 execution complete*
+*Last updated: 2026-02-14 after Phase 17 Plan 01 execution complete*
