@@ -100,42 +100,42 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CLEAN-01 | — | Pending |
-| CLEAN-02 | — | Pending |
-| CLEAN-03 | — | Pending |
-| CLEAN-04 | — | Pending |
-| HOME-01 | — | Pending |
-| HOME-02 | — | Pending |
-| HOME-03 | — | Pending |
-| HOME-04 | — | Pending |
-| HOME-05 | — | Pending |
-| HOME-06 | — | Pending |
-| HOME-07 | — | Pending |
-| PROD-01 | — | Pending |
-| PROD-02 | — | Pending |
-| PROD-03 | — | Pending |
-| PROD-04 | — | Pending |
-| PROD-05 | — | Pending |
-| UI-01 | — | Pending |
-| UI-02 | — | Pending |
-| UI-03 | — | Pending |
-| UI-04 | — | Pending |
-| BLOG-01 | — | Pending |
-| BLOG-02 | — | Pending |
-| SEO-01 | — | Pending |
-| SEO-02 | — | Pending |
-| SEO-03 | — | Pending |
-| SEO-04 | — | Pending |
-| SEO-05 | — | Pending |
-| SEO-06 | — | Pending |
-| SEO-07 | — | Pending |
-| SEO-08 | — | Pending |
+| CLEAN-01 | Phase 15 | Pending |
+| CLEAN-02 | Phase 15 | Pending |
+| CLEAN-03 | Phase 15 | Pending |
+| CLEAN-04 | Phase 15 | Pending |
+| HOME-01 | Phase 16 | Pending |
+| HOME-02 | Phase 16 | Pending |
+| HOME-03 | Phase 16 | Pending |
+| HOME-04 | Phase 16 | Pending |
+| HOME-05 | Phase 16 | Pending |
+| HOME-06 | Phase 16 | Pending |
+| HOME-07 | Phase 16 | Pending |
+| PROD-01 | Phase 16 | Pending |
+| PROD-02 | Phase 16 | Pending |
+| PROD-03 | Phase 16 | Pending |
+| PROD-04 | Phase 16 | Pending |
+| PROD-05 | Phase 16 | Pending |
+| UI-01 | Phase 16 | Pending |
+| UI-02 | Phase 16 | Pending |
+| UI-03 | Phase 16 | Pending |
+| UI-04 | Phase 16 | Pending |
+| BLOG-01 | Phase 16 | Pending |
+| BLOG-02 | Phase 16 | Pending |
+| SEO-01 | Phase 16 | Pending |
+| SEO-02 | Phase 16 | Pending |
+| SEO-03 | Phase 16 | Pending |
+| SEO-04 | Phase 17 | Pending |
+| SEO-05 | Phase 17 | Pending |
+| SEO-06 | Phase 18 | Pending |
+| SEO-07 | Phase 18 | Pending |
+| SEO-08 | Phase 18 | Pending |
 
 **Coverage:**
 - v1.3 requirements: 30 total
-- Mapped to phases: 0
-- Unmapped: 30 ⚠️
+- Mapped to phases: 30
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-14*
-*Last updated: 2026-02-14 after initial definition*
+*Last updated: 2026-02-14 after v1.3 roadmap creation*
