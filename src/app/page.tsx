@@ -6,6 +6,10 @@ import { HowItWorksSection } from "@/components/home/how-it-works-section";
 import { FaqSection } from "@/components/home/faq-section";
 import { ContactSection } from "@/components/home/contact-section";
 import type { Metadata } from "next";
+import { JsonLd } from "@/lib/schema/jsonld";
+import { buildOrganizationSchema } from "@/lib/schema/organization";
+import { buildFaqSchema } from "@/lib/schema/faq";
+import { FAQ_ITEMS } from "@/data/faq-items";
 
 export const metadata: Metadata = {
   title: "Rolgordijnen op Maat Bestellen | Pure Blinds",
@@ -22,8 +26,15 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://pureblinds.nl';
+  const orgSchema = buildOrganizationSchema(BASE_URL);
+  const faqSchema = buildFaqSchema(FAQ_ITEMS);
+
   return (
     <>
+      <JsonLd data={orgSchema} />
+      <JsonLd data={faqSchema} />
+
       {/* Hero */}
       <section className="relative h-[calc(100dvh-5rem)]">
         {/* Mobile: background image with overlay */}
