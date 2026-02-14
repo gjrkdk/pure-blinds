@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-02-13)
 
 Milestone: v1.2 complete (shipped 2026-02-13)
 Status: Between milestones
-Last activity: 2026-02-13 — v1.2 milestone archived
+Last activity: 2026-02-14 - Completed quick task 4: Change category page from white/black to transparency-based categories
 
 Progress: 3 milestones shipped (v1.0, v1.1, v1.2)
 
