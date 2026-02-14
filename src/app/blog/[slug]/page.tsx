@@ -1,6 +1,7 @@
 import { posts } from '../../../../.velite'
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
+import { nl } from 'date-fns/locale'
 import Breadcrumbs from '@/components/layout/breadcrumbs'
 import { MDXContent } from '@/components/mdx/mdx-content'
 
@@ -17,8 +18,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return {}
 
   return {
-    title: post.title,
-    description: post.excerpt
+    title: `${post.title} | Pure Blinds`,
+    description: post.excerpt,
+    openGraph: {
+      locale: 'nl_NL',
+      type: 'article',
+      title: post.title,
+      description: post.excerpt,
+      siteName: 'Pure Blinds',
+    },
   }
 }
 
@@ -48,7 +56,7 @@ export default async function BlogPostPage({
         <article className="mt-8">
           <header className="mb-8">
             <time className="text-sm text-muted">
-              {format(new Date(post.date), 'MMMM d, yyyy')} • {post.readingTime}
+              {format(new Date(post.date), 'd MMMM yyyy', { locale: nl })} • {post.readingTime}
             </time>
             <h1 className="mt-2 text-4xl font-light tracking-tight sm:text-5xl">
               {post.title}
