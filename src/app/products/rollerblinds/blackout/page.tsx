@@ -1,11 +1,10 @@
 import Link from "next/link";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
-import { getProductsByCategory } from "@/lib/product/catalog";
+import { getProductsBySubcategory } from "@/lib/product/catalog";
 
-export default function TransparentPage() {
-  const category = "transparent";
-  const products = getProductsByCategory(category);
-  const displayName = "Transparent";
+export default function BlackoutPage() {
+  const products = getProductsBySubcategory("rollerblinds", "blackout");
+  const displayName = "Blackout";
 
   return (
     <div className="px-6 py-12 sm:py-16">
@@ -14,6 +13,7 @@ export default function TransparentPage() {
           items={[
             { label: "Home", href: "/" },
             { label: "Products", href: "/products" },
+            { label: "Rollerblinds", href: "/products/rollerblinds" },
             { label: displayName, current: true },
           ]}
         />
@@ -27,7 +27,7 @@ export default function TransparentPage() {
             {displayName}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Browse our collection of transparent blinds. Light-filtering options that let natural light through while providing privacy.
+            Browse our collection of blackout blinds. Block up to 99% of light for complete darkness and privacy.
           </p>
         </div>
 
