@@ -165,10 +165,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 16-01-PLAN.md — Homepage Dutch content, hero, all sections, root layout nl-NL, metadata
-- [ ] 16-02-PLAN.md — Product pages Dutch content, product data, configurator, metadata
-- [ ] 16-03-PLAN.md — Navigation, cart, confirmation Dutch localization, metadata
-- [ ] 16-04-PLAN.md — Blog Dutch content, date localization, new Dutch blog post, metadata
+- [x] 16-01-PLAN.md — Homepage Dutch content, hero, all sections, root layout nl-NL, metadata
+- [x] 16-02-PLAN.md — Product pages Dutch content, product data, configurator, metadata
+- [x] 16-03-PLAN.md — Navigation, cart, confirmation Dutch localization, metadata
+- [x] 16-04-PLAN.md — Blog Dutch content, date localization, new Dutch blog post, metadata
 
 #### Phase 17: Structured Data
 **Goal**: Schema.org JSON-LD markup for rich search results eligibility
@@ -221,9 +221,9 @@ Phases execute in numeric order: 15 → 16 → 17 → 18
 | 13. Blog Foundation & Content Marketing | v1.2 | 1/1 | Complete | 2026-02-13 |
 | 14. Polish & URL Migration | v1.2 | 1/1 | Complete | 2026-02-13 |
 | 15. Category Cleanup & Redirects | v1.3 | 2/2 | Complete | 2026-02-14 |
-| 16. Dutch Content & Metadata | v1.3 | 0/TBD | Not started | - |
+| 16. Dutch Content & Metadata | v1.3 | 4/4 | Complete | 2026-02-14 |
 | 17. Structured Data | v1.3 | 0/TBD | Not started | - |
 | 18. Sitemap & Robots | v1.3 | 0/TBD | Not started | - |
 
 ---
-*Last updated: 2026-02-14 after Phase 15 completion*
+*Last updated: 2026-02-14 after Phase 16 completion*
