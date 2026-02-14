@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "lastUpdated": "2026-01-29",
-  "description": "Textile pricing matrix for custom dimensions",
+  "description": "Roller blinds pricing matrix for custom dimensions",
   "currency": "USD",
   "priceUnit": "cents",
   "dimensions": {

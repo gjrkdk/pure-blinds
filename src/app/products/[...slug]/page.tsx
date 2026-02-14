@@ -110,7 +110,7 @@ export default async function ProductPage({
                   "Enter your desired width and height",
                   "See your price calculated instantly",
                   "Add to cart and proceed to checkout",
-                  "Your textile is produced and shipped",
+                  "Your roller blind is produced and shipped",
                 ].map((step, i) => (
                   <li key={i} className="flex gap-3 text-sm">
                     <span className="flex-none font-mono text-xs text-muted">
