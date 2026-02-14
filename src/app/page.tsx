@@ -14,13 +14,13 @@ export default function Home() {
         {/* Mobile: background image with overlay */}
         <div className="absolute inset-0 md:hidden">
           <Image
-            src="/hero-placeholder.svg"
-            alt="Custom textile showcase"
+            src="/png/transparant-rolgordijn-woonkamer.png"
+            alt="Custom roller blinds showcase"
             fill
-            className="object-cover"
+            className="object-cover object-[10%_center]"
             priority
           />
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px]" />
         </div>
 
         {/* Desktop layout */}
@@ -28,10 +28,10 @@ export default function Home() {
           {/* Text content */}
           <div className="flex flex-col justify-center py-32 md:py-0 md:w-[38%] md:shrink-0">
             <p className="text-sm font-semibold uppercase tracking-wider text-muted">
-              Premium Custom Textiles
+              Premium Custom Roller Blinds
             </p>
             <h1 className="mt-4 text-4xl font-normal leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Textiles, crafted to your exact dimensions
+              Roller blinds, crafted to your exact dimensions
             </h1>
             <p className="mt-6 max-w-md text-base text-muted sm:text-lg">
               Premium custom-sized fabrics — priced instantly, produced with
@@ -66,15 +66,15 @@ export default function Home() {
           <div className="hidden md:block relative md:flex-1 self-stretch py-8">
             <div className="relative h-full w-full overflow-hidden rounded-2xl shadow-lifted">
               <Image
-                src="/hero-placeholder.svg"
-                alt="Custom textile showcase"
+                src="/png/transparant-rolgordijn-woonkamer.png"
+                alt="Custom roller blinds showcase"
                 fill
-                className="object-cover"
+                className="object-cover object-[10%_center]"
                 priority
               />
 
               {/* Testimonial card overlay */}
-              <div className="absolute bottom-6 left-6 right-6 bg-background/90 backdrop-blur-md border border-border/50 rounded-2xl p-5 shadow-lg">
+              {/* <div className="absolute bottom-6 left-6 right-6 bg-background/90 backdrop-blur-md border border-border/50 rounded-2xl p-5 shadow-lg">
                 <div className="flex gap-0.5 text-foreground mb-2">
                   {[...Array(5)].map((_, i) => (
                     <svg
@@ -95,7 +95,7 @@ export default function Home() {
                   <span className="mx-1.5">&middot;</span>
                   <span>Interior Designer</span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

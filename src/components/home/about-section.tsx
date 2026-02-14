@@ -29,11 +29,11 @@ export function AboutSection() {
           About Us
         </p>
         <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-          Crafting custom textiles with precision and care
+          Crafting custom roller blinds with precision and care
         </h2>
         <p className="mt-6 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-          We specialize in made-to-measure textiles for homes, businesses, and
-          events. Every piece is crafted with attention to detail, using premium
+          We specialize in made-to-measure roller blinds for homes, businesses, and
+          offices. Every piece is crafted with attention to detail, using premium
           materials and precise measurements to deliver exactly what you need.
         </p>
 
