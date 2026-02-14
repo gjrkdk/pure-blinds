@@ -50,7 +50,7 @@ export default function CartPage() {
             </svg>
             <p className="text-sm text-muted">Uw winkelwagen is leeg</p>
             <Link
-              href="/products"
+              href="/producten"
               className="mt-6 inline-flex items-center gap-2 bg-accent px-6 py-3 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
             >
               Begin met configureren
@@ -70,7 +70,7 @@ export default function CartPage() {
             Uw winkelwagen
           </h1>
           <Link
-            href="/products"
+            href="/producten"
             className="text-sm text-muted transition-colors hover:text-foreground"
           >
             Verder winkelen

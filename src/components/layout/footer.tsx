@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export function Footer() {
   const links = [
-    { label: "Rolgordijnen", href: "/products/roller-blinds" },
+    { label: "Rolgordijnen", href: "/producten/rolgordijnen" },
     { label: "Blog", href: "/blog" },
     { label: "Over ons", href: "#about" },
     { label: "Contact", href: "#contact" },
@@ -18,7 +18,8 @@ export function Footer() {
             <Image
               src="/svg/logo-icon-inverted.svg"
               alt="Pure Blinds"
-              className="h-8 w-8"
+              height={32}
+              width={32}
             />
             Pure Blinds
           </p>
@@ -57,11 +58,10 @@ export function Footer() {
       <div className="mx-auto max-w-5xl px-6">
         <div className="flex flex-col items-center justify-between gap-4 border-t border-neutral-800 py-6 sm:flex-row">
           <p className="text-xs text-neutral-500">
-            &copy; {new Date().getFullYear()} Pure Blinds. Alle rechten voorbehouden.
+            &copy; {new Date().getFullYear()} Pure Blinds. Alle rechten
+            voorbehouden.
           </p>
-          <p className="text-xs text-neutral-500">
-            Rolgordijnen op maat
-          </p>
+          <p className="text-xs text-neutral-500">Rolgordijnen op maat</p>
         </div>
       </div>
     </footer>
