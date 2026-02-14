@@ -9,6 +9,26 @@ const nextConfig = {
         destination: '/confirmation',
         permanent: true, // 308 status code, treated as 301 by Google
       },
+      {
+        source: '/products/venetian-blinds',
+        destination: '/products',
+        statusCode: 301,
+      },
+      {
+        source: '/products/venetian-blinds/:path*',
+        destination: '/products',
+        statusCode: 301,
+      },
+      {
+        source: '/products/textiles',
+        destination: '/products',
+        statusCode: 301,
+      },
+      {
+        source: '/products/textiles/:path*',
+        destination: '/products',
+        statusCode: 301,
+      },
     ]
   },
 }
