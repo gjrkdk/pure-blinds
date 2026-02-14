@@ -162,10 +162,13 @@ Plans:
   7. Open Graph tags configured with nl_NL locale on all pages
   8. Blog post "Welk rolgordijn voor welke kamer?" published in Dutch (800-1500 words)
   9. English sample blog posts replaced with Dutch content or removed
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 16-01: TBD
+- [ ] 16-01-PLAN.md — Homepage Dutch content, hero, all sections, root layout nl-NL, metadata
+- [ ] 16-02-PLAN.md — Product pages Dutch content, product data, configurator, metadata
+- [ ] 16-03-PLAN.md — Navigation, cart, confirmation Dutch localization, metadata
+- [ ] 16-04-PLAN.md — Blog Dutch content, date localization, new Dutch blog post, metadata
 
 #### Phase 17: Structured Data
 **Goal**: Schema.org JSON-LD markup for rich search results eligibility
