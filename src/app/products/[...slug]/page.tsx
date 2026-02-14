@@ -1,13 +1,20 @@
 import { notFound } from "next/navigation";
 import DimensionConfigurator from "@/components/dimension-configurator";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
-import { getProduct, getAllProducts } from "@/lib/product/catalog";
+import { getProductBySlug, getAllProducts, getProductUrl } from "@/lib/product/catalog";
 
 export function generateStaticParams() {
   const products = getAllProducts();
-  return products.map((product) => ({
-    productId: product.id,
-  }));
+  return products.map((product) => {
+    // Build slug array from product URL
+    // e.g., /products/roller-blinds/transparent-roller-blinds/roller-blind-white
+    // becomes ['roller-blinds', 'transparent-roller-blinds', 'roller-blind-white']
+    const url = getProductUrl(product);
+    const slugArray = url.split('/').filter(s => s && s !== 'products');
+    return {
+      slug: slugArray,
+    };
+  });
 }
 
 function formatCategoryName(category: string): string {
@@ -20,10 +27,13 @@ function formatCategoryName(category: string): string {
 export default async function ProductPage({
   params,
 }: {
-  params: Promise<{ productId: string }>;
+  params: Promise<{ slug: string[] }>;
 }) {
-  const { productId } = await params;
-  const product = getProduct(productId);
+  const { slug } = await params;
+
+  // The last segment is the product slug
+  const productSlug = slug[slug.length - 1];
+  const product = getProductBySlug(productSlug);
 
   if (!product) {
     notFound();
@@ -67,7 +77,7 @@ export default async function ProductPage({
 
             <div className="mt-10">
               <DimensionConfigurator
-                productId={productId}
+                productId={product.id}
                 productName={product.name}
               />
             </div>

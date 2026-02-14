@@ -50,7 +50,7 @@ export default function CartPage() {
             </svg>
             <p className="text-sm text-muted">Your cart is empty</p>
             <Link
-              href="/products/custom-textile"
+              href="/products"
               className="mt-6 inline-flex items-center gap-2 bg-accent px-6 py-3 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
             >
               Start configuring
@@ -70,7 +70,7 @@ export default function CartPage() {
             Your Cart
           </h1>
           <Link
-            href="/products/custom-textile"
+            href="/products"
             className="text-sm text-muted transition-colors hover:text-foreground"
           >
             Continue shopping
