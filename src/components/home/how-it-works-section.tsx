@@ -1,25 +1,25 @@
 export function HowItWorksSection() {
   const steps = [
     {
-      label: "Step One",
-      title: "Measure Your Window",
+      label: "Stap Een",
+      title: "Meet uw raam op",
       description:
-        "Measure your window width and height in millimeters. Our product pages include measuring guides to help you get it right.",
-      tagline: "Simple & Precise!",
+        "Meet de breedte en hoogte van uw raam in millimeters. Onze productpaginas bevatten meetgidsen om u te helpen het goed te doen.",
+      tagline: "Eenvoudig en precies!",
     },
     {
-      label: "Step Two",
-      title: "Choose Your Blind",
+      label: "Stap Twee",
+      title: "Kies uw rolgordijn",
       description:
-        "Pick your blind type, fabric, and color. Enter your dimensions and see the price instantly — no waiting for quotes.",
-      tagline: "Instant Pricing!",
+        "Kies uw type rolgordijn, stof en kleur. Voer uw afmetingen in en zie direct de prijs — geen wachten op offertes.",
+      tagline: "Direct uw prijs!",
     },
     {
-      label: "Step Three",
-      title: "Order & Receive",
+      label: "Stap Drie",
+      title: "Bestel en ontvang",
       description:
-        "Add to cart and checkout. Your blinds are custom-made to your exact specifications and shipped directly to your door.",
-      tagline: "Fast Delivery!",
+        "Voeg toe aan winkelwagen en reken af. Uw rolgordijnen worden op maat gemaakt volgens uw exacte specificaties en direct naar u verzonden.",
+      tagline: "Snel bezorgd!",
     },
   ];
 
@@ -33,15 +33,15 @@ export function HowItWorksSection() {
               <circle cx="12" cy="12" r="10" />
               <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none" />
             </svg>
-            How It Works
+            Hoe het werkt
           </span>
         </div>
 
         {/* Heading */}
         <h2 className="mt-6 text-center text-3xl font-medium tracking-tight text-accent-foreground sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
-          Custom Blinds In Three
+          Rolgordijnen op maat
           <br className="hidden sm:block" />
-          {" "}Simple Steps.
+          {" "}in drie stappen.
         </h2>
 
         {/* Cards */}

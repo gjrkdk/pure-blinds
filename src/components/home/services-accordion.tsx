@@ -5,29 +5,29 @@ import Image from "next/image";
 
 const SERVICES = [
   {
-    title: "Custom Curtains",
+    title: "Transparante Rolgordijnen",
     description:
-      "Made-to-measure curtains tailored to your exact window dimensions. Choose from our range of premium fabrics and finishes to create the perfect window treatment for your space.",
+      "Lichtdoorlatende rolgordijnen die privacy bieden terwijl ze natuurlijk licht doorlaten. Perfect voor woonkamers, kantoren en ruimtes waar u een balans wilt tussen privacy en daglicht.",
   },
   {
-    title: "Room Dividers",
+    title: "Verduisterende Rolgordijnen",
     description:
-      "Flexible space partitioning solutions for homes and offices. Precision-cut fabric panels that create privacy and define areas while maintaining an elegant aesthetic.",
+      "Blackout rolgordijnen die 100% licht tegenhouden voor volledige duisternis. Ideaal voor slaapkamers, thuisbioscopen en ruimtes waar complete lichtcontrole essentieel is.",
   },
   {
-    title: "Commercial Displays",
+    title: "Rolgordijnen voor Kantoor",
     description:
-      "Eye-catching banners and signage for retail, trade shows, and corporate events. Custom-sized displays that showcase your brand with professional quality materials.",
+      "Professionele rolgordijnen op maat voor zakelijke omgevingen. Brandvertragend materiaal verkrijgbaar, met opties voor geluidsdemping en optimale lichtregulatie voor werkplekken.",
   },
   {
-    title: "Event Decoration",
+    title: "Advies op Maat",
     description:
-      "Transform any venue with custom window treatments. From backdrop drapes to table runners, we create pieces that match your event's theme and dimensions perfectly.",
+      "Persoonlijk advies over het opmeten van uw ramen, keuze van materialen en kleuren. Wij helpen u bij het selecteren van het perfecte rolgordijn dat past bij uw interieur en functionele wensen.",
   },
   {
-    title: "Flags & Banners",
+    title: "Montageservice",
     description:
-      "Custom flags for any occasion, from small desk flags to large outdoor displays. Durable materials that withstand the elements while maintaining vibrant colors.",
+      "Professionele montage van uw rolgordijnen door ervaren monteurs. Wij zorgen voor een perfecte afwerking en uitleg over het gebruik en onderhoud van uw nieuwe rolgordijnen.",
   },
 ];
 
@@ -42,10 +42,10 @@ export function ServicesAccordion() {
     <section id="services" className="px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
         <p className="text-sm font-semibold uppercase tracking-wider text-muted">
-          What We Do
+          Wat wij doen
         </p>
         <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-          Services tailored to your needs
+          Diensten afgestemd op uw wensen
         </h2>
 
         <div className="mt-12 lg:grid lg:grid-cols-2 lg:gap-16">
@@ -96,7 +96,7 @@ export function ServicesAccordion() {
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-lifted">
               <Image
                 src="/hero-placeholder.svg"
-                alt="Our services showcase"
+                alt="Onze diensten"
                 fill
                 className="object-cover"
               />

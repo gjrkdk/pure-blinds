@@ -2,23 +2,23 @@ export function AboutSection() {
   const stats = [
     {
       number: "15+",
-      label: "Years Experience",
-      description: "Serving customers since 2009",
+      label: "Jaar ervaring",
+      description: "Sinds 2009 actief",
     },
     {
       number: "10K+",
-      label: "Happy Customers",
-      description: "Across Europe and beyond",
+      label: "Tevreden klanten",
+      description: "Door heel Nederland",
     },
     {
       number: "50+",
-      label: "Fabric Options",
-      description: "Premium materials to choose from",
+      label: "Stofopties",
+      description: "Premium materialen naar keuze",
     },
     {
-      number: "24h",
-      label: "Turnaround",
-      description: "Quick production on most orders",
+      number: "24u",
+      label: "Doorlooptijd",
+      description: "Snelle productie bij de meeste bestellingen",
     },
   ];
 
@@ -26,15 +26,15 @@ export function AboutSection() {
     <section id="about" className="px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
         <p className="text-sm font-semibold uppercase tracking-wider text-muted">
-          About Us
+          Over ons
         </p>
         <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-          Crafting custom roller blinds with precision and care
+          Rolgordijnen op maat met precisie en zorg
         </h2>
         <p className="mt-6 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-          We specialize in made-to-measure roller blinds for homes, businesses, and
-          offices. Every piece is crafted with attention to detail, using premium
-          materials and precise measurements to deliver exactly what you need.
+          Wij zijn gespecialiseerd in rolgordijnen op maat voor woningen, bedrijven
+          en kantoren. Elk stuk wordt met aandacht voor detail vervaardigd, met
+          premium materialen en precieze afmetingen om precies te leveren wat u nodig heeft.
         </p>
 
         {/* Stats Grid */}
