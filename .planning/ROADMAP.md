@@ -142,10 +142,11 @@ Plans:
   3. All removed category and product routes return 301 redirects to relevant destinations
   4. Navigation menu displays only rollerblinds category
   5. Product catalog JSON contains only rollerblinds products (2 products remaining)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 15-01: TBD
+- [ ] 15-01-PLAN.md — Redirects, data/route cleanup, TypeScript type narrowing, cart migration, products page, footer
+- [ ] 15-02-PLAN.md — Codebase-wide text audit replacing textile/venetian references with roller blinds
 
 #### Phase 16: Dutch Content & Metadata
 **Goal**: Native-quality Dutch content across all pages with unique meta tags for social sharing and SEO
@@ -216,7 +217,7 @@ Phases execute in numeric order: 15 → 16 → 17 → 18
 | 12. Category Navigation & Product Expansion | v1.2 | 2/2 | Complete | 2026-02-13 |
 | 13. Blog Foundation & Content Marketing | v1.2 | 1/1 | Complete | 2026-02-13 |
 | 14. Polish & URL Migration | v1.2 | 1/1 | Complete | 2026-02-13 |
-| 15. Category Cleanup & Redirects | v1.3 | 0/TBD | Not started | - |
+| 15. Category Cleanup & Redirects | v1.3 | 0/2 | Not started | - |
 | 16. Dutch Content & Metadata | v1.3 | 0/TBD | Not started | - |
 | 17. Structured Data | v1.3 | 0/TBD | Not started | - |
 | 18. Sitemap & Robots | v1.3 | 0/TBD | Not started | - |
