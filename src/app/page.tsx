@@ -5,6 +5,21 @@ import { HowItWorksSection } from "@/components/home/how-it-works-section";
 
 import { FaqSection } from "@/components/home/faq-section";
 import { ContactSection } from "@/components/home/contact-section";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Rolgordijnen op Maat Bestellen | Pure Blinds",
+  description:
+    "Rolgordijnen precies op uw maat. Kies uit transparante of verduisterende gordijnen, zie direct de prijs, en bestel online. Premium kwaliteit, snel geleverd.",
+  openGraph: {
+    locale: "nl_NL",
+    type: "website",
+    title: "Rolgordijnen op Maat Bestellen | Pure Blinds",
+    description:
+      "Rolgordijnen precies op uw maat. Kies uit transparante of verduisterende gordijnen, zie direct de prijs, en bestel online. Premium kwaliteit, snel geleverd.",
+    siteName: "Pure Blinds",
+  },
+};
 
 export default function Home() {
   return (
@@ -15,7 +30,7 @@ export default function Home() {
         <div className="absolute inset-0 md:hidden">
           <Image
             src="/png/transparant-rolgordijn-woonkamer.png"
-            alt="Custom roller blinds showcase"
+            alt="Rolgordijnen op maat in woonkamer"
             fill
             className="object-cover object-[10%_center]"
             priority
@@ -28,21 +43,21 @@ export default function Home() {
           {/* Text content */}
           <div className="flex flex-col justify-center py-32 md:py-0 md:w-[38%] md:shrink-0">
             <p className="text-sm font-semibold uppercase tracking-wider text-muted">
-              Premium Custom Roller Blinds
+              Premium rolgordijnen op maat
             </p>
             <h1 className="mt-4 text-4xl font-normal leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Roller blinds, crafted to your exact dimensions
+              Rolgordijnen, vervaardigd op uw exacte maten
             </h1>
             <p className="mt-6 max-w-md text-base text-muted sm:text-lg">
-              Premium custom-sized fabrics — priced instantly, produced with
-              care, and delivered to your door.
+              Premium rolgordijnen op maat — directe prijsberekening, met zorg
+              geproduceerd, en geleverd aan huis.
             </p>
             <div className="mt-10">
               <a
                 href="#contact"
                 className="inline-flex items-center gap-3 rounded-full bg-accent pl-7 pr-2 py-2 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
               >
-                Get in Touch
+                Neem contact op
                 <span className="flex items-center justify-center w-9 h-9 rounded-full bg-accent-foreground/10">
                   <svg
                     width="14"
@@ -67,7 +82,7 @@ export default function Home() {
             <div className="relative h-full w-full overflow-hidden rounded-2xl shadow-lifted">
               <Image
                 src="/png/transparant-rolgordijn-woonkamer.png"
-                alt="Custom roller blinds showcase"
+                alt="Rolgordijnen op maat in woonkamer"
                 fill
                 className="object-cover object-[10%_center]"
                 priority
