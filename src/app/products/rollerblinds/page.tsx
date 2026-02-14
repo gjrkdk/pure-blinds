@@ -1,83 +1,76 @@
 import Link from "next/link";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
 
-interface Category {
+interface Subcategory {
   id: string;
   name: string;
   description: string;
   href: string;
 }
 
-const categories: Category[] = [
+const subcategories: Subcategory[] = [
   {
-    id: "rollerblinds",
-    name: "Rollerblinds",
-    description: "Made-to-measure rollerblinds in transparent and blackout options",
-    href: "/products/rollerblinds",
+    id: "transparent",
+    name: "Transparent",
+    description: "Light-filtering blinds that let natural light through while providing privacy",
+    href: "/products/rollerblinds/transparent",
   },
   {
-    id: "venetian-blinds",
-    name: "Venetian Blinds",
-    description: "Classic venetian blinds in various sizes",
-    href: "/products/venetian-blinds",
-  },
-  {
-    id: "textiles",
-    name: "Textiles",
-    description: "Premium custom-dimension textiles",
-    href: "/products/textiles",
+    id: "blackout",
+    name: "Blackout",
+    description: "Block up to 99% of light for complete darkness and privacy",
+    href: "/products/rollerblinds/blackout",
   },
 ];
 
-export default function ProductsPage() {
+export default function RollerblindsPage() {
   return (
     <div className="px-6 py-12 sm:py-16">
       <div className="mx-auto max-w-5xl">
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: "Products", current: true },
+            { label: "Products", href: "/products" },
+            { label: "Rollerblinds", current: true },
           ]}
         />
 
         {/* Page header */}
         <div className="mb-12">
           <p className="text-sm font-semibold uppercase tracking-wider text-muted">
-            Browse Products
+            Rollerblinds
           </p>
           <h1 className="mt-2 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-            Our Products
+            Rollerblinds
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Explore our range of made-to-measure window treatments. Each
-            product is custom-crafted to your exact dimensions with instant
-            pricing.
+            Choose from our range of made-to-measure rollerblinds. Available in transparent and blackout options.
           </p>
         </div>
 
-        {/* Category grid */}
+        {/* Subcategory grid */}
         <div className="grid gap-8 md:grid-cols-2">
-          {categories.map((category) => (
+          {subcategories.map((subcategory) => (
             <Link
-              key={category.id}
-              href={category.href}
+              key={subcategory.id}
+              href={subcategory.href}
               className="group block transition-transform duration-200 hover:-translate-y-1"
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-surface">
-                {/* Category image placeholder */}
+                {/* Subcategory image placeholder */}
                 <div className="flex aspect-[4/3] items-center justify-center bg-white shadow-lifted">
                   <span className="text-sm font-medium text-muted">
-                    {category.name}
+                    {subcategory.name}
                   </span>
                 </div>
 
-                {/* Category info */}
+                {/* Subcategory info */}
                 <div className="p-6">
                   <h2 className="text-xl font-medium text-foreground">
-                    {category.name}
+                    {subcategory.name}
                   </h2>
                   <p className="mt-2 text-sm text-muted">
-                    {category.description}
+                    {subcategory.description}
                   </p>
                   <div className="mt-4 flex items-center gap-2 text-sm font-medium text-foreground">
                     View products

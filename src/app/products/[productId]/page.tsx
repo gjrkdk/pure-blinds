@@ -29,20 +29,31 @@ export default async function ProductPage({
     notFound();
   }
 
+  // Build breadcrumbs based on whether product has subcategory
+  const breadcrumbItems: Array<{ label: string; href?: string; current?: boolean }> = [
+    { label: "Home", href: "/" },
+    { label: "Products", href: "/products" },
+    {
+      label: formatCategoryName(product.category),
+      href: `/products/${product.category}`,
+    },
+  ];
+
+  // Add subcategory breadcrumb if product has one
+  if (product.subcategory) {
+    breadcrumbItems.push({
+      label: formatCategoryName(product.subcategory),
+      href: `/products/${product.category}/${product.subcategory}`,
+    });
+  }
+
+  // Add product name as current page
+  breadcrumbItems.push({ label: product.name, current: true });
+
   return (
     <div className="px-6 py-12 sm:py-16">
       <div className="mx-auto max-w-5xl">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Products", href: "/products" },
-            {
-              label: formatCategoryName(product.category),
-              href: `/products/${product.category}`,
-            },
-            { label: product.name, current: true },
-          ]}
-        />
+        <Breadcrumbs items={breadcrumbItems} />
 
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left column — product info + configurator */}
