@@ -95,7 +95,7 @@ export function ServicesAccordion() {
           <div className="mt-12 lg:mt-0 lg:sticky lg:top-28 lg:self-start">
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-lifted">
               <Image
-                src="/hero-placeholder.svg"
+                src="/png/rolgordijn-in-woonkamer-situatie.png"
                 alt="Onze diensten"
                 fill
                 className="object-cover"
