@@ -2,11 +2,11 @@
 
 ## What This Is
 
-A custom webshop for selling textiles (blinds, curtains, flags) with dynamic pricing based on customer-specified dimensions, a polished homepage, multi-product catalog with category navigation, and a Velite-powered blog. Prices are calculated using per-product matrix lookups (width x height) with 10cm increments. The pricing engine is architected to be reusable across the webshop, future Shopify app, and headless/API use cases.
+A Dutch-language custom roller blinds webshop (pureblinds.nl) with dynamic pricing based on customer-specified dimensions, SEO infrastructure for Google.nl ranking, and Shopify checkout integration. Prices are calculated using per-product matrix lookups (width x height) with 10cm increments. The pricing engine is architected to be reusable across the webshop, future Shopify app, and headless/API use cases.
 
 ## Core Value
 
-Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
+Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
 
 ## Requirements
 
@@ -43,22 +43,21 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 - ✓ Blog page with grid layout and individual post pages — v1.2
 - ✓ Confirmation page at /confirmation with redirect from /thank-you — v1.2
 - ✓ WCAG 2.5.8 responsive breadcrumbs across all pages — v1.2
+- ✓ Venetian blinds and textiles categories removed with 301 redirects — v1.3
+- ✓ Rollerblinds-only catalog with literal union types — v1.3
+- ✓ Dutch homepage content (hero, about, services, FAQ, contact) — v1.3
+- ✓ Dutch product pages with descriptions, features, and configurator labels — v1.3
+- ✓ Dutch category and subcategory introductory copy — v1.3
+- ✓ Dutch navigation, cart, confirmation, breadcrumbs — v1.3
+- ✓ Dutch blog content with "Welk rolgordijn voor welke kamer?" buying guide — v1.3
+- ✓ Unique Dutch meta titles and descriptions on every page — v1.3
+- ✓ Open Graph tags with nl_NL locale on all pages — v1.3
+- ✓ Schema.org JSON-LD (Organization, FAQPage, Product, BlogPosting, BreadcrumbList) — v1.3
+- ✓ Dynamic sitemap.xml from product catalog and blog posts — v1.3
+- ✓ robots.txt with crawling rules and sitemap reference — v1.3
+- ✓ Cart and confirmation pages marked noindex — v1.3
 
 ### Active
-
-#### Current Milestone: v1.3 Dutch Content & SEO
-
-**Goal:** Transform the placeholder webshop into a real Dutch-language rollerblind store that ranks in Google.nl
-
-**Target features:**
-- [ ] Dutch copy for homepage (hero, about, services, FAQ, contact sections)
-- [ ] Dutch copy for category page (Rolgordijnen)
-- [ ] Dutch copy for subcategory pages (Transparante rolgordijnen, Verduisterende rolgordijnen)
-- [ ] Dutch copy for product pages
-- [ ] Category cleanup: remove venetian blinds + textiles, keep rollerblinds only
-- [ ] 1-2 real Dutch blog posts (buying guides)
-- [ ] Real Dutch FAQ content
-- [ ] Technical SEO: meta tags, structured data (Product, FAQ, LocalBusiness), sitemap.xml, robots.txt, OG tags
 
 #### Carried from v1.0
 - [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
@@ -68,8 +67,8 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 ### Out of Scope
 
-- Advanced SEO (content strategy, keyword research, link building) — Foundation first, strategy later
-- GEO optimization — Deferred until SEO foundation is solid
+- Advanced SEO (content strategy, keyword research, link building) — Foundation shipped, strategy later
+- GEO optimization — SEO foundation solid, next logical step
 - Order status/tracking page — Beyond confirmation page, deferred
 - Shopify app version — Requires different architecture
 - Theme extensions — App-specific feature
@@ -80,31 +79,33 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 - Contact form backend — Frontend form only, backend submission handling deferred
 - Scroll-reveal animations — Ship structure first, add polish later
 - Image carousel — Deferred to future milestone
-- Real business copy — Placeholder content first, copywriting is separate effort
 - Product photography — Using placeholder images, real photos added later
-- Real blog content — Mock posts for structure, content strategy separate effort
-- Product sorting/filtering — Only 4 products, not needed yet
+- Product sorting/filtering — Only 2 products, not needed yet
 - Blog categories/tags — Wait for 10+ posts
 - Blog search — Wait for 20+ posts
 - User accounts/wishlist — Not needed for guest checkout flow
 
 ## Context
 
-**Product domain:** Custom textiles (curtains, flags) where every order has unique dimensions.
+**Product domain:** Custom roller blinds where every order has unique dimensions. Netherlands-focused market.
 
-**Current codebase state (v1.2 shipped):**
-- 3,449 LOC TypeScript/TSX
-- Tech stack: Next.js 15 App Router, TypeScript, Tailwind CSS v4, Zustand, Shopify Admin API, Velite (MDX)
+**Current codebase state (v1.3 shipped):**
+- 4,127 LOC TypeScript/TSX
+- Tech stack: Next.js 15 App Router, TypeScript, Tailwind CSS v4, Zustand, Shopify Admin API, Velite (MDX), schema-dts
 - 3 API routes: /api/pricing (POST with productId), /api/checkout (POST), /api/health (GET)
 - Pure pricing engine with zero Shopify dependencies, accepts any pricing matrix as parameter
-- 4 products across 3 categories (rollerblinds, venetian-blinds, textiles) with per-product pricing matrices
+- 2 products in rollerblinds-only catalog with per-product pricing matrices and literal union types
 - Cart persistence: localStorage with 7-day TTL, human-readable IDs (productId-widthxheight)
-- Blog: 3 sample MDX posts via Velite with type-safe content management
+- Blog: 4 Dutch MDX posts via Velite with type-safe content management
 - Navigation: Products overview, category pages, product detail, blog listing/detail, confirmation
 - Breadcrumbs: W3C ARIA compliant, WCAG 2.5.8 touch targets, responsive truncation
+- Full Dutch localization: all pages, navigation, cart, metadata in nl-NL
+- SEO infrastructure: Schema.org JSON-LD, dynamic sitemap.xml, robots.txt, unique meta tags per page
+- Open Graph with nl_NL locale on every page
+- 301 redirects for removed categories (venetian blinds, textiles)
 - Test coverage: 1 integration test (cart-clear-on-checkout)
-- Homepage: 7 sections (Hero, About, Services, Our Work, Testimonials, FAQ, Contact)
-- All content is placeholder — awaiting real business copy and photography
+- Homepage: 7 sections with Dutch content (Hero, About, Services, Our Work, Testimonials, FAQ, Contact)
+- All images are placeholders — awaiting real product photography
 
 **Pricing matrix structure:**
 - 20x20 grid = 400 price points per product
@@ -122,14 +123,13 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 - Limited test coverage (only 1 integration test)
 - All images are placeholders (SVG/divs)
 - Contact form has no backend (client-side validation only)
-- No SEO infrastructure (no meta tags, sitemap, structured data)
 - Velite uses relative imports (Turbopack doesn't support #content/* alias)
 
 **Multi-phase vision:**
 - ✅ Phase 1: MVP webshop (own store, fastest validation) — v1.0 shipped
 - ✅ Phase 2: Homepage design — v1.1 shipped
 - ✅ Phase 3: Product catalog & navigation — v1.2 shipped
-- Phase 4: SEO foundation, real content, animations
+- ✅ Phase 4: Dutch content & SEO foundation — v1.3 shipped
 - Phase 5: Shopify app v1 (theme-based stores, largest market)
 - Phase 6: Shopify app v2 (native pricing for Plus merchants)
 - Phase 7: Headless/API (technical merchants, full freedom)
@@ -168,6 +168,12 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 | Relative imports for .velite data | Turbopack doesn't recognize #content/* path alias | ✓ Good — works without config changes |
 | 308 permanent redirect for URL migration | Preserves query parameters, treated as 301 by Google | ✓ Good — clean migration from /thank-you to /confirmation |
 | WCAG 2.5.8 touch targets (py-3 = 44px) | Mobile accessibility compliance for breadcrumb links | ✓ Good — adequate tap targets without layout disruption |
+| 301 redirects for removed categories | Explicit SEO control, Google treats as permanent redirect | ✓ Good — prevents SEO damage from category removal |
+| Literal union types for Category/Subcategory | Compile-time enforcement of rollerblinds-only catalog | ✓ Good — impossible to add invalid categories without type errors |
+| Cart layout.tsx for metadata on client pages | Next.js pattern: metadata exports require server components | ✓ Good — cart page has noindex meta without losing client-side state |
+| schema-dts for typed JSON-LD | Type-safe Schema.org markup prevents invalid structured data | ✓ Good — IDE autocompletion, compile-time validation |
+| FAQ data extracted to shared file | Client accordion + server JSON-LD both need FAQ data | ✓ Good — single source of truth, no duplication |
+| Next.js MetadataRoute for sitemap/robots | Built-in conventions, no external packages needed | ✓ Good — type-safe, integrates with build pipeline |
 
 ---
-*Last updated: 2026-02-14 after v1.3 milestone started*
+*Last updated: 2026-02-14 after v1.3 milestone*

@@ -87,3 +87,33 @@
 
 ---
 
+
+## v1.3 Dutch Content & SEO (Shipped: 2026-02-14)
+
+**Delivered:** Transformed the placeholder webshop into a real Dutch-language rollerblind store with full SEO infrastructure ready to rank in Google.nl.
+
+**Phases completed:** 15-18 (9 plans, ~15 tasks)
+
+**Key accomplishments:**
+
+- Removed venetian blinds and textiles categories with 301 redirects, narrowing to rollerblinds-only catalog with literal union types for compile-time enforcement
+- Translated entire site to native Dutch — homepage (hero, about, services, FAQ, contact), product pages, navigation, cart, confirmation, and blog
+- Added Schema.org structured data (Organization, FAQPage, Product, BlogPosting, BreadcrumbList) using schema-dts for type-safe JSON-LD generation
+- Created dynamic sitemap.xml and robots.txt using Next.js MetadataRoute conventions, dynamically pulling from product catalog and blog posts
+- Configured unique Dutch meta titles (50-60 chars), descriptions (150-160 chars), and Open Graph tags with nl_NL locale on every page
+- Published Dutch blog content including "Welk rolgordijn voor welke kamer?" buying guide, replacing all English sample posts
+
+**Stats:**
+
+- 85 files modified (+6,377/-934 lines)
+- 4,127 lines of TypeScript/TSX (total project)
+- 4 phases, 9 plans, ~15 tasks
+- 1 day (Feb 14), ~1,180s (~19m 40s) execution time
+- Zero deviations across all phases
+
+**Git range:** `feat(15-01)` → `feat(18-01)`
+
+**What's next:** Production deployment, real product photography, contact form backend, scroll animations, content expansion.
+
+---
+
