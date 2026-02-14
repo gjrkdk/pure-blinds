@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
   const links = [
-    { label: "Rollerblinds", href: "/products/rollerblinds" },
+    { label: "Roller Blinds", href: "/products/roller-blinds" },
     { label: "Venetian Blinds", href: "/products/venetian-blinds" },
     { label: "Textiles", href: "/products/textiles" },
     { label: "Blog", href: "/blog" },

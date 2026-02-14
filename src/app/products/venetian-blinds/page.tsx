@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
-import { getProductsByCategory } from "@/lib/product/catalog";
+import { getProductsByCategory, getProductUrl } from "@/lib/product/catalog";
 
 export default function VenetianBlindsPage() {
   const category = "venetian-blinds";
@@ -37,7 +37,7 @@ export default function VenetianBlindsPage() {
           {products.map((product) => (
             <Link
               key={product.id}
-              href={`/products/${product.id}`}
+              href={getProductUrl(product)}
               className="group block transition-transform duration-200 hover:-translate-y-1"
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-surface">

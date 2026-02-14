@@ -10,10 +10,10 @@ interface Category {
 
 const categories: Category[] = [
   {
-    id: "rollerblinds",
-    name: "Rollerblinds",
-    description: "Made-to-measure rollerblinds in transparent and blackout options",
-    href: "/products/rollerblinds",
+    id: "roller-blinds",
+    name: "Roller Blinds",
+    description: "Made-to-measure roller blinds in transparent and blackout options",
+    href: "/products/roller-blinds",
   },
   {
     id: "venetian-blinds",

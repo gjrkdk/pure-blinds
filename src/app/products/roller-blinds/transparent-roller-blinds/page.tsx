@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
-import { getProductsBySubcategory } from "@/lib/product/catalog";
+import { getProductsBySubcategory, getProductUrl } from "@/lib/product/catalog";
 
-export default function BlackoutPage() {
-  const products = getProductsBySubcategory("rollerblinds", "blackout");
-  const displayName = "Blackout";
+export default function TransparentRollerBlindsPage() {
+  const products = getProductsBySubcategory("roller-blinds", "transparent-roller-blinds");
+  const displayName = "Transparent Roller Blinds";
 
   return (
     <div className="px-6 py-12 sm:py-16">
@@ -13,7 +13,7 @@ export default function BlackoutPage() {
           items={[
             { label: "Home", href: "/" },
             { label: "Products", href: "/products" },
-            { label: "Rollerblinds", href: "/products/rollerblinds" },
+            { label: "Roller Blinds", href: "/products/roller-blinds" },
             { label: displayName, current: true },
           ]}
         />
@@ -27,7 +27,7 @@ export default function BlackoutPage() {
             {displayName}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Browse our collection of blackout blinds. Block up to 99% of light for complete darkness and privacy.
+            Browse our collection of transparent roller blinds. Light-filtering options that let natural light through while providing privacy.
           </p>
         </div>
 
@@ -36,7 +36,7 @@ export default function BlackoutPage() {
           {products.map((product) => (
             <Link
               key={product.id}
-              href={`/products/${product.id}`}
+              href={getProductUrl(product)}
               className="group block transition-transform duration-200 hover:-translate-y-1"
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-surface">

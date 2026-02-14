@@ -10,20 +10,20 @@ interface Subcategory {
 
 const subcategories: Subcategory[] = [
   {
-    id: "transparent",
-    name: "Transparent",
+    id: "transparent-roller-blinds",
+    name: "Transparent Roller Blinds",
     description: "Light-filtering blinds that let natural light through while providing privacy",
-    href: "/products/rollerblinds/transparent",
+    href: "/products/roller-blinds/transparent-roller-blinds",
   },
   {
-    id: "blackout",
-    name: "Blackout",
+    id: "blackout-roller-blinds",
+    name: "Blackout Roller Blinds",
     description: "Block up to 99% of light for complete darkness and privacy",
-    href: "/products/rollerblinds/blackout",
+    href: "/products/roller-blinds/blackout-roller-blinds",
   },
 ];
 
-export default function RollerblindsPage() {
+export default function RollerBlindsPage() {
   return (
     <div className="px-6 py-12 sm:py-16">
       <div className="mx-auto max-w-5xl">
@@ -31,20 +31,20 @@ export default function RollerblindsPage() {
           items={[
             { label: "Home", href: "/" },
             { label: "Products", href: "/products" },
-            { label: "Rollerblinds", current: true },
+            { label: "Roller Blinds", current: true },
           ]}
         />
 
         {/* Page header */}
         <div className="mb-12">
           <p className="text-sm font-semibold uppercase tracking-wider text-muted">
-            Rollerblinds
+            Roller Blinds
           </p>
           <h1 className="mt-2 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-            Rollerblinds
+            Roller Blinds
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted max-w-2xl">
-            Choose from our range of made-to-measure rollerblinds. Available in transparent and blackout options.
+            Choose from our range of made-to-measure roller blinds. Available in transparent and blackout options.
           </p>
         </div>
 
