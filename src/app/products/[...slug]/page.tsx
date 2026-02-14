@@ -3,6 +3,12 @@ import { Metadata } from "next";
 import DimensionConfigurator from "@/components/dimension-configurator";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
 import { getProductBySlug, getAllProducts, getProductUrl } from "@/lib/product/catalog";
+import { JsonLd } from "@/lib/schema/jsonld";
+import { buildProductSchema } from "@/lib/schema/product";
+import { buildBreadcrumbSchema } from "@/lib/schema/breadcrumb";
+import { loadPricingMatrix } from "@/lib/pricing/loader";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://pureblinds.nl';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -62,6 +68,9 @@ export default async function ProductPage({
     notFound();
   }
 
+  // Load pricing matrix for schema
+  const pricingMatrix = await loadPricingMatrix(product.pricingMatrixPath);
+
   // Build breadcrumbs based on whether product has subcategory
   const breadcrumbItems: Array<{ label: string; href?: string; current?: boolean }> = [
     { label: "Home", href: "/" },
@@ -83,9 +92,15 @@ export default async function ProductPage({
   // Add product name as current page
   breadcrumbItems.push({ label: product.name, current: true });
 
+  // Build schemas for SEO
+  const productSchema = buildProductSchema(product, pricingMatrix, BASE_URL);
+  const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems, BASE_URL);
+
   return (
     <div className="px-6 py-12 sm:py-16">
       <div className="mx-auto max-w-5xl">
+        <JsonLd data={productSchema} />
+        <JsonLd data={breadcrumbSchema} />
         <Breadcrumbs items={breadcrumbItems} />
 
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
