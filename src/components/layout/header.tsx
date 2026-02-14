@@ -36,8 +36,9 @@ export function Header() {
         >
           <Link
             href="/"
-            className="text-base font-bold tracking-tight text-foreground hover:text-muted transition-colors"
+            className="flex items-center gap-2 text-base font-bold tracking-tight text-foreground hover:text-muted transition-colors"
           >
+            <img src="/logo.svg" alt="Pure Blinds" className="h-6 w-6" />
             Pure Blinds
           </Link>
 

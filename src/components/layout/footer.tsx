@@ -15,7 +15,8 @@ export function Footer() {
       <div className="mx-auto max-w-5xl px-6 py-16">
         <div className="flex flex-col gap-10 sm:flex-row sm:justify-between sm:items-start">
           {/* Brand */}
-          <p className="text-2xl font-bold tracking-tight text-accent-foreground">
+          <p className="flex items-center gap-3 text-2xl font-bold tracking-tight text-accent-foreground">
+            <img src="/logo-inverted.svg" alt="Pure Blinds" className="h-8 w-8" />
             Pure Blinds
           </p>
 
