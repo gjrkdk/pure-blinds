@@ -3,8 +3,6 @@ import Link from "next/link";
 export function Footer() {
   const links = [
     { label: "Roller Blinds", href: "/products/roller-blinds" },
-    { label: "Venetian Blinds", href: "/products/venetian-blinds" },
-    { label: "Textiles", href: "/products/textiles" },
     { label: "Blog", href: "/blog" },
     { label: "About us", href: "#about" },
     { label: "Contact", href: "#contact" },

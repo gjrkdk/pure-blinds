@@ -3,7 +3,7 @@
  */
 
 import catalogData from '../../../data/products.json';
-import type { ProductCatalog, Product } from './types';
+import type { ProductCatalog, Product, Category, Subcategory } from './types';
 
 const catalog = catalogData as ProductCatalog;
 
@@ -15,11 +15,11 @@ export function getAllProducts(): Product[] {
   return catalog.products;
 }
 
-export function getProductsByCategory(category: string): Product[] {
+export function getProductsByCategory(category: Category): Product[] {
   return catalog.products.filter((p) => p.category === category);
 }
 
-export function getProductsBySubcategory(category: string, subcategory: string): Product[] {
+export function getProductsBySubcategory(category: Category, subcategory: Subcategory): Product[] {
   return catalog.products.filter((p) => p.category === category && p.subcategory === subcategory);
 }
 

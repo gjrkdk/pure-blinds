@@ -6,6 +6,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { CartItem, AddCartItemInput } from './types';
 import { generateCartItemId, generateOptionsSignature } from './utils';
+import { getProduct } from '@/lib/product/catalog';
 
 /**
  * Cart state shape
@@ -145,7 +146,7 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: 'cart-storage',
-      version: 3,
+      version: 4,
       storage: createJSONStorage(() => storageWithTTL),
       // Only persist the items array, not derived values
       partialize: (state) => ({ items: state.items }),
@@ -157,6 +158,24 @@ export const useCartStore = create<CartState>()(
           console.warn('Cart format changed (v3: new product IDs) - clearing old items');
           return { items: [] };
         }
+
+        // Version 3 -> 4: Filter out items for deleted products (venetian-blinds, textiles)
+        if (version < 4) {
+          const state = persistedState as { items: CartItem[] };
+          const validItems = state.items.filter((item) => {
+            const product = getProduct(item.productId);
+            return product !== undefined;
+          });
+
+          if (validItems.length !== state.items.length) {
+            console.warn(
+              `Cart migration v4: Removed ${state.items.length - validItems.length} items for deleted products`
+            );
+          }
+
+          return { items: validItems };
+        }
+
         return persistedState as { items: CartItem[] };
       },
     }
