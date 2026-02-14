@@ -1,7 +1,21 @@
 import { posts } from '../../../.velite'
 import { format } from 'date-fns'
+import { nl } from 'date-fns/locale'
 import Link from 'next/link'
 import Breadcrumbs from '@/components/layout/breadcrumbs'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Blog over Rolgordijnen | Pure Blinds',
+  description: 'Tips, advies en inspiratie over rolgordijnen op maat. Lees onze gidsen over het kiezen, opmeten en onderhouden van rolgordijnen.',
+  openGraph: {
+    locale: 'nl_NL',
+    type: 'website',
+    title: 'Blog over Rolgordijnen | Pure Blinds',
+    description: 'Tips, advies en inspiratie over rolgordijnen op maat.',
+    siteName: 'Pure Blinds',
+  },
+}
 
 export default function BlogPage() {
   const sortedPosts = posts.sort((a, b) =>
@@ -23,7 +37,7 @@ export default function BlogPage() {
             Blog
           </p>
           <h1 className="mt-3 text-3xl font-light tracking-tight sm:text-4xl">
-            Guides & Tips
+            Gidsen en tips
           </h1>
         </div>
 
@@ -36,7 +50,7 @@ export default function BlogPage() {
             >
               <article className="flex flex-col h-full border border-neutral-200 rounded-lg p-6 hover:border-neutral-300 transition-colors">
                 <time className="text-sm text-muted">
-                  {format(new Date(post.date), 'MMMM d, yyyy')}
+                  {format(new Date(post.date), 'd MMMM yyyy', { locale: nl })}
                 </time>
                 <h2 className="mt-2 text-xl font-semibold group-hover:text-neutral-600 transition-colors">
                   {post.title}
