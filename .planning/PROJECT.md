@@ -46,6 +46,20 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 
 ### Active
 
+#### Current Milestone: v1.3 Dutch Content & SEO
+
+**Goal:** Transform the placeholder webshop into a real Dutch-language rollerblind store that ranks in Google.nl
+
+**Target features:**
+- [ ] Dutch copy for homepage (hero, about, services, FAQ, contact sections)
+- [ ] Dutch copy for category page (Rolgordijnen)
+- [ ] Dutch copy for subcategory pages (Transparante rolgordijnen, Verduisterende rolgordijnen)
+- [ ] Dutch copy for product pages
+- [ ] Category cleanup: remove venetian blinds + textiles, keep rollerblinds only
+- [ ] 1-2 real Dutch blog posts (buying guides)
+- [ ] Real Dutch FAQ content
+- [ ] Technical SEO: meta tags, structured data (Product, FAQ, LocalBusiness), sitemap.xml, robots.txt, OG tags
+
 #### Carried from v1.0
 - [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
 - [ ] Create test products in Shopify store (deferred from Phase 1)
@@ -156,4 +170,4 @@ Customers can order custom-dimension textiles with accurate matrix-based pricing
 | WCAG 2.5.8 touch targets (py-3 = 44px) | Mobile accessibility compliance for breadcrumb links | ✓ Good — adequate tap targets without layout disruption |
 
 ---
-*Last updated: 2026-02-13 after v1.2 milestone completion*
+*Last updated: 2026-02-14 after v1.3 milestone started*

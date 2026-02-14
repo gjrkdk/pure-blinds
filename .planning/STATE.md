@@ -5,13 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-13)
 
 **Core value:** Customers can order custom-dimension textiles with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** Planning next milestone
+**Current focus:** v1.3 Dutch Content & SEO
 
 ## Current Position
 
-Milestone: v1.2 complete (shipped 2026-02-13)
-Status: Between milestones
-Last activity: 2026-02-14 - Completed quick task 7: Reduce spacing in navigation header
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-14 — Milestone v1.3 started
 
 Progress: 3 milestones shipped (v1.0, v1.1, v1.2)
 
@@ -62,9 +63,9 @@ None active.
 ## Session Continuity
 
 Last session: 2026-02-14
-Stopped at: Completed quick task 7 (reduce header spacing)
+Stopped at: Milestone v1.3 initialization
 Resume file: None
-Next step: `/gsd:new-milestone` to start next milestone
+Next step: Research → Requirements → Roadmap
 
 ---
-*Last updated: 2026-02-14 after quick task 7 completion*
+*Last updated: 2026-02-14 after milestone v1.3 started*
