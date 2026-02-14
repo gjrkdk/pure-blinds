@@ -4,34 +4,54 @@ import { useState } from "react";
 
 const FAQ_ITEMS = [
   {
-    question: "What dimensions can I order?",
+    question: "Welke afmetingen kan ik bestellen?",
     answer:
-      "We can create custom roller blinds to virtually any dimension you need. Simply enter your desired width and height on the product page, and our system will calculate the exact price for your specifications.",
+      "Wij kunnen rolgordijnen op maat maken in vrijwel elke gewenste afmeting. Voer simpelweg uw gewenste breedte en hoogte in op de productpagina, en ons systeem berekent direct de exacte prijs voor uw specificaties.",
   },
   {
-    question: "How does pricing work?",
+    question: "Hoe werkt de prijsberekening?",
     answer:
-      "Our pricing is calculated based on your exact dimensions using a transparent matrix-based system. The price updates instantly as you adjust your measurements, so there are no surprises — what you see is what you pay.",
+      "Onze prijzen worden berekend op basis van uw exacte afmetingen met een transparant matrix-gebaseerd systeem. De prijs wordt direct bijgewerkt wanneer u uw afmetingen aanpast, dus geen verrassingen — wat u ziet is wat u betaalt.",
   },
   {
-    question: "What fabrics are available?",
+    question: "Wat is het verschil tussen transparant en verduisterend?",
     answer:
-      "We offer a curated selection of premium fabrics suitable for transparent and blackout roller blinds. Each product page shows the available fabric options with details about weight, opacity, and ideal uses.",
+      "Transparante rolgordijnen laten natuurlijk licht door terwijl ze privacy bieden, ideaal voor woonruimtes. Verduisterende (blackout) rolgordijnen blokkeren 100% van het licht en zijn perfect voor slaapkamers of thuisbioscopen waar complete duisternis gewenst is.",
   },
   {
-    question: "How long does delivery take?",
+    question: "Hoe meet ik mijn raam op?",
     answer:
-      "Most custom orders are produced within 5-7 business days and shipped via standard carrier. You'll receive tracking information once your order ships. Express production options are available for time-sensitive projects.",
+      "Meet de breedte en hoogte van uw raam in millimeters. Wij adviseren om op meerdere punten te meten en de kleinste maat aan te houden. Onze productpaginas bevatten gedetailleerde meetinstructies met illustraties om u te helpen.",
   },
   {
-    question: "Can I return custom orders?",
+    question: "Wat is de levertijd?",
     answer:
-      "Because every order is made to your exact specifications, we cannot accept returns on custom-sized roller blinds. However, if there's a manufacturing defect or error on our part, we'll gladly replace your order at no charge.",
+      "De meeste bestellingen op maat worden binnen 5-7 werkdagen geproduceerd en verzonden via een standaard vervoerder. U ontvangt trackinginformatie zodra uw bestelling is verzonden. Voor urgente projecten zijn snellere productie-opties beschikbaar.",
   },
   {
-    question: "Do you offer bulk discounts?",
+    question: "Kan ik retourneren?",
     answer:
-      "Yes, we provide volume pricing for orders of 10 or more units. Contact us with your project details for a custom quote. We work with interior designers, event planners, and businesses on large-scale installations.",
+      "Omdat elke bestelling op uw exacte specificaties wordt gemaakt, kunnen wij geen retourzendingen accepteren bij rolgordijnen op maat. Als er echter een productiefout of fout van onze kant is, vervangen wij uw bestelling kosteloos.",
+  },
+  {
+    question: "Hoe monteer ik een rolgordijn?",
+    answer:
+      "Elk rolgordijn wordt geleverd met montage-instructies en alle benodigde bevestigingsmaterialen. U heeft alleen een boormachine en niveau nodig. De meeste klanten kunnen zelf monteren binnen 15-20 minuten. Wij bieden ook een professionele montageservice aan.",
+  },
+  {
+    question: "Welke materialen gebruiken jullie?",
+    answer:
+      "Wij gebruiken uitsluitend premium stoffen die speciaal zijn ontwikkeld voor rolgordijnen. Ons assortiment omvat polyester-, PVC- en natuurlijke stoffen, elk geselecteerd op duurzaamheid, kleurechtheid en onderhoudsgemak.",
+  },
+  {
+    question: "Bieden jullie korting bij grotere bestellingen?",
+    answer:
+      "Ja, wij bieden volumekortingen voor bestellingen van 10 stuks of meer. Neem contact met ons op met uw projectdetails voor een offerte op maat. Wij werken regelmatig samen met interieurontwerpers en bedrijven voor grootschalige installaties.",
+  },
+  {
+    question: "Hoe onderhoud ik mijn rolgordijn?",
+    answer:
+      "De meeste rolgordijnen kunnen eenvoudig worden gereinigd met een vochtige doek of stofzuiger met zachte borstel. Voor hardnekkige vlekken raden wij aan om voorzichtig te deppen met een mild sopje. Vermijd agressieve schoonmaakmiddelen die de stof kunnen beschadigen.",
   },
 ];
 
@@ -49,15 +69,15 @@ export function FaqSection() {
           {/* Left column: Intro */}
           <div>
             <p className="text-sm font-semibold uppercase tracking-wider text-muted">
-              Frequently Asked Questions
+              Veelgestelde vragen
             </p>
             <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground">
-              Everything you need to know
+              Alles wat u moet weten
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted">
-              Have questions about ordering custom roller blinds? Find answers to the
-              most common questions about dimensions, pricing, fabrics, and
-              delivery.
+              Heeft u vragen over het bestellen van rolgordijnen op maat? Vind
+              antwoorden op de meest gestelde vragen over afmetingen, prijzen,
+              materialen en levering.
             </p>
           </div>
 

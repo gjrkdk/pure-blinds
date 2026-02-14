@@ -18,17 +18,17 @@ export function ContactSection() {
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
+      newErrors.name = "Naam is verplicht";
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = "E-mail is verplicht";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
+      newErrors.email = "Voer een geldig e-mailadres in";
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = "Message is required";
+      newErrors.message = "Bericht is verplicht";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -64,18 +64,17 @@ export function ContactSection() {
               Contact
             </span>
             <h2 className="mt-5 text-3xl font-light tracking-tight text-accent-foreground sm:text-4xl">
-              Get in touch
+              Neem contact op
             </h2>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-neutral-400">
-              For any inquiries or to explore your vision further, we invite you
-              to contact our professional team using the details provided below.
+              Voor vragen of om uw wensen te bespreken, nodigen wij u uit om contact op te nemen met ons professionele team via onderstaande gegevens.
             </p>
 
             {/* Contact details */}
             <div className="mt-10 space-y-0">
               <div className="flex items-baseline justify-between border-b border-neutral-800 py-4">
                 <span className="text-sm font-semibold text-accent-foreground">
-                  Office
+                  Kantoor
                 </span>
                 <span className="text-sm text-neutral-400">
                   Keizersgracht 123, 1015 CJ Amsterdam
@@ -83,7 +82,7 @@ export function ContactSection() {
               </div>
               <div className="flex items-baseline justify-between border-b border-neutral-800 py-4">
                 <span className="text-sm font-semibold text-accent-foreground">
-                  Email
+                  E-mail
                 </span>
                 <a
                   href="mailto:info@pureblinds.nl"
@@ -94,7 +93,7 @@ export function ContactSection() {
               </div>
               <div className="flex items-baseline justify-between border-b border-neutral-800 py-4">
                 <span className="text-sm font-semibold text-accent-foreground">
-                  Telephone
+                  Telefoon
                 </span>
                 <a
                   href="tel:+31201234567"
@@ -108,7 +107,7 @@ export function ContactSection() {
             {/* Social links */}
             <div className="mt-10">
               <p className="text-sm font-semibold text-accent-foreground">
-                Follow us
+                Volg ons
               </p>
               <div className="mt-3 flex gap-4">
                 <a
@@ -206,8 +205,7 @@ export function ContactSection() {
               {submitted ? (
                 <div className="py-12 text-center">
                   <p className="text-sm leading-relaxed text-foreground">
-                    Thank you for your message. We&rsquo;ll get back to you
-                    soon.
+                    Bedankt voor uw bericht. We nemen zo snel mogelijk contact met u op.
                   </p>
                 </div>
               ) : (
@@ -217,13 +215,13 @@ export function ContactSection() {
                       htmlFor="name"
                       className="block text-sm font-medium text-foreground mb-1.5"
                     >
-                      Name<span className="text-red-500">*</span>
+                      Naam<span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       id="name"
                       name="name"
-                      placeholder="John Smith"
+                      placeholder="Jan Jansen"
                       value={formData.name}
                       onChange={handleChange}
                       className="w-full border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors rounded-lg"
@@ -238,13 +236,13 @@ export function ContactSection() {
                       htmlFor="email"
                       className="block text-sm font-medium text-foreground mb-1.5"
                     >
-                      Email<span className="text-red-500">*</span>
+                      E-mail<span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
                       id="email"
                       name="email"
-                      placeholder="johnsmith@gmail.com"
+                      placeholder="janjansen@email.nl"
                       value={formData.email}
                       onChange={handleChange}
                       className="w-full border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors rounded-lg"
@@ -261,7 +259,7 @@ export function ContactSection() {
                       htmlFor="phone"
                       className="block text-sm font-medium text-foreground mb-1.5"
                     >
-                      Phone Number
+                      Telefoonnummer
                     </label>
                     <input
                       type="tel"
@@ -279,13 +277,13 @@ export function ContactSection() {
                       htmlFor="message"
                       className="block text-sm font-medium text-foreground mb-1.5"
                     >
-                      Message<span className="text-red-500">*</span>
+                      Bericht<span className="text-red-500">*</span>
                     </label>
                     <textarea
                       id="message"
                       name="message"
                       rows={5}
-                      placeholder="Hello, I'd like to enquire about..."
+                      placeholder="Hallo, ik wil graag meer weten over..."
                       value={formData.message}
                       onChange={handleChange}
                       className="w-full border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors resize-none rounded-lg"
@@ -301,7 +299,7 @@ export function ContactSection() {
                     type="submit"
                     className="w-full bg-neutral-800 text-accent-foreground py-3 text-sm font-medium tracking-wide transition-colors hover:bg-neutral-700 rounded-lg"
                   >
-                    Send message
+                    Verstuur bericht
                   </button>
                 </form>
               )}
