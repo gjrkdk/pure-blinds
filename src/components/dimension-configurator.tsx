@@ -1,77 +1,83 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useDebounce } from 'use-debounce'
-import { useCartStore } from '@/lib/cart/store'
-import { formatPrice } from '@/lib/pricing/calculator'
+import { useState, useEffect } from "react";
+import { useDebounce } from "use-debounce";
+import { useCartStore } from "@/lib/cart/store";
+import { formatPrice } from "@/lib/pricing/calculator";
 
 interface DimensionConfiguratorProps {
-  productId: string
-  productName: string
+  productId: string;
+  productName: string;
 }
 
 interface FieldErrors {
-  width?: string
-  height?: string
+  width?: string;
+  height?: string;
 }
 
-export default function DimensionConfigurator({ productId, productName }: DimensionConfiguratorProps) {
+export default function DimensionConfigurator({
+  productId,
+  productName,
+}: DimensionConfiguratorProps) {
   // State management
-  const [width, setWidth] = useState('')
-  const [height, setHeight] = useState('')
-  const [debouncedWidth] = useDebounce(width, 400)
-  const [debouncedHeight] = useDebounce(height, 400)
-  const [price, setPrice] = useState<number | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
-  const [addedFeedback, setAddedFeedback] = useState(false)
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [debouncedWidth] = useDebounce(width, 400);
+  const [debouncedHeight] = useDebounce(height, 400);
+  const [price, setPrice] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [addedFeedback, setAddedFeedback] = useState(false);
 
   // Cart store
-  const addItem = useCartStore((state) => state.addItem)
+  const addItem = useCartStore((state) => state.addItem);
 
   // Client-side validation (immediate, no debounce)
-  const validateField = (name: 'width' | 'height', value: string): string | undefined => {
-    if (value === '') return undefined
+  const validateField = (
+    name: "width" | "height",
+    value: string,
+  ): string | undefined => {
+    if (value === "") return undefined;
 
-    const numValue = parseInt(value, 10)
-    if (isNaN(numValue)) return 'Voer een geheel getal in'
-    if (numValue < 10) return 'Minimaal 10 cm'
-    if (numValue > 200) return 'Maximaal 200 cm'
+    const numValue = parseInt(value, 10);
+    if (isNaN(numValue)) return "Voer een geheel getal in";
+    if (numValue < 10) return "Minimaal 10 cm";
+    if (numValue > 200) return "Maximaal 200 cm";
 
-    return undefined
-  }
+    return undefined;
+  };
 
   const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setWidth(value)
+    const value = e.target.value;
+    setWidth(value);
 
-    const validationError = validateField('width', value)
-    setFieldErrors(prev => ({
+    const validationError = validateField("width", value);
+    setFieldErrors((prev) => ({
       ...prev,
-      width: validationError
-    }))
-  }
+      width: validationError,
+    }));
+  };
 
   const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setHeight(value)
+    const value = e.target.value;
+    setHeight(value);
 
-    const validationError = validateField('height', value)
-    setFieldErrors(prev => ({
+    const validationError = validateField("height", value);
+    setFieldErrors((prev) => ({
       ...prev,
-      height: validationError
-    }))
-  }
+      height: validationError,
+    }));
+  };
 
   // Debounced API call
   useEffect(() => {
-    let ignore = false
+    let ignore = false;
 
     const fetchPrice = async () => {
       // Only fetch if both values are valid
-      const widthNum = parseInt(debouncedWidth, 10)
-      const heightNum = parseInt(debouncedHeight, 10)
+      const widthNum = parseInt(debouncedWidth, 10);
+      const heightNum = parseInt(debouncedHeight, 10);
 
       if (
         isNaN(widthNum) ||
@@ -83,78 +89,81 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
       ) {
         // Invalid values - clear price but don't show error
         if (!ignore) {
-          setPrice(null)
-          setError(null)
+          setPrice(null);
+          setError(null);
         }
-        return
+        return;
       }
 
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
       try {
-        const response = await fetch('/api/pricing', {
-          method: 'POST',
+        const response = await fetch("/api/pricing", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             productId,
             width: widthNum,
-            height: heightNum
-          })
-        })
+            height: heightNum,
+          }),
+        });
 
-        const data = await response.json()
+        const data = await response.json();
 
         if (!ignore) {
           if (response.ok) {
-            setPrice(data.priceInCents)
-            setError(null)
-            setFieldErrors({})
+            setPrice(data.priceInCents);
+            setError(null);
+            setFieldErrors({});
           } else if (response.status === 400) {
             // Parse Zod field errors from details array
             if (data.details && Array.isArray(data.details)) {
-              const errors: FieldErrors = {}
-              data.details.forEach((detail: { path: string[]; message: string }) => {
-                const field = detail.path[0] as 'width' | 'height'
-                if (field === 'width' || field === 'height') {
-                  errors[field] = detail.message
-                }
-              })
-              setFieldErrors(errors)
+              const errors: FieldErrors = {};
+              data.details.forEach(
+                (detail: { path: string[]; message: string }) => {
+                  const field = detail.path[0] as "width" | "height";
+                  if (field === "width" || field === "height") {
+                    errors[field] = detail.message;
+                  }
+                },
+              );
+              setFieldErrors(errors);
             }
-            setPrice(null)
+            setPrice(null);
           } else if (response.status === 404) {
-            setError('Productprijs niet beschikbaar')
-            setPrice(null)
+            setError("Productprijs niet beschikbaar");
+            setPrice(null);
           } else {
-            setError('Kan prijs niet berekenen')
-            setPrice(null)
+            setError("Kan prijs niet berekenen");
+            setPrice(null);
           }
         }
       } catch (err) {
         if (!ignore) {
-          setError('Kan prijs niet berekenen')
-          setPrice(null)
+          setError("Kan prijs niet berekenen");
+          setPrice(null);
         }
       } finally {
         if (!ignore) {
-          setLoading(false)
+          setLoading(false);
         }
       }
-    }
+    };
 
-    fetchPrice()
+    fetchPrice();
 
     return () => {
-      ignore = true
-    }
-  }, [debouncedWidth, debouncedHeight])
+      ignore = true;
+    };
+  }, [debouncedWidth, debouncedHeight]);
 
   // Handle add to cart
   const handleAddToCart = () => {
-    if (price === null || loading || Object.keys(fieldErrors).length > 0) return
+    if (price === null || loading || Object.keys(fieldErrors).length > 0)
+      return;
 
     addItem({
       productId,
@@ -164,17 +173,21 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
         height: parseInt(height, 10),
       },
       priceInCents: price,
-    })
+    });
 
     // Show feedback for 2 seconds
-    setAddedFeedback(true)
+    setAddedFeedback(true);
     setTimeout(() => {
-      setAddedFeedback(false)
-    }, 2000)
-  }
+      setAddedFeedback(false);
+    }, 2000);
+  };
 
   // Determine if Add to Cart button should be enabled
-  const canAddToCart = price !== null && !loading && Object.keys(fieldErrors).length === 0 && !addedFeedback
+  const canAddToCart =
+    price !== null &&
+    !loading &&
+    Object.keys(fieldErrors).length === 0 &&
+    !addedFeedback;
 
   return (
     <div className="space-y-6">
@@ -182,7 +195,10 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Width input */}
         <div>
-          <label htmlFor="width" className="block text-sm font-medium text-foreground mb-2">
+          <label
+            htmlFor="width"
+            className="block text-sm font-medium text-foreground mb-2 rounded-lg"
+          >
             Breedte (cm)
           </label>
           <input
@@ -193,9 +209,9 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
             value={width}
             onChange={handleWidthChange}
             aria-invalid={!!fieldErrors.width}
-            aria-describedby={fieldErrors.width ? 'width-error' : undefined}
-            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors ${
-              fieldErrors.width ? 'border-red-500' : 'border-border'
+            aria-describedby={fieldErrors.width ? "width-error" : undefined}
+            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors border-border rounded-lg ${
+              fieldErrors.width ? "border-red-500" : "border-border"
             }`}
             placeholder="bijv. 100"
           />
@@ -208,7 +224,10 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
 
         {/* Height input */}
         <div>
-          <label htmlFor="height" className="block text-sm font-medium text-foreground mb-2">
+          <label
+            htmlFor="height"
+            className="block text-sm font-medium text-foreground mb-2"
+          >
             Hoogte (cm)
           </label>
           <input
@@ -219,9 +238,9 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
             value={height}
             onChange={handleHeightChange}
             aria-invalid={!!fieldErrors.height}
-            aria-describedby={fieldErrors.height ? 'height-error' : undefined}
-            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors ${
-              fieldErrors.height ? 'border-red-500' : 'border-border'
+            aria-describedby={fieldErrors.height ? "height-error" : undefined}
+            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors border-border rounded-lg ${
+              fieldErrors.height ? "border-red-500" : "border-border"
             }`}
             placeholder="bijv. 150"
           />
@@ -242,10 +261,14 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
         ) : price !== null ? (
           <div>
             <p className="text-sm text-muted mb-1">Prijs</p>
-            <p className="text-3xl font-semibold text-foreground">{formatPrice(price)}</p>
+            <p className="text-3xl font-semibold text-foreground">
+              {formatPrice(price)}
+            </p>
           </div>
         ) : (
-          <p className="text-sm text-muted">Voer afmetingen in om de prijs te zien</p>
+          <p className="text-sm text-muted">
+            Voer afmetingen in om de prijs te zien
+          </p>
         )}
       </div>
 
@@ -254,11 +277,11 @@ export default function DimensionConfigurator({ productId, productName }: Dimens
         <button
           onClick={handleAddToCart}
           disabled={!canAddToCart}
-          className="w-full bg-accent text-accent-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full bg-accent text-accent-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed border-border rounded-lg"
         >
-          {addedFeedback ? 'Toegevoegd!' : 'Toevoegen aan winkelwagen'}
+          {addedFeedback ? "Toegevoegd!" : "Toevoegen aan winkelwagen"}
         </button>
       </div>
     </div>
-  )
+  );
 }
