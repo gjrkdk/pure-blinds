@@ -2,16 +2,25 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Image from "next/image";
 import DimensionConfigurator from "@/components/dimension-configurator";
+import ProductImageGallery from "@/components/product/product-image-gallery";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
-import { getProductBySlug, getAllProducts, getProductUrl } from "@/lib/product/catalog";
+import {
+  getProductBySlug,
+  getAllProducts,
+  getProductUrl,
+} from "@/lib/product/catalog";
 import { JsonLd } from "@/lib/schema/jsonld";
 import { buildProductSchema } from "@/lib/schema/product";
 import { buildBreadcrumbSchema } from "@/lib/schema/breadcrumb";
 import { loadPricingMatrix } from "@/lib/pricing/loader";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://pureblinds.nl';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pureblinds.nl";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const productSlug = slug[slug.length - 1];
   const product = getProductBySlug(productSlug);
@@ -24,11 +33,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${product.name} op Maat | Pure Blinds`,
     description: product.description,
     openGraph: {
-      locale: 'nl_NL',
-      type: 'website',
+      locale: "nl_NL",
+      type: "website",
       title: product.name,
       description: product.description,
-      siteName: 'Pure Blinds',
+      siteName: "Pure Blinds",
     },
   };
 }
@@ -40,7 +49,7 @@ export function generateStaticParams() {
     // e.g., /producten/rolgordijnen/transparante-rolgordijnen/wit-rolgordijn
     // becomes ['rolgordijnen', 'transparante-rolgordijnen', 'wit-rolgordijn']
     const url = getProductUrl(product);
-    const slugArray = url.split('/').filter(s => s && s !== 'producten');
+    const slugArray = url.split("/").filter((s) => s && s !== "producten");
     return {
       slug: slugArray,
     };
@@ -50,15 +59,18 @@ export function generateStaticParams() {
 function formatCategoryName(category: string): string {
   // Map Dutch slugs to proper display names
   const categoryMap: Record<string, string> = {
-    'rolgordijnen': 'Rolgordijnen',
-    'transparante-rolgordijnen': 'Transparante Rolgordijnen',
-    'verduisterende-rolgordijnen': 'Verduisterende Rolgordijnen',
+    rolgordijnen: "Rolgordijnen",
+    "transparante-rolgordijnen": "Transparante Rolgordijnen",
+    "verduisterende-rolgordijnen": "Verduisterende Rolgordijnen",
   };
 
-  return categoryMap[category] || category
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+  return (
+    categoryMap[category] ||
+    category
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ")
+  );
 }
 
 export default async function ProductPage({
@@ -80,7 +92,11 @@ export default async function ProductPage({
   const pricingMatrix = await loadPricingMatrix(product.pricingMatrixPath);
 
   // Build breadcrumbs based on whether product has subcategory
-  const breadcrumbItems: Array<{ label: string; href?: string; current?: boolean }> = [
+  const breadcrumbItems: Array<{
+    label: string;
+    href?: string;
+    current?: boolean;
+  }> = [
     { label: "Home", href: "/" },
     { label: "Producten", href: "/producten" },
     {
@@ -115,20 +131,11 @@ export default async function ProductPage({
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left column — product image */}
           <div>
-            {product.image ? (
-              <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-white shadow-lifted">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ) : (
-              <div className="relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-lifted">
-                <span className="text-sm text-muted">Productafbeelding</span>
-              </div>
-            )}
+            <ProductImageGallery
+              image={product.image}
+              images={product.images}
+              alt={product.name}
+            />
           </div>
 
           {/* Right column — product name, description, USPs, configurator */}
@@ -174,7 +181,7 @@ export default async function ProductPage({
         </div>
 
         {/* Specifications section - full width */}
-        {product.specifications && product.specifications.length > 0 && (
+        {/* {product.specifications && product.specifications.length > 0 && (
           <div className="mt-12 border border-border p-8 sm:p-10">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
               Specificaties
@@ -190,26 +197,10 @@ export default async function ProductPage({
               ))}
             </dl>
           </div>
-        )}
+        )} */}
 
         {/* Product details and How it works - 2 column grid */}
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div className="border border-border p-8 sm:p-10">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-              Productdetails
-            </h2>
-            <dl className="mt-6 space-y-5">
-              {product.details.map((detail) => (
-                <div key={detail.label}>
-                  <dt className="text-sm text-muted">{detail.label}</dt>
-                  <dd className="mt-0.5 text-sm font-medium text-foreground">
-                    {detail.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-
+        <div className="mt-6 grid gap-6 lg:grid-cols-1">
           <div className="border border-border p-8 sm:p-10">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
               Hoe het werkt
@@ -229,6 +220,22 @@ export default async function ProductPage({
                 </li>
               ))}
             </ol>
+          </div>
+
+          <div className="border border-border p-8 sm:p-10">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
+              Productdetails
+            </h2>
+            <dl className="mt-6 space-y-5">
+              {product.details.map((detail) => (
+                <div key={detail.label}>
+                  <dt className="text-sm text-muted">{detail.label}</dt>
+                  <dd className="mt-0.5 text-sm font-medium text-foreground">
+                    {detail.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </div>
