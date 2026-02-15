@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import Image from "next/image";
 import DimensionConfigurator from "@/components/dimension-configurator";
 import ProductImageGallery from "@/components/product/product-image-gallery";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
@@ -180,9 +179,8 @@ export default async function ProductPage({
           </div>
         </div>
 
-        {/* Specifications section - full width */}
-        {/* {product.specifications && product.specifications.length > 0 && (
-          <div className="mt-12 border border-border p-8 sm:p-10">
+        {product.specifications && product.specifications.length > 0 && (
+          <div className="mt-12 border border-border rounded-lg p-8 sm:p-10">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
               Specificaties
             </h2>
@@ -197,47 +195,7 @@ export default async function ProductPage({
               ))}
             </dl>
           </div>
-        )} */}
-
-        {/* Product details and How it works - 2 column grid */}
-        <div className="mt-6 grid gap-6 lg:grid-cols-1">
-          <div className="border border-border p-8 sm:p-10">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-              Hoe het werkt
-            </h2>
-            <ol className="mt-6 space-y-4">
-              {[
-                "Voer uw gewenste breedte en hoogte in",
-                "Bekijk direct uw berekende prijs",
-                "Voeg toe aan winkelwagen en bestel",
-                "Uw rolgordijn wordt geproduceerd en verzonden",
-              ].map((step, i) => (
-                <li key={i} className="flex gap-3 text-sm">
-                  <span className="flex-none font-mono text-xs text-muted">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-muted">{step}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <div className="border border-border p-8 sm:p-10">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-              Productdetails
-            </h2>
-            <dl className="mt-6 space-y-5">
-              {product.details.map((detail) => (
-                <div key={detail.label}>
-                  <dt className="text-sm text-muted">{detail.label}</dt>
-                  <dd className="mt-0.5 text-sm font-medium text-foreground">
-                    {detail.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
