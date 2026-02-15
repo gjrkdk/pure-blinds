@@ -12,6 +12,25 @@
       "pricingMatrixPath": "/data/pricing/roller-blind-white.json",
       "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_WHITE",
       "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_WHITE",
+      "image": "/png/transparant-rolgordijn-woonkamer.png",
+      "usps": [
+        "Op maat gemaakt binnen 3-5 werkdagen",
+        "Lichtdoorlatend met privacy",
+        "Eenvoudige montage in of buiten de dag",
+        "Duurzame, onderhoudsvriendelijke stof"
+      ],
+      "specifications": [
+        { "label": "Type", "value": "Transparant rolgordijn" },
+        { "label": "Materiaal", "value": "Hoogwaardige polyester stof" },
+        { "label": "Kleur", "value": "Wit" },
+        { "label": "Breedte bereik", "value": "10 - 200 cm" },
+        { "label": "Hoogte bereik", "value": "10 - 200 cm" },
+        { "label": "Bediening", "value": "Kettingbediening (rechts)" },
+        { "label": "Montage", "value": "In of buiten de dag" },
+        { "label": "Lichtdoorlatendheid", "value": "Lichtfiltrerend" },
+        { "label": "Onderhoud", "value": "Afneembaar met vochtige doek" },
+        { "label": "Productietijd", "value": "3-5 werkdagen" }
+      ],
       "details": [
         { "label": "Materiaal", "value": "Stof" },
         { "label": "Kleur", "value": "Wit" },
@@ -32,6 +51,26 @@
       "pricingMatrixPath": "/data/pricing/roller-blind-black.json",
       "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_BLACK",
       "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_BLACK",
+      "image": "/png/verduisterend-rolgordijn-slaapkamer.png",
+      "usps": [
+        "Op maat gemaakt binnen 3-5 werkdagen",
+        "Blokkeert 99% van het licht",
+        "Extra isolerend tegen warmte en kou",
+        "Eenvoudige montage in of buiten de dag"
+      ],
+      "specifications": [
+        { "label": "Type", "value": "Verduisterend rolgordijn" },
+        { "label": "Materiaal", "value": "Hoogwaardige verduisterende stof" },
+        { "label": "Kleur", "value": "Zwart" },
+        { "label": "Breedte bereik", "value": "10 - 200 cm" },
+        { "label": "Hoogte bereik", "value": "10 - 200 cm" },
+        { "label": "Bediening", "value": "Kettingbediening (rechts)" },
+        { "label": "Montage", "value": "In of buiten de dag" },
+        { "label": "Lichtblokkering", "value": "99% verduisterend" },
+        { "label": "Isolatie", "value": "Thermisch isolerend" },
+        { "label": "Onderhoud", "value": "Afneembaar met vochtige doek" },
+        { "label": "Productietijd", "value": "3-5 werkdagen" }
+      ],
       "details": [
         { "label": "Materiaal", "value": "Stof" },
         { "label": "Kleur", "value": "Zwart" },
