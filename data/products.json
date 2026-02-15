@@ -13,6 +13,7 @@
       "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_WHITE",
       "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_WHITE",
       "image": "/png/transparant-rolgordijn-woonkamer.png",
+      "images": ["/png/transparant-rolgordijn-keuken.png", "/png/rolgordijn-in-woonkamer-situatie.png"],
       "usps": [
         "Op maat gemaakt binnen 3-5 werkdagen",
         "Lichtdoorlatend met privacy",
@@ -52,6 +53,7 @@
       "shopifyProductId": "gid://shopify/Product/PLACEHOLDER_BLACK",
       "shopifyVariantId": "gid://shopify/ProductVariant/PLACEHOLDER_BLACK",
       "image": "/png/verduisterend-rolgordijn-slaapkamer.png",
+      "images": ["/png/rolgordijn-keuken.png", "/png/rolgordijn-in-woonkamer-situatie.png"],
       "usps": [
         "Op maat gemaakt binnen 3-5 werkdagen",
         "Blokkeert 99% van het licht",

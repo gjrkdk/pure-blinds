@@ -16,6 +16,7 @@ export interface Product {
   shopifyProductId: string; // e.g., 'gid://shopify/Product/123'
   shopifyVariantId: string; // e.g., 'gid://shopify/ProductVariant/456'
   image: string; // e.g., '/png/transparant-rolgordijn-woonkamer.png'
+  images?: string[]; // Additional gallery images, e.g., ['/png/transparant-rolgordijn-keuken.png']
   usps: string[]; // e.g., ['Op maat gemaakt binnen 3-5 werkdagen', ...]
   specifications: { label: string; value: string }[]; // Structured product specifications
   details: { label: string; value: string }[];
