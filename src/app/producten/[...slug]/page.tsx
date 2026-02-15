@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import Image from "next/image";
 import DimensionConfigurator from "@/components/dimension-configurator";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
 import { getProductBySlug, getAllProducts, getProductUrl } from "@/lib/product/catalog";
@@ -110,8 +111,27 @@ export default async function ProductPage({
         <JsonLd data={breadcrumbSchema} />
         <Breadcrumbs items={breadcrumbItems} />
 
+        {/* Product image + info section */}
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Left column — product info + configurator */}
+          {/* Left column — product image */}
+          <div>
+            {product.image ? (
+              <div className="relative aspect-4/3 overflow-hidden rounded-2xl bg-white shadow-lifted">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <div className="relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-lifted">
+                <span className="text-sm text-muted">Productafbeelding</span>
+              </div>
+            )}
+          </div>
+
+          {/* Right column — product name, description, USPs, configurator */}
           <div>
             <h1 className="text-3xl font-light tracking-tight text-foreground sm:text-4xl">
               {product.name}
@@ -120,6 +140,30 @@ export default async function ProductPage({
               {product.description}
             </p>
 
+            {/* USPs */}
+            {product.usps && product.usps.length > 0 && (
+              <div className="mt-6 space-y-3">
+                {product.usps.map((usp, i) => (
+                  <div key={i} className="flex gap-3">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="mt-0.5 flex-none text-accent"
+                    >
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                    <span className="text-sm text-foreground">{usp}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="mt-10">
               <DimensionConfigurator
                 productId={product.id}
@@ -127,45 +171,64 @@ export default async function ProductPage({
               />
             </div>
           </div>
+        </div>
 
-          {/* Right column — product details */}
-          <div className="lg:pt-2">
-            <div className="border border-border p-8 sm:p-10">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-                Productdetails
-              </h2>
-              <dl className="mt-6 space-y-5">
-                {product.details.map((detail) => (
-                  <div key={detail.label}>
-                    <dt className="text-sm text-muted">{detail.label}</dt>
-                    <dd className="mt-0.5 text-sm font-medium text-foreground">
-                      {detail.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
+        {/* Specifications section - full width */}
+        {product.specifications && product.specifications.length > 0 && (
+          <div className="mt-12 border border-border p-8 sm:p-10">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
+              Specificaties
+            </h2>
+            <dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
+              {product.specifications.map((spec) => (
+                <div key={spec.label}>
+                  <dt className="text-sm text-muted">{spec.label}</dt>
+                  <dd className="mt-0.5 text-sm font-medium text-foreground">
+                    {spec.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
 
-            <div className="mt-6 border border-border p-8 sm:p-10">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-                Hoe het werkt
-              </h2>
-              <ol className="mt-6 space-y-4">
-                {[
-                  "Voer uw gewenste breedte en hoogte in",
-                  "Bekijk direct uw berekende prijs",
-                  "Voeg toe aan winkelwagen en bestel",
-                  "Uw rolgordijn wordt geproduceerd en verzonden",
-                ].map((step, i) => (
-                  <li key={i} className="flex gap-3 text-sm">
-                    <span className="flex-none font-mono text-xs text-muted">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-muted">{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
+        {/* Product details and How it works - 2 column grid */}
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          <div className="border border-border p-8 sm:p-10">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
+              Productdetails
+            </h2>
+            <dl className="mt-6 space-y-5">
+              {product.details.map((detail) => (
+                <div key={detail.label}>
+                  <dt className="text-sm text-muted">{detail.label}</dt>
+                  <dd className="mt-0.5 text-sm font-medium text-foreground">
+                    {detail.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          <div className="border border-border p-8 sm:p-10">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
+              Hoe het werkt
+            </h2>
+            <ol className="mt-6 space-y-4">
+              {[
+                "Voer uw gewenste breedte en hoogte in",
+                "Bekijk direct uw berekende prijs",
+                "Voeg toe aan winkelwagen en bestel",
+                "Uw rolgordijn wordt geproduceerd en verzonden",
+              ].map((step, i) => (
+                <li key={i} className="flex gap-3 text-sm">
+                  <span className="flex-none font-mono text-xs text-muted">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="text-muted">{step}</span>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </div>
