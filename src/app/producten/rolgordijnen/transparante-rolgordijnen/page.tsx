@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Breadcrumbs from "@/components/layout/breadcrumbs";
 import { getProductsBySubcategory, getProductUrl } from "@/lib/product/catalog";
 
@@ -56,9 +57,20 @@ export default function TransparentRollerBlindsPage() {
               className="group block transition-transform duration-200 hover:-translate-y-1"
             >
               <div className="overflow-hidden rounded-2xl border border-border bg-surface">
-                {/* Product image placeholder */}
-                <div className="flex aspect-[4/3] items-center justify-center rounded-2xl bg-white shadow-lifted">
-                  <span className="text-sm text-muted">Productafbeelding</span>
+                {/* Product image */}
+                <div className="relative aspect-4/3 bg-white shadow-lifted">
+                  {product.image ? (
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <span className="text-sm text-muted">Productafbeelding</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Product info */}
