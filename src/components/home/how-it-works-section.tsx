@@ -1,10 +1,27 @@
+import Link from "next/link";
+
 export function HowItWorksSection() {
-  const steps = [
+  const steps: Array<{
+    label: string;
+    title: string;
+    description: React.ReactNode;
+    tagline: string;
+  }> = [
     {
       label: "Stap Een",
       title: "Meet uw raam op",
-      description:
-        "Meet de breedte en hoogte van uw raam in millimeters. Onze productpaginas bevatten meetgidsen om u te helpen het goed te doen.",
+      description: (
+        <>
+          Meet de breedte en hoogte van uw raam in millimeters. Bekijk onze{" "}
+          <Link
+            href="/inmeetinstructies"
+            className="underline underline-offset-4 hover:text-accent-foreground transition-colors"
+          >
+            inmeetinstructies
+          </Link>{" "}
+          om u te helpen het goed te doen.
+        </>
+      ),
       tagline: "Eenvoudig en precies!",
     },
     {

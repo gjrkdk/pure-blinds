@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { AboutSection } from "@/components/home/about-section";
 import { ServicesAccordion } from "@/components/home/services-accordion";
 import { HowItWorksSection } from "@/components/home/how-it-works-section";
@@ -66,7 +67,7 @@ export default function Home() {
               bestelling snel aan huis.
             </p>
             <div className="mt-10">
-              <a
+              <Link
                 href="/producten"
                 className="inline-flex items-center gap-3 rounded-full bg-accent pl-7 pr-2 py-2 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80"
               >
@@ -86,7 +87,7 @@ export default function Home() {
                     <path d="M7 7h10v10" />
                   </svg>
                 </span>
-              </a>
+              </Link>
             </div>
           </div>
 
