@@ -52,3 +52,14 @@ export function generateCartItemId(
 ): string {
   return `${productId}-${options.width}x${options.height}`;
 }
+
+/**
+ * Generates a cart item ID for a color sample
+ * Format: sample-${productId}
+ *
+ * @param productId - Product identifier
+ * @returns Unique cart item identifier for the sample
+ */
+export function generateSampleCartItemId(productId: string): string {
+  return `sample-${productId}`;
+}

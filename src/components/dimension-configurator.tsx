@@ -29,9 +29,12 @@ export default function DimensionConfigurator({
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [addedFeedback, setAddedFeedback] = useState(false);
+  const [sampleFeedback, setSampleFeedback] = useState(false);
 
   // Cart store
   const addItem = useCartStore((state) => state.addItem);
+  const addSample = useCartStore((state) => state.addSample);
+  const hasSample = useCartStore((state) => state.hasSample(productId));
 
   // Client-side validation (immediate, no debounce)
   const validateField = (
@@ -182,6 +185,18 @@ export default function DimensionConfigurator({
     }, 2000);
   };
 
+  // Handle add sample to cart
+  const handleAddSample = () => {
+    if (hasSample || sampleFeedback) return;
+
+    addSample({ productId, productName });
+
+    setSampleFeedback(true);
+    setTimeout(() => {
+      setSampleFeedback(false);
+    }, 2000);
+  };
+
   // Determine if Add to Cart button should be enabled
   const canAddToCart =
     price !== null &&
@@ -273,13 +288,24 @@ export default function DimensionConfigurator({
       </div>
 
       {/* Add to Cart button */}
-      <div className="mt-6">
+      <div className="mt-6 space-y-3">
         <button
           onClick={handleAddToCart}
           disabled={!canAddToCart}
           className="w-full bg-accent text-accent-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed border-border rounded-lg"
         >
           {addedFeedback ? "Toegevoegd!" : "Toevoegen aan winkelwagen"}
+        </button>
+        <button
+          onClick={handleAddSample}
+          disabled={hasSample || sampleFeedback}
+          className="w-full border border-border text-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg"
+        >
+          {sampleFeedback
+            ? "Kleurstaal toegevoegd!"
+            : hasSample
+              ? "Kleurstaal in winkelwagen"
+              : "Kleurstaal bestellen"}
         </button>
       </div>
     </div>

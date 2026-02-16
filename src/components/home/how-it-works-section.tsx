@@ -9,16 +9,16 @@ export function HowItWorksSection() {
     },
     {
       label: "Stap Twee",
-      title: "Kies uw rolgordijn",
+      title: "Kies uw raamdecoratie",
       description:
-        "Kies uw type rolgordijn, stof en kleur. Voer uw afmetingen in en zie direct de prijs — geen wachten op offertes.",
+        "Selecteer het type raamdecoratie, de stof en kleur die bij uw interieur passen. Voer uw afmetingen in en zie direct de prijs — geen wachten op offertes.",
       tagline: "Direct uw prijs!",
     },
     {
       label: "Stap Drie",
       title: "Bestel en ontvang",
       description:
-        "Voeg toe aan winkelwagen en reken af. Uw rolgordijnen worden op maat gemaakt volgens uw exacte specificaties en direct naar u verzonden.",
+        "Plaats uw bestelling en wij gaan voor u aan de slag. Uw raamdecoratie wordt op maat gemaakt volgens uw specificaties en met zorg aan huis geleverd.",
       tagline: "Snel bezorgd!",
     },
   ];
@@ -39,7 +39,7 @@ export function HowItWorksSection() {
 
         {/* Heading */}
         <h2 className="mt-6 text-center text-3xl font-medium tracking-tight text-accent-foreground sm:text-4xl lg:text-[2.75rem] lg:leading-[1.15]">
-          Rolgordijnen op maat
+          Uw raamdecoratie op maat
           <br className="hidden sm:block" />
           {" "}in drie stappen.
         </h2>

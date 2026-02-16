@@ -34,6 +34,12 @@ body {
   font-family: var(--font-jakarta), system-ui, sans-serif;
 }
 
+/* Pointer cursor for all interactive elements */
+button,
+a {
+  cursor: pointer;
+}
+
 /* Soft lifted shadow for cards and image containers */
 .shadow-lifted {
   box-shadow:

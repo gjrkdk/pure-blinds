@@ -29,12 +29,13 @@ export function AboutSection() {
           Over ons
         </p>
         <h2 className="mt-3 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
-          Rolgordijnen op maat met precisie en zorg
+          Raamdecoratie waar vakmanschap en stijl samenkomen
         </h2>
         <p className="mt-6 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-          Wij zijn gespecialiseerd in rolgordijnen op maat voor woningen, bedrijven
-          en kantoren. Elk stuk wordt met aandacht voor detail vervaardigd, met
-          premium materialen en precieze afmetingen om precies te leveren wat u nodig heeft.
+          Pure Blinds is gespecialiseerd in raamdecoratie op maat voor woningen,
+          bedrijfspanden en kantoren. Elk product wordt met oog voor detail
+          vervaardigd uit premium materialen, zodat het naadloos aansluit bij uw
+          interieur en precies doet wat u ervan verwacht.
         </p>
 
         {/* Stats Grid */}
