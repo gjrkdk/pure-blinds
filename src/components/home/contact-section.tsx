@@ -41,7 +41,7 @@ export function ContactSection() {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -67,7 +67,9 @@ export function ContactSection() {
               Neem contact op
             </h2>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-neutral-400">
-              Voor vragen of om uw wensen te bespreken, nodigen wij u uit om contact op te nemen met ons professionele team via onderstaande gegevens.
+              Voor vragen of om uw wensen te bespreken, nodigen wij u uit om
+              contact op te nemen met ons professionele team via onderstaande
+              gegevens.
             </p>
 
             {/* Contact details */}
@@ -77,7 +79,7 @@ export function ContactSection() {
                   Kantoor
                 </span>
                 <span className="text-sm text-neutral-400">
-                  Keizersgracht 123, 1015 CJ Amsterdam
+                  Dorpsstaat 119, 3284 AE Zuid-Beijerland
                 </span>
               </div>
               <div className="flex items-baseline justify-between border-b border-neutral-800 py-4">
@@ -99,7 +101,7 @@ export function ContactSection() {
                   href="tel:+31201234567"
                   className="text-sm text-neutral-400 hover:text-accent-foreground transition-colors"
                 >
-                  +31 20 123 4567
+                  0186 660 510
                 </a>
               </div>
             </div>
@@ -205,7 +207,8 @@ export function ContactSection() {
               {submitted ? (
                 <div className="py-12 text-center">
                   <p className="text-sm leading-relaxed text-foreground">
-                    Bedankt voor uw bericht. We nemen zo snel mogelijk contact met u op.
+                    Bedankt voor uw bericht. We nemen zo snel mogelijk contact
+                    met u op.
                   </p>
                 </div>
               ) : (
