@@ -37,6 +37,7 @@ export default function ProductImageGallery({
           src={allImages[selectedIndex]}
           alt={alt}
           fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           className="object-cover"
         />
       </div>
@@ -58,6 +59,7 @@ export default function ProductImageGallery({
                 src={img}
                 alt={`${alt} - weergave ${index + 1}`}
                 fill
+                sizes="64px"
                 className="object-cover"
               />
             </button>

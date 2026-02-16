@@ -15,8 +15,8 @@ export interface Product {
   pricingMatrixPath: string; // e.g., '/data/pricing/rollerblinds-white.json'
   shopifyProductId: string; // e.g., 'gid://shopify/Product/123'
   shopifyVariantId: string; // e.g., 'gid://shopify/ProductVariant/456'
-  image: string; // e.g., '/png/transparant-rolgordijn-woonkamer.png'
-  images?: string[]; // Additional gallery images, e.g., ['/png/transparant-rolgordijn-keuken.png']
+  image: string; // e.g., '/images/transparant-rolgordijn-woonkamer.webp'
+  images?: string[]; // Additional gallery images, e.g., ['/images/transparant-rolgordijn-keuken.webp']
   usps: string[]; // e.g., ['Op maat gemaakt binnen 3-5 werkdagen', ...]
   specifications: { label: string; value: string }[]; // Structured product specifications
   details: { label: string; value: string }[];

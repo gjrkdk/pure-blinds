@@ -31,7 +31,7 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
       <div className="flex flex-col items-center px-4 pt-3">
         <div
-          className={`pointer-events-auto rounded-full bg-background/90 backdrop-blur-md shadow-lg shadow-black/3 border border-border/50 transition-all duration-300 px-6 py-3 flex items-center gap-4 ${
+          className={`pointer-events-auto rounded-full bg-white shadow-lg shadow-black/3 border border-border/50 transition-all duration-300 px-6 py-3 flex items-center gap-4 ${
             scrolled ? "shadow-xl shadow-black/6" : ""
           }`}
         >
@@ -54,7 +54,7 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-muted hover:text-foreground transition-colors"
+                className="text-sm hover:text-foreground transition-colors text-black "
               >
                 {link.label}
               </Link>
@@ -90,13 +90,13 @@ export function Header() {
             menuOpen ? "max-h-80 opacity-100 mt-2" : "max-h-0 opacity-0"
           }`}
         >
-          <nav className="rounded-2xl bg-background/90 backdrop-blur-md shadow-lg shadow-black/3 border border-border/50 px-5 py-4 flex flex-col gap-3">
+          <nav className="rounded-2xl bg-white shadow-lg shadow-black/3 border border-border/50 px-5 py-4 flex flex-col gap-3">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={handleMobileLinkClick}
-                className="text-sm text-muted hover:text-foreground transition-colors"
+                className="text-sm text-black hover:text-foreground transition-colors"
               >
                 {link.label}
               </Link>

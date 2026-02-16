@@ -40,9 +40,10 @@ export default function Home() {
         {/* Mobile: background image with overlay */}
         <div className="absolute inset-0 md:hidden">
           <Image
-            src="/png/transparant-rolgordijn-woonkamer.png"
+            src="/images/transparant-rolgordijn-woonkamer.webp"
             alt="Raamdecoratie op maat in woonkamer"
             fill
+            sizes="100vw"
             className="object-cover object-[10%_center]"
             priority
           />
@@ -93,9 +94,10 @@ export default function Home() {
           <div className="hidden md:block relative md:flex-1 self-stretch py-8">
             <div className="relative h-full w-full overflow-hidden rounded-2xl shadow-lifted">
               <Image
-                src="/png/transparant-rolgordijn-woonkamer.png"
+                src="/images/transparant-rolgordijn-woonkamer.webp"
                 alt="Raamdecoratie op maat in woonkamer"
                 fill
+                sizes="(max-width: 768px) 0vw, 60vw"
                 className="object-cover object-[10%_center]"
                 priority
               />

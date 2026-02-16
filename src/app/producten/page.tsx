@@ -30,7 +30,7 @@ const categories: Category[] = [
     description:
       "Rolgordijnen op maat in transparante en verduisterende uitvoeringen",
     href: "/producten/rolgordijnen",
-    image: "/png/rolgordijn-keuken.png",
+    image: "/images/rolgordijn-keuken.webp",
   },
 ];
 
@@ -74,6 +74,7 @@ export default function ProductsPage() {
                       src={category.image}
                       alt={category.name}
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"
                     />
                   ) : (
