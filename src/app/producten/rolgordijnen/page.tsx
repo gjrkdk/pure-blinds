@@ -32,7 +32,7 @@ const subcategories: Subcategory[] = [
     description:
       "Lichtdoorlatende rolgordijnen die natuurlijk licht doorlaten met privacy",
     href: "/producten/rolgordijnen/transparante-rolgordijnen",
-    image: "/png/transparant-rolgordijn-keuken.png",
+    image: "/images/transparant-rolgordijn-keuken.webp",
   },
   {
     id: "verduisterende-rolgordijnen",
@@ -40,7 +40,7 @@ const subcategories: Subcategory[] = [
     description:
       "Blokkeert tot 99% van het licht voor complete duisternis en privacy",
     href: "/producten/rolgordijnen/verduisterende-rolgordijnen",
-    image: "/png/verduisterend-rolgordijn-slaapkamer.png",
+    image: "/images/verduisterend-rolgordijn-slaapkamer.webp",
   },
 ];
 
@@ -109,6 +109,7 @@ export default function RollerBlindsPage() {
                       src={subcategory.image}
                       alt={subcategory.name}
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"
                     />
                   ) : (

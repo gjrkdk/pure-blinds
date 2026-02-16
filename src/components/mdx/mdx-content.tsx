@@ -1,9 +1,7 @@
-'use client'
-
 import * as runtime from 'react/jsx-runtime'
 import Image from 'next/image'
 
-const useMDXComponent = (code: string) => {
+const getMDXComponent = (code: string) => {
   const fn = new Function(code)
   return fn({ ...runtime }).default
 }
@@ -13,6 +11,5 @@ const components = {
 }
 
 export function MDXContent({ code }: { code: string }) {
-  const Component = useMDXComponent(code)
-  return <Component components={components} />
+  return getMDXComponent(code)({ components })
 }
