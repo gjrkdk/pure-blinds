@@ -7,6 +7,7 @@ export function Footer() {
     { label: "Blog", href: "/blog" },
     { label: "Over ons", href: "#about" },
     { label: "Contact", href: "#contact" },
+    { label: "Inmeetinstructies", href: "/inmeetinstructies" },
   ];
 
   return (

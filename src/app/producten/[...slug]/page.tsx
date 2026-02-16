@@ -12,6 +12,7 @@ import { JsonLd } from "@/lib/schema/jsonld";
 import { buildProductSchema } from "@/lib/schema/product";
 import { buildBreadcrumbSchema } from "@/lib/schema/breadcrumb";
 import { loadPricingMatrix } from "@/lib/pricing/loader";
+import MeasurementGuide from "@/components/product/measurement-guide";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pureblinds.nl";
 
@@ -170,7 +171,11 @@ export default async function ProductPage({
               </div>
             )}
 
-            <div className="mt-10">
+            <div className="mt-8">
+              <MeasurementGuide />
+            </div>
+
+            <div className="mt-6">
               <DimensionConfigurator
                 productId={product.id}
                 productName={product.name}
