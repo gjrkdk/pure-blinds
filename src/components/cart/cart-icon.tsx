@@ -11,7 +11,7 @@ export default function CartIcon() {
   const itemCount = useCartStore((state) => state.getItemCount())
 
   return (
-    <Link href="/cart" className="relative inline-flex items-center">
+    <Link href="/winkelwagen" className="relative inline-flex items-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
