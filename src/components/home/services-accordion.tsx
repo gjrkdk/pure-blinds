@@ -22,12 +22,12 @@ const SERVICES = [
   {
     title: "Advies op Maat",
     description:
-      "Persoonlijk advies over het opmeten van uw ramen, keuze van materialen en kleuren. Wij helpen u bij het selecteren van het perfecte rolgordijn dat past bij uw interieur en functionele wensen.",
+      "Persoonlijk advies over het opmeten van uw ramen, de keuze van materialen en kleuren. Wij helpen u bij het selecteren van de perfecte raamdecoratie die aansluit bij uw interieur en functionele wensen.",
   },
   {
     title: "Montageservice",
     description:
-      "Professionele montage van uw rolgordijnen door ervaren monteurs. Wij zorgen voor een perfecte afwerking en uitleg over het gebruik en onderhoud van uw nieuwe rolgordijnen.",
+      "Professionele montage van uw raamdecoratie door ervaren monteurs. Wij zorgen voor een perfecte afwerking en geven u uitleg over het gebruik en onderhoud.",
   },
 ];
 

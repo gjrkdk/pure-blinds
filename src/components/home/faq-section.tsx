@@ -25,7 +25,7 @@ export function FaqSection() {
             Alles wat u moet weten
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-muted">
-            Heeft u vragen over het bestellen van rolgordijnen op maat? Vind
+            Heeft u vragen over onze raamdecoratie op maat? Hieronder vindt u
             antwoorden op de meest gestelde vragen over afmetingen, prijzen,
             materialen en levering.
           </p>

@@ -36,22 +36,39 @@ export async function createDraftOrder(items: CartItem[]): Promise<{ invoiceUrl:
     const response = await client.request(DRAFT_ORDER_CREATE, {
       variables: {
         input: {
-          lineItems: items.map(item => ({
-            // Include dimensions in title for clear order display
-            title: `${item.productName} - ${item.options.width}cm x ${item.options.height}cm`,
-            // Locked custom pricing (not variant-based)
-            originalUnitPriceWithCurrency: {
-              amount: (item.priceInCents / 100).toFixed(2),
-              currencyCode: "EUR"
-            },
-            quantity: item.quantity,
-            // Store dimensions and product metadata as custom attributes for fulfillment
-            customAttributes: [
-              { key: "Width", value: `${item.options.width}cm` },
-              { key: "Height", value: `${item.options.height}cm` },
-              { key: "Product ID", value: item.productId }
-            ]
-          }))
+          lineItems: items.map(item => {
+            if (item.type === "sample") {
+              return {
+                title: `Kleurstaal — ${item.productName}`,
+                originalUnitPriceWithCurrency: {
+                  amount: (item.priceInCents / 100).toFixed(2),
+                  currencyCode: "EUR"
+                },
+                quantity: 1,
+                customAttributes: [
+                  { key: "Type", value: "Kleurstaal" },
+                  { key: "Product ID", value: item.productId }
+                ]
+              };
+            }
+
+            return {
+              // Include dimensions in title for clear order display
+              title: `${item.productName} - ${item.options!.width}cm x ${item.options!.height}cm`,
+              // Locked custom pricing (not variant-based)
+              originalUnitPriceWithCurrency: {
+                amount: (item.priceInCents / 100).toFixed(2),
+                currencyCode: "EUR"
+              },
+              quantity: item.quantity,
+              // Store dimensions and product metadata as custom attributes for fulfillment
+              customAttributes: [
+                { key: "Width", value: `${item.options!.width}cm` },
+                { key: "Height", value: `${item.options!.height}cm` },
+                { key: "Product ID", value: item.productId }
+              ]
+            };
+          })
         }
       },
       retries: 2

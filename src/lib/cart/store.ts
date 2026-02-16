@@ -4,8 +4,8 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
-import { CartItem, AddCartItemInput } from './types';
-import { generateCartItemId, generateOptionsSignature } from './utils';
+import { CartItem, AddCartItemInput, AddSampleItemInput } from './types';
+import { generateCartItemId, generateOptionsSignature, generateSampleCartItemId } from './utils';
 import { getProduct } from '@/lib/product/catalog';
 
 /**
@@ -17,10 +17,16 @@ interface CartState {
   /** Add item to cart (increments quantity if already exists) */
   addItem: (input: AddCartItemInput) => void;
 
+  /** Add a color sample to cart (one per product, fixed price) */
+  addSample: (input: AddSampleItemInput) => void;
+
+  /** Check if a sample for this product is already in cart */
+  hasSample: (productId: string) => boolean;
+
   /** Remove item from cart */
   removeItem: (itemId: string) => void;
 
-  /** Update item quantity (min 1, max 999) */
+  /** Update item quantity (min 1, max 999) — no-op for samples */
   updateQuantity: (itemId: string, quantity: number) => void;
 
   /** Clear all items from cart */
@@ -86,8 +92,8 @@ export const useCartStore = create<CartState>()(
 
       addItem: (input) => {
         set((state) => {
-          const optionsSignature = generateOptionsSignature(input.options);
-          const id = generateCartItemId(input.productId, input.options);
+          const optionsSignature = generateOptionsSignature(input.options!);
+          const id = generateCartItemId(input.productId, input.options!);
 
           // Check if item already exists
           const existingItemIndex = state.items.findIndex((item) => item.id === id);
@@ -113,6 +119,33 @@ export const useCartStore = create<CartState>()(
         });
       },
 
+      addSample: (input) => {
+        set((state) => {
+          const id = generateSampleCartItemId(input.productId);
+
+          // Deduplicate: one sample per product
+          if (state.items.some((item) => item.id === id)) {
+            return state;
+          }
+
+          const newItem: CartItem = {
+            id,
+            productId: input.productId,
+            productName: input.productName,
+            type: "sample",
+            quantity: 1,
+            priceInCents: 250,
+          };
+          return { items: [...state.items, newItem] };
+        });
+      },
+
+      hasSample: (productId) => {
+        const { items } = get();
+        const id = generateSampleCartItemId(productId);
+        return items.some((item) => item.id === id);
+      },
+
       removeItem: (itemId) => {
         set((state) => ({
           items: state.items.filter((item) => item.id !== itemId),
@@ -124,9 +157,11 @@ export const useCartStore = create<CartState>()(
         if (quantity < 1 || quantity > 999) return;
 
         set((state) => ({
-          items: state.items.map((item) =>
-            item.id === itemId ? { ...item, quantity } : item
-          ),
+          items: state.items.map((item) => {
+            // Samples are always quantity 1
+            if (item.type === "sample") return item;
+            return item.id === itemId ? { ...item, quantity } : item;
+          }),
         }));
       },
 
@@ -146,7 +181,7 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: 'cart-storage',
-      version: 4,
+      version: 5,
       storage: createJSONStorage(() => storageWithTTL),
       // Only persist the items array, not derived values
       partialize: (state) => ({ items: state.items }),
@@ -175,6 +210,9 @@ export const useCartStore = create<CartState>()(
 
           return { items: validItems };
         }
+
+        // Version 4 -> 5: No-op migration for sample type support
+        // Existing items without `type` are treated as "product"
 
         return persistedState as { items: CartItem[] };
       },

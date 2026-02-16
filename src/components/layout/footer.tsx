@@ -61,7 +61,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Pure Blinds. Alle rechten
             voorbehouden.
           </p>
-          <p className="text-xs text-neutral-500">Rolgordijnen op maat</p>
+          <p className="text-xs text-neutral-500">Raamdecoratie op maat</p>
         </div>
       </div>
     </footer>

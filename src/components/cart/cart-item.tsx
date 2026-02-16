@@ -33,27 +33,34 @@ export function CartItem({ item }: CartItemProps) {
     setIsRemoveDialogOpen(false);
   };
 
+  const isSample = item.type === "sample";
   const lineTotal = item.priceInCents * item.quantity;
 
   return (
     <>
       <div className="flex flex-col gap-4 border-b border-border py-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex-1">
-          <h3 className="text-sm font-medium text-foreground">{item.productName}</h3>
-          <p className="mt-1 text-sm text-muted">
-            {item.options.width} &times; {item.options.height} cm
-          </p>
+          <h3 className="text-sm font-medium text-foreground">
+            {isSample ? `Kleurstaal — ${item.productName}` : item.productName}
+          </h3>
+          {!isSample && item.options && (
+            <p className="mt-1 text-sm text-muted">
+              {item.options.width} &times; {item.options.height} cm
+            </p>
+          )}
           <p className="mt-0.5 text-sm text-muted">
-            {formatPrice(item.priceInCents)} per stuk
+            {formatPrice(item.priceInCents)}{!isSample && " per stuk"}
           </p>
         </div>
 
         <div className="flex items-center gap-4 sm:flex-col sm:items-end sm:gap-3">
           <div className="flex items-center gap-3">
-            <QuantityInput
-              quantity={item.quantity}
-              onUpdate={handleQuantityUpdate}
-            />
+            {!isSample && (
+              <QuantityInput
+                quantity={item.quantity}
+                onUpdate={handleQuantityUpdate}
+              />
+            )}
             <button
               type="button"
               onClick={handleRemoveClick}
