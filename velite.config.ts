@@ -14,7 +14,7 @@ const posts = defineCollection({
     })
     .transform((data) => ({
       ...data,
-      readingTime: readingTime(data.body).text,
+      readingTime: readingTime(data.body).text.replace('min read', 'min leestijd'),
       permalink: `/blog/${data.slug}`
     }))
 })

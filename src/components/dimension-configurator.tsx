@@ -225,7 +225,7 @@ export default function DimensionConfigurator({
             onChange={handleWidthChange}
             aria-invalid={!!fieldErrors.width}
             aria-describedby={fieldErrors.width ? "width-error" : undefined}
-            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors border-border rounded-lg ${
+            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors bg-white rounded-lg ${
               fieldErrors.width ? "border-red-500" : "border-border"
             }`}
             placeholder="bijv. 100"
@@ -254,7 +254,7 @@ export default function DimensionConfigurator({
             onChange={handleHeightChange}
             aria-invalid={!!fieldErrors.height}
             aria-describedby={fieldErrors.height ? "height-error" : undefined}
-            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors border-border rounded-lg ${
+            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors bg-white rounded-lg ${
               fieldErrors.height ? "border-red-500" : "border-border"
             }`}
             placeholder="bijv. 150"
@@ -299,7 +299,7 @@ export default function DimensionConfigurator({
         <button
           onClick={handleAddSample}
           disabled={hasSample || sampleFeedback}
-          className="w-full border border-border text-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg"
+          className="w-full border border-border bg-white text-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg"
         >
           {sampleFeedback
             ? "Kleurstaal toegevoegd!"

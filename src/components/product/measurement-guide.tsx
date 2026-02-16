@@ -7,7 +7,7 @@ export default function MeasurementGuide() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="rounded-lg border border-border">
+    <div className="rounded-lg border border-border bg-white">
       <button
         type="button"
         className="flex w-full items-center justify-between p-5 text-left"
