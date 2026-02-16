@@ -1,24 +1,24 @@
 export function AboutSection() {
-  const stats = [
+  const usps = [
     {
-      number: "15+",
-      label: "Jaar ervaring",
-      description: "Sinds 2009 actief",
+      number: "100%",
+      label: "Op maat gemaakt",
+      description: "Geen standaardmaten, altijd maatwerk",
     },
     {
-      number: "10K+",
-      label: "Tevreden klanten",
-      description: "Door heel Nederland",
+      number: "A+",
+      label: "Kwaliteitsstoffen",
+      description: "Geselecteerd op duurzaamheid en kleurechtheid",
     },
     {
-      number: "50+",
-      label: "Stofopties",
-      description: "Premium materialen naar keuze",
+      number: "Premium",
+      label: "Materialen",
+      description: "Uitsluitend hoogwaardige Europese stoffen",
     },
     {
-      number: "24u",
-      label: "Doorlooptijd",
-      description: "Snelle productie bij de meeste bestellingen",
+      number: "Thuis",
+      label: "Kleuren vergelijken",
+      description: "Bestel stalen om op uw gemak te kiezen",
     },
   ];
 
@@ -38,18 +38,18 @@ export function AboutSection() {
           interieur en precies doet wat u ervan verwacht.
         </p>
 
-        {/* Stats Grid */}
+        {/* USP Grid */}
         <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.label} className="rounded-2xl bg-white p-6 shadow-lifted">
+          {usps.map((usp) => (
+            <div key={usp.label} className="rounded-2xl bg-white p-6 shadow-lifted">
               <div className="text-3xl font-semibold text-foreground sm:text-4xl">
-                {stat.number}
+                {usp.number}
               </div>
               <div className="mt-2 text-sm font-semibold uppercase tracking-wider text-foreground">
-                {stat.label}
+                {usp.label}
               </div>
               <p className="mt-1 text-sm leading-relaxed text-muted">
-                {stat.description}
+                {usp.description}
               </p>
             </div>
           ))}
