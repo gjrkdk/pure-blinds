@@ -50,7 +50,7 @@ export function RemoveDialog({
       aria-labelledby="remove-dialog-title"
       aria-describedby="remove-dialog-description"
       onClick={handleBackdropClick}
-      className="max-w-sm border border-border p-8 shadow-sm backdrop:bg-foreground/40"
+      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-sm border border-border p-8 shadow-sm backdrop:bg-foreground/40 rounded-lg"
     >
       <h2 id="remove-dialog-title" className="text-base font-medium text-foreground">
         Verwijderen uit winkelwagen?
