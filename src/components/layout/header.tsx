@@ -31,8 +31,8 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
       <div className="flex flex-col items-center px-4 pt-3">
         <div
-          className={`pointer-events-auto rounded-full bg-white shadow-lg shadow-black/3 border border-border/50 transition-all duration-300 px-6 py-3 flex items-center gap-4 ${
-            scrolled ? "shadow-xl shadow-black/6" : ""
+          className={`pointer-events-auto rounded-full bg-white shadow-lg shadow-black/8 border border-border/50 transition-all duration-300 px-8 py-4 flex items-center gap-5 ${
+            scrolled ? "shadow-xl shadow-black/10" : ""
           }`}
         >
           <Link

@@ -48,7 +48,7 @@ export default function BlogPage() {
               href={post.permalink}
               className="group"
             >
-              <article className="flex flex-col h-full border border-neutral-200 rounded-lg p-6 hover:border-neutral-300 transition-colors">
+              <article className="flex flex-col h-full bg-white border border-neutral-200 rounded-lg p-6 hover:border-neutral-300 transition-colors">
                 <time className="text-sm text-muted">
                   {format(new Date(post.date), 'd MMMM yyyy', { locale: nl })}
                 </time>

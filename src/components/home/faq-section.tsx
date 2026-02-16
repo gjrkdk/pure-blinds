@@ -36,7 +36,7 @@ export function FaqSection() {
           {FAQ_ITEMS.map((item, index) => (
             <div
               key={item.question}
-              className="cursor-pointer rounded-lg border border-border p-6"
+              className="cursor-pointer rounded-lg border border-border bg-white p-6"
               onClick={() => toggleFaq(index)}
             >
               <div
