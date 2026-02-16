@@ -1,16 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { useCartStore } from '@/lib/cart/store'
 
-export default function CartIcon() {
-  const [mounted, setMounted] = useState(false)
-  const itemCount = useCartStore((state) => state.getItemCount())
+const emptySubscribe = () => () => {}
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+export default function CartIcon() {
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
+  const itemCount = useCartStore((state) => state.getItemCount())
 
   return (
     <Link href="/cart" className="relative inline-flex items-center">
