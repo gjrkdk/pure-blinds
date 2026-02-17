@@ -1,18 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/cart/store';
 import { CartItem } from '@/components/cart/cart-item';
 import { CartSummary } from '@/components/cart/cart-summary';
 
-export default function CartPage() {
-  const [mounted, setMounted] = useState(false);
-  const items = useCartStore((state) => state.items);
+const emptySubscribe = () => () => {};
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+export default function CartPage() {
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+  const items = useCartStore((state) => state.items);
 
   if (!mounted) {
     return (

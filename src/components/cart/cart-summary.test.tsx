@@ -12,16 +12,18 @@ describe('CartSummary', () => {
     global.fetch = vi.fn();
 
     // Mock window.location.href to prevent actual navigation
-    delete (window as any).location;
-    (window as any).location = { href: '' };
+    Object.defineProperty(window, 'location', {
+      value: { href: '' },
+      writable: true,
+    });
   });
 
   it('clears cart after successful checkout redirect', async () => {
     // Mock successful checkout response
-    (global.fetch as any).mockResolvedValueOnce({
+    vi.mocked(global.fetch).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ invoiceUrl: 'https://shop.myshopify.com/checkout/123' }),
-    });
+    } as Response);
 
     // Pre-populate cart with one item
     useCartStore.getState().addItem({

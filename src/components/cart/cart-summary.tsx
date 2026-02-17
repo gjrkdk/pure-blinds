@@ -1,21 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useCartStore } from '@/lib/cart/store';
 import { formatPrice } from '@/lib/pricing/calculator';
 
+const emptySubscribe = () => () => {};
+
 export function CartSummary() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);
   const getItemCount = useCartStore((state) => state.getItemCount);
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   if (!mounted) {
     return null;
