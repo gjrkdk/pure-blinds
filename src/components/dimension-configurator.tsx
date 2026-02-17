@@ -144,7 +144,7 @@ export default function DimensionConfigurator({
             setPrice(null);
           }
         }
-      } catch (err) {
+      } catch {
         if (!ignore) {
           setError("Kan prijs niet berekenen");
           setPrice(null);
@@ -161,7 +161,7 @@ export default function DimensionConfigurator({
     return () => {
       ignore = true;
     };
-  }, [debouncedWidth, debouncedHeight]);
+  }, [debouncedWidth, debouncedHeight, productId]);
 
   // Handle add to cart
   const handleAddToCart = () => {

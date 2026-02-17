@@ -21,6 +21,21 @@ export const metadata: Metadata = {
     description:
       "Bestel rolgordijnen op maat online. Directe prijsberekening, premium materialen, geleverd aan huis. Gratis advies en snelle levering door heel Nederland.",
     siteName: "Pure Blinds",
+    images: [
+      {
+        url: "/images/rolgordijn-in-woonkamer-situatie.webp",
+        width: 1200,
+        height: 630,
+        alt: "Rolgordijn op maat in woonkamer | Pure Blinds",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rolgordijnen op Maat | Pure Blinds",
+    description:
+      "Bestel rolgordijnen op maat online. Directe prijsberekening, premium materialen, geleverd aan huis. Gratis advies en snelle levering door heel Nederland.",
+    images: ["/images/rolgordijn-in-woonkamer-situatie.webp"],
   },
 };
 
