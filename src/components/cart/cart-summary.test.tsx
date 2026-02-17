@@ -40,7 +40,7 @@ describe('CartSummary', () => {
     render(<CartSummary />);
 
     // Click checkout button
-    const checkoutButton = screen.getByRole('button', { name: /proceed to checkout/i });
+    const checkoutButton = screen.getByRole('button', { name: /afrekenen/i });
     fireEvent.click(checkoutButton);
 
     // Wait for fetch to complete
