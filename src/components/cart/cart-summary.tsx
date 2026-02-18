@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useSyncExternalStore } from 'react';
-import { useCartStore } from '@/lib/cart/store';
-import { formatPrice } from '@/lib/pricing/calculator';
+import { useState, useSyncExternalStore } from "react";
+import { useCartStore } from "@/lib/cart/store";
+import { formatPrice } from "@/lib/pricing/calculator";
 
 const emptySubscribe = () => () => {};
 
@@ -10,14 +10,13 @@ export function CartSummary() {
   const mounted = useSyncExternalStore(
     emptySubscribe,
     () => true,
-    () => false
+    () => false,
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);
   const getItemCount = useCartStore((state) => state.getItemCount);
   const items = useCartStore((state) => state.items);
-  const clearCart = useCartStore((state) => state.clearCart);
 
   if (!mounted) {
     return null;
@@ -31,23 +30,25 @@ export function CartSummary() {
     setError(null);
 
     try {
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.invoiceUrl) {
-        clearCart();
+        localStorage.setItem("checkout_started", Date.now().toString());
         window.location.href = data.invoiceUrl;
       } else {
-        setError(data.error || 'Kan bestelling niet verwerken. Probeer het opnieuw.');
+        setError(
+          data.error || "Kan bestelling niet verwerken. Probeer het opnieuw.",
+        );
         setLoading(false);
       }
     } catch {
-      setError('Kan bestelling niet verwerken. Probeer het opnieuw.');
+      setError("Kan bestelling niet verwerken. Probeer het opnieuw.");
       setLoading(false);
     }
   };
@@ -61,7 +62,7 @@ export function CartSummary() {
       <div className="mt-6 space-y-3 border-b border-border pb-6">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted">
-            Subtotaal ({itemCount} {itemCount === 1 ? 'artikel' : 'artikelen'})
+            Subtotaal ({itemCount} {itemCount === 1 ? "artikel" : "artikelen"})
           </span>
           <span className="font-medium text-foreground">
             {formatPrice(totalPrice)}
@@ -83,7 +84,7 @@ export function CartSummary() {
       <button
         onClick={handleCheckout}
         disabled={loading || itemCount === 0}
-        className="mt-6 w-full min-h-[44px] bg-accent py-3 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-6 w-full min-h-11 bg-accent py-3 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {loading ? (
           <span className="flex items-center justify-center gap-2">
@@ -91,7 +92,7 @@ export function CartSummary() {
             Bestelling voorbereiden...
           </span>
         ) : (
-          'Afrekenen'
+          "Afrekenen"
         )}
       </button>
 
