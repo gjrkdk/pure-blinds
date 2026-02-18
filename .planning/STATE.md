@@ -11,7 +11,7 @@ See: .planning/PROJECT.md (updated 2026-02-14)
 
 Milestone: v1.3 Dutch Content & SEO — SHIPPED 2026-02-14
 Status: All milestones complete, planning next
-Last activity: 2026-02-15 - Completed quick task 12: Add additional product images underneath
+Last activity: 2026-02-18 - Completed quick task 13: Clear cart only after order completion
 
 Progress: [██████████████████████] 100% (4 milestones shipped)
 
@@ -63,13 +63,14 @@ None.
 | 10 | Deployment vercel | 2026-02-14 | a92a5e8 |
 | 11 | Add product image, USPs and specification | 2026-02-15 | a36846e |
 | 12 | Add additional product images underneath | 2026-02-15 | 055f66a |
+| 13 | Clear cart only after order completion | 2026-02-18 | d2ec260 |
 
 ## Session Continuity
 
-Last session: 2026-02-15
-Stopped at: Completed quick-12-PLAN.md
+Last session: 2026-02-18
+Stopped at: Completed quick-13-PLAN.md
 Resume file: None
 Next step: /gsd:new-milestone
 
 ---
-*Last updated: 2026-02-15 after quick task 12 completion*
+*Last updated: 2026-02-18 after quick task 13 completion*
