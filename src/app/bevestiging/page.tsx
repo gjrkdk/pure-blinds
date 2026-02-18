@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from "next/link";
+import { ClearCartOnMount } from '@/components/cart/clear-cart-on-mount';
 
 export const metadata: Metadata = {
   title: 'Bestelling Bevestigd | Pure Blinds',
@@ -23,6 +24,7 @@ export default async function ConfirmationPage({
 
   return (
     <div className="px-6 py-20 sm:py-28">
+      <ClearCartOnMount />
       <div className="mx-auto max-w-lg text-center">
         {/* Success icon */}
         <div className="mx-auto flex h-16 w-16 items-center justify-center border-2 border-foreground">
