@@ -17,7 +17,6 @@ export function CartSummary() {
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);
   const getItemCount = useCartStore((state) => state.getItemCount);
   const items = useCartStore((state) => state.items);
-  const clearCart = useCartStore((state) => state.clearCart);
 
   if (!mounted) {
     return null;
@@ -40,7 +39,6 @@ export function CartSummary() {
       const data = await response.json();
 
       if (response.ok && data.invoiceUrl) {
-        clearCart();
         window.location.href = data.invoiceUrl;
       } else {
         setError(data.error || 'Kan bestelling niet verwerken. Probeer het opnieuw.');
