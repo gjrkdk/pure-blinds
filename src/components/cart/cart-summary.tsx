@@ -40,6 +40,7 @@ export function CartSummary() {
 
       if (response.ok && data.invoiceUrl) {
         useCartStore.getState().clearCart();
+        localStorage.setItem("checkout_started", Date.now().toString());
         window.location.href = data.invoiceUrl;
       } else {
         setError(
@@ -84,7 +85,7 @@ export function CartSummary() {
       <button
         onClick={handleCheckout}
         disabled={loading || itemCount === 0}
-        className="mt-6 w-full min-h-[44px] bg-accent py-3 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-6 w-full min-h-11 bg-accent py-3 text-sm font-medium tracking-wide text-accent-foreground transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {loading ? (
           <span className="flex items-center justify-center gap-2">

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <title>{{ page_title }}</title>
+  {{ content_for_header }}
+
+  <script>
+    (function() {
+      var storefront = "https://pure-blinds.nl";
+      var path = window.location.pathname;
+
+      // Order status page: redirect to confirmation page with order name
+      if (path.indexOf('/orders/') !== -1) {
+        var orderName = document.querySelector('[data-order-name]');
+        var orderId = orderName ? orderName.getAttribute('data-order-name') : '';
+        window.location.replace(storefront + "/bevestiging?order_id=" + encodeURIComponent(orderId));
+        return;
+      }
+
+      // All other Shopify storefront pages: redirect to homepage
+      window.location.replace(storefront + path);
+    })();
+  </script>
+</head>
+<body>
+  {{ content_for_layout }}
+  <p>Doorsturen naar <a href="https://pure-blinds.nl">pure-blinds.nl</a>...</p>
+</body>
+</html>
