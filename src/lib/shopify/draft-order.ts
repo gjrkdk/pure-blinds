@@ -1,6 +1,7 @@
 import { GraphqlQueryError } from '@shopify/shopify-api';
 import { createAdminClient } from '@/lib/shopify/client';
 import { CartItem } from '@/lib/cart/types';
+import { getProduct } from '@/lib/product/catalog';
 
 const DRAFT_ORDER_CREATE = `#graphql
   mutation draftOrderCreate($input: DraftOrderInput!) {
@@ -37,6 +38,9 @@ export async function createDraftOrder(items: CartItem[]): Promise<{ invoiceUrl:
       variables: {
         input: {
           lineItems: items.map(item => {
+            const product = getProduct(item.productId);
+            const variantId = product?.shopifyVariantId;
+
             if (item.type === "sample") {
               return {
                 title: `Kleurstaal — ${item.productName}`,
@@ -45,6 +49,7 @@ export async function createDraftOrder(items: CartItem[]): Promise<{ invoiceUrl:
                   currencyCode: "EUR"
                 },
                 quantity: 1,
+                ...(variantId && { variantId }),
                 customAttributes: [
                   { key: "Type", value: "Kleurstaal" },
                   { key: "Product ID", value: item.productId }
@@ -61,6 +66,8 @@ export async function createDraftOrder(items: CartItem[]): Promise<{ invoiceUrl:
                 currencyCode: "EUR"
               },
               quantity: item.quantity,
+              // Link to Shopify variant for product image on checkout
+              ...(variantId && { variantId }),
               // Store dimensions and product metadata as custom attributes for fulfillment
               customAttributes: [
                 { key: "Width", value: `${item.options!.width}cm` },
