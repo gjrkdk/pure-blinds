@@ -3,7 +3,6 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { ClearCartAfterCheckout } from "@/components/cart/clear-cart-on-mount";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -50,7 +49,6 @@ export default function RootLayout({
       <body
         className={`${jakarta.variable} antialiased flex min-h-screen flex-col`}
       >
-        <ClearCartAfterCheckout />
         <Header />
         <main className="flex-1 pt-0 md:pt-20">{children}</main>
         <Footer />
