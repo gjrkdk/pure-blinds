@@ -16,7 +16,8 @@ export async function POST(request: Request) {
     const result = await createDraftOrder(body.items);
 
     return NextResponse.json(result, { status: 200 });
-  } catch {
+  } catch (error) {
+    console.error("[checkout]", error);
     // User-friendly error only (CONTEXT.md decision)
     return NextResponse.json(
       { error: "Unable to process checkout. Please try again." },
