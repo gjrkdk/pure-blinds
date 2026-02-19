@@ -20,12 +20,12 @@ Requirements for production readiness. Each maps to roadmap phases.
 
 ### Checkout & Payment
 
-- [ ] **CHKOUT-01**: Product page displays price with "Incl. 21% BTW" label
-- [ ] **CHKOUT-02**: Cart clears only after confirmed purchase completion, not on every confirmation page visit
+- [x] **CHKOUT-01**: Product page displays price with "Incl. 21% BTW" label
+- [x] **CHKOUT-02**: Cart clears only after confirmed purchase completion, not on every confirmation page visit
 
 ### Order Tracking
 
-- [ ] **TRACK-01**: Draft Orders containing sample items receive `kleurstaal` tag in Shopify
+- [x] **TRACK-01**: Draft Orders containing sample items receive `kleurstaal` tag in Shopify
 
 ### Bug Fixes
 
@@ -64,9 +64,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CART-01 | Phase 21 | Complete |
 | CART-02 | Phase 21 | Complete |
 | CART-03 | Phase 21 | Complete |
-| CHKOUT-01 | Phase 22 | Pending |
-| CHKOUT-02 | Phase 22 | Pending |
-| TRACK-01 | Phase 22 | Pending |
+| CHKOUT-01 | Phase 22 | Complete |
+| CHKOUT-02 | Phase 22 | Complete |
+| TRACK-01 | Phase 22 | Complete |
 | FIX-01 | Phase 19 | Complete |
 | FIX-02 | Phase 19 | Complete |
 | FIX-03 | Phase 19 | Complete |
