@@ -6,6 +6,7 @@
 - ✅ **v1.1 Design Homepage** - Phases 6-10 (shipped 2026-02-10)
 - ✅ **v1.2 Product Catalog & Navigation** - Phases 11-14 (shipped 2026-02-13)
 - ✅ **v1.3 Dutch Content & SEO** - Phases 15-18 (shipped 2026-02-14)
+- 🚧 **v1.4 Production Ready** - Phases 19-22 (in progress)
 
 ## Phases
 
@@ -166,6 +167,75 @@ Plans:
 
 </details>
 
+### 🚧 v1.4 Production Ready (In Progress)
+
+**Milestone Goal:** Make the webshop production-ready with correct environment configuration, improved cart UX, VAT display, and sample order tracking so customers can complete the full purchase flow reliably.
+
+- [ ] **Phase 19: Bug Fixes** - Eliminate env var inconsistencies, dead config, and data errors
+- [ ] **Phase 20: Environment Configuration** - Environment-based Shopify IDs for dev/prod separation
+- [ ] **Phase 21: Cart UX** - Split add-to-cart button, sample button update, mobile cart icon
+- [ ] **Phase 22: Checkout & Order Tracking** - VAT display, smart cart clearing, sample order tagging
+
+## Phase Details
+
+### Phase 19: Bug Fixes
+**Goal**: Codebase is free of env var inconsistencies, dead configuration references, and incorrect data metadata
+**Depends on**: Phase 18
+**Requirements**: FIX-01, FIX-02, FIX-03, FIX-04
+**Success Criteria** (what must be TRUE):
+  1. All pages resolve canonical URLs using `NEXT_PUBLIC_BASE_URL` — no `NEXT_PUBLIC_SITE_URL` references remain in the codebase
+  2. The env validation in `src/lib/env.ts` no longer references `SHOPIFY_PRODUCT_ID`
+  3. Pricing matrix JSON files declare `"currency": "EUR"` — the USD value is gone
+  4. The domain fallback in `src/lib/env.ts` resolves to `pure-blinds.nl`, not `pureblinds.nl`
+**Plans**: TBD
+
+Plans:
+- [ ] 19-01: Fix env vars, remove dead config, correct currency metadata and domain fallback
+
+### Phase 20: Environment Configuration
+**Goal**: Shopify product and variant IDs are resolved from environment variables at runtime, enabling separate dev and production Shopify stores
+**Depends on**: Phase 19
+**Requirements**: ENV-01, ENV-02
+**Success Criteria** (what must be TRUE):
+  1. Adding a product to cart in dev uses the Shopify product/variant ID from dev environment variables, not a value hardcoded in products.json
+  2. Deploying to production with prod env vars causes the Draft Order to reference production Shopify IDs without any code change
+  3. The `.env.example` (or equivalent) documents the required Shopify ID env vars for both dev and prod environments
+  4. Products.json no longer contains Shopify product or variant ID values
+**Plans**: TBD
+
+Plans:
+- [ ] 20-01: Extract Shopify IDs to env vars, update products.json, update Draft Order creation
+
+### Phase 21: Cart UX
+**Goal**: The add-to-cart and sample flows give customers clear next-step navigation, and the cart is always visible on mobile
+**Depends on**: Phase 19
+**Requirements**: CART-01, CART-02, CART-03
+**Success Criteria** (what must be TRUE):
+  1. After adding a product to cart on the product page, the single "Toevoegen" button is replaced by two buttons: "Nog een toevoegen" (resets form) and "Naar winkelwagen →" (navigates to cart page)
+  2. After adding a sample to cart, the sample button label changes to "Bekijk winkelwagen →" and clicking it navigates to the cart page
+  3. On mobile, a cart icon with an item count badge is visible in the header next to the hamburger menu icon
+  4. The cart badge count updates immediately when items are added or removed
+**Plans**: TBD
+
+Plans:
+- [ ] 21-01: Split add-to-cart button and sample button state update
+- [ ] 21-02: Mobile cart icon with badge in header
+
+### Phase 22: Checkout & Order Tracking
+**Goal**: Customers see the VAT-inclusive price before checkout, cart state survives browser navigation after purchase, and sample orders are tagged in Shopify for operations
+**Depends on**: Phase 21
+**Requirements**: CHKOUT-01, CHKOUT-02, TRACK-01
+**Success Criteria** (what must be TRUE):
+  1. The product configurator displays the calculated price with "Incl. 21% BTW" label beneath or alongside it
+  2. Visiting `/bevestiging` without a valid order query parameter does not clear the cart
+  3. Cart is cleared only when the confirmation page receives a confirmed Shopify order ID (purchase completion signal)
+  4. Draft Orders in Shopify that include at least one sample line item carry the `kleurstaal` tag, visible in the Shopify admin
+**Plans**: TBD
+
+Plans:
+- [ ] 22-01: VAT display on product page and smart cart clearing on confirmation
+- [ ] 22-02: kleurstaal tag on Draft Orders with sample items
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -188,6 +258,10 @@ Plans:
 | 16. Dutch Content & Metadata | v1.3 | 4/4 | Complete | 2026-02-14 |
 | 17. Structured Data | v1.3 | 2/2 | Complete | 2026-02-14 |
 | 18. Sitemap & Robots | v1.3 | 1/1 | Complete | 2026-02-14 |
+| 19. Bug Fixes | v1.4 | 0/1 | Not started | - |
+| 20. Environment Configuration | v1.4 | 0/1 | Not started | - |
+| 21. Cart UX | v1.4 | 0/2 | Not started | - |
+| 22. Checkout & Order Tracking | v1.4 | 0/2 | Not started | - |
 
 ---
-*Last updated: 2026-02-14 after v1.3 milestone completion*
+*Last updated: 2026-02-19 after v1.4 roadmap creation*
