@@ -28,6 +28,11 @@ const envSchema = z.object({
 
 export type Env = z.infer<typeof envSchema>;
 
-const env = envSchema.parse(process.env);
+// Parse only on the server — client components import this module
+// transitively (via catalog.ts → store.ts) but never use server-only values.
+const env =
+  typeof window === "undefined"
+    ? envSchema.parse(process.env)
+    : ({} as z.infer<typeof envSchema>);
 
 export default env;
