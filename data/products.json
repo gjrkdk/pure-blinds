@@ -10,8 +10,6 @@
       "subcategory": "transparante-rolgordijnen",
       "description": "Strak wit rolgordijn op maat gemaakt. Voer uw gewenste breedte en hoogte in voor een directe prijsopgave.",
       "pricingMatrixPath": "/data/pricing/roller-blind-white.json",
-      "shopifyProductId": "gid://shopify/Product/9275201487085",
-      "shopifyVariantId": "gid://shopify/ProductVariant/49390577025261",
       "image": "/images/transparant-rolgordijn-woonkamer.webp",
       "images": ["/images/transparant-rolgordijn-keuken.webp", "/images/rolgordijn-in-woonkamer-situatie.webp"],
       "usps": [
@@ -50,8 +48,6 @@
       "subcategory": "verduisterende-rolgordijnen",
       "description": "Stijlvol zwart rolgordijn op maat gemaakt. Voer uw gewenste breedte en hoogte in voor een directe prijsopgave.",
       "pricingMatrixPath": "/data/pricing/roller-blind-black.json",
-      "shopifyProductId": "gid://shopify/Product/9275201487085",
-      "shopifyVariantId": "gid://shopify/ProductVariant/49390787821805",
       "image": "/images/verduisterend-rolgordijn-slaapkamer.webp",
       "images": ["/images/rolgordijn-keuken.webp", "/images/rolgordijn-in-woonkamer-situatie.webp"],
       "usps": [
