@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "lastUpdated": "2026-01-29",
   "description": "Roller blinds pricing matrix for custom dimensions",
-  "currency": "USD",
+  "currency": "EUR",
   "priceUnit": "cents",
   "dimensions": {
     "width": {

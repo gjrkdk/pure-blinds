@@ -87,10 +87,10 @@ export function ContactSection() {
                   E-mail
                 </span>
                 <a
-                  href="mailto:info@pureblinds.nl"
+                  href="mailto:info@pure-blinds.nl"
                   className="text-sm text-neutral-400 hover:text-accent-foreground transition-colors"
                 >
-                  info@pureblinds.nl
+                  info@pure-blinds.nl
                 </a>
               </div>
               <div className="flex items-baseline justify-between border-b border-neutral-800 py-4">

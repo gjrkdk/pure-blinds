@@ -7,6 +7,6 @@ export function buildOrganizationSchema(baseUrl: string): WithContext<Organizati
     name: 'Pure Blinds',
     url: baseUrl,
     logo: `${baseUrl}/svg/logo.svg`,
-    email: 'info@pureblinds.nl',
+    email: 'info@pure-blinds.nl',
   };
 }
