@@ -173,7 +173,7 @@ Plans:
 
 - [x] **Phase 19: Bug Fixes** - Eliminate env var inconsistencies, dead config, and data errors (completed 2026-02-19)
 - [x] **Phase 20: Environment Configuration** - Environment-based Shopify IDs for dev/prod separation (completed 2026-02-19)
-- [ ] **Phase 21: Cart UX** - Split add-to-cart button, sample button update, mobile cart icon
+- [x] **Phase 21: Cart UX** - Split add-to-cart button, sample button update, mobile cart icon (completed 2026-02-19)
 - [ ] **Phase 22: Checkout & Order Tracking** - VAT display, smart cart clearing, sample order tagging
 
 ## Phase Details
@@ -260,7 +260,7 @@ Plans:
 | 18. Sitemap & Robots | v1.3 | 1/1 | Complete | 2026-02-14 |
 | 19. Bug Fixes | v1.4 | 1/1 | Complete | 2026-02-19 |
 | 20. Environment Configuration | v1.4 | Complete    | 2026-02-19 | 2026-02-19 |
-| 21. Cart UX | v1.4 | 0/2 | Not started | - |
+| 21. Cart UX | 2/2 | Complete   | 2026-02-19 | - |
 | 22. Checkout & Order Tracking | v1.4 | 0/2 | Not started | - |
 
 ---
