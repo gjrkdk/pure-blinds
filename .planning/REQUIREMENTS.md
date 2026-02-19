@@ -16,7 +16,7 @@ Requirements for production readiness. Each maps to roadmap phases.
 
 - [ ] **CART-01**: After adding product to cart, button splits into "Nog een toevoegen" + "Naar winkelwagen →"
 - [ ] **CART-02**: After adding sample to cart, sample button changes to "Bekijk winkelwagen →" linking to cart page
-- [ ] **CART-03**: Cart icon with item count badge visible next to hamburger menu on mobile
+- [x] **CART-03**: Cart icon with item count badge visible next to hamburger menu on mobile
 
 ### Checkout & Payment
 
@@ -63,7 +63,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ENV-02 | Phase 20 | Complete |
 | CART-01 | Phase 21 | Pending |
 | CART-02 | Phase 21 | Pending |
-| CART-03 | Phase 21 | Pending |
+| CART-03 | Phase 21 | Complete |
 | CHKOUT-01 | Phase 22 | Pending |
 | CHKOUT-02 | Phase 22 | Pending |
 | TRACK-01 | Phase 22 | Pending |

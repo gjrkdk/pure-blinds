@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** v1.4 Production Ready — Phase 20: Environment Configuration
+**Current focus:** v1.4 Production Ready — Phase 21: Cart UX
 
 ## Current Position
 
-Phase: 20 of 22 (Environment Configuration)
-Plan: 1 of 1 in current phase
-Status: Phase complete
-Last activity: 2026-02-19 — Phase 20 Environment Configuration complete (SHOPIFY_PRODUCT_MAP env var)
+Phase: 21 of 22 (Cart UX)
+Plan: 2 of 4 in current phase
+Status: In progress
+Last activity: 2026-02-19 — Phase 21 Plan 02 complete (mobile cart icon with badge in header)
 
-Progress: [██████████████░░░░░░] 67% (20/30 plans complete)
+Progress: [██████████████░░░░░░] 70% (21/30 plans complete)
 
 ## Performance Metrics
 
@@ -48,6 +48,9 @@ Recent decisions affecting v1.4:
 - [20-01]: SHOPIFY_PRODUCT_MAP stored as single JSON-encoded env var rather than 2N individual vars for catalog scalability
 - [20-01]: .env.example is gitignored per project convention (prior PR #10 explicitly removed it from tracking)
 - [20-01]: getShopifyIds returns undefined for unmapped products rather than throwing, preserving draft order resilience
+- [21-02]: Mobile cart icon uses useSyncExternalStore hydration guard (same pattern as CartIcon) to avoid SSR mismatch
+- [21-02]: Badge styling matches desktop CartIcon (bg-foreground, text-accent-foreground) per locked nav styling decision
+- [21-02]: Pulse animation via scale-125/scale-100 transition (300ms) — no external animation library needed
 
 ### Pending Todos
 
@@ -84,9 +87,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 20-01-PLAN.md (Phase 20 Environment Configuration complete)
+Stopped at: Completed 21-02-PLAN.md (Phase 21 Cart UX — mobile cart icon with badge)
 Resume file: None
-Next step: `/gsd:plan-phase 21`
+Next step: Continue Phase 21 Plan 03
 
 ---
-*Last updated: 2026-02-19 after Phase 20 Environment Configuration execution*
+*Last updated: 2026-02-19 after Phase 21 Plan 02 execution*
