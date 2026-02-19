@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 import Link from "next/link";
-import { redirect } from 'next/navigation';
-import { ClearCartOnMount } from '@/components/cart/clear-cart-on-mount';
 
 export const metadata: Metadata = {
   title: 'Bestelling Bevestigd | Pure Blinds',
@@ -16,21 +14,9 @@ export const metadata: Metadata = {
   robots: { index: false },
 }
 
-export default async function ConfirmationPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ order_id?: string }>;
-}) {
-  const { order_id } = await searchParams;
-
-  // Redirect to homepage if no order_id provided — prevents accidental cart clearing
-  if (!order_id || order_id.trim() === '') {
-    redirect('/');
-  }
-
+export default function ConfirmationPage() {
   return (
     <div className="px-6 py-20 sm:py-28">
-      <ClearCartOnMount orderId={order_id} />
       <div className="mx-auto max-w-lg text-center">
         {/* Success icon */}
         <div className="mx-auto flex h-16 w-16 items-center justify-center border-2 border-foreground">
@@ -53,12 +39,6 @@ export default async function ConfirmationPage({
         <h1 className="mt-8 text-3xl font-light tracking-tight text-foreground sm:text-4xl">
           Bedankt voor uw bestelling
         </h1>
-
-        {order_id && (
-          <p className="mt-3 font-mono text-sm text-muted">
-            Bestelling {order_id}
-          </p>
-        )}
 
         <p className="mt-4 text-base text-muted">
           Uw rolgordijn op maat wordt nu geproduceerd.
