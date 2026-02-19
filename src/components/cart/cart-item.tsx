@@ -66,7 +66,7 @@ export function CartItem({ item }: CartItemProps) {
               </p>
             )}
             <p className="mt-0.5 text-sm text-muted">
-              {formatPrice(item.priceInCents)}{!isSample && " per stuk"}
+              {formatPrice(item.priceInCents)}{!isSample && " per stuk"} incl. BTW
             </p>
           </div>
         </div>

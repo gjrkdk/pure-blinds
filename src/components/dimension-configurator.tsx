@@ -278,9 +278,8 @@ export default function DimensionConfigurator({
           <p className="text-2xl font-semibold text-red-500">{error}</p>
         ) : price !== null ? (
           <div>
-            <p className="text-sm text-muted mb-1">Prijs</p>
             <p className="text-3xl font-semibold text-foreground">
-              {formatPrice(price)}
+              {formatPrice(price)}<span className="text-base font-normal text-muted ml-1">incl. 21% BTW</span>
             </p>
           </div>
         ) : (
