@@ -259,7 +259,7 @@ Plans:
 | 17. Structured Data | v1.3 | 2/2 | Complete | 2026-02-14 |
 | 18. Sitemap & Robots | v1.3 | 1/1 | Complete | 2026-02-14 |
 | 19. Bug Fixes | v1.4 | 1/1 | Complete | 2026-02-19 |
-| 20. Environment Configuration | v1.4 | 1/1 | Complete | 2026-02-19 |
+| 20. Environment Configuration | v1.4 | Complete    | 2026-02-19 | 2026-02-19 |
 | 21. Cart UX | v1.4 | 0/2 | Not started | - |
 | 22. Checkout & Order Tracking | v1.4 | 0/2 | Not started | - |
 
