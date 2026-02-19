@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-export type ShopifyProductMap = Record<string, { productId: string; variantId: string }>;
+export type ShopifyProductMap = Record<
+  string,
+  { productId: string; variantId: string }
+>;
 
 const envSchema = z.object({
   SHOPIFY_STORE_DOMAIN: z.string().min(1, "SHOPIFY_STORE_DOMAIN is required"),
@@ -21,11 +24,11 @@ const envSchema = z.object({
         z.object({
           productId: z.string().startsWith("gid://shopify/Product/"),
           variantId: z.string().startsWith("gid://shopify/ProductVariant/"),
-        })
-      )
+        }),
+      ),
     ),
   RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
-  CONTACT_EMAIL: z.string().email().default("info@pure-blinds.nl"),
+  CONTACT_EMAIL: z.string().email().default("robin@raamdeluxe.nl"),
 });
 
 export type Env = z.infer<typeof envSchema>;

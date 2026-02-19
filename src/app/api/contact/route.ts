@@ -84,7 +84,7 @@ export async function POST(request: Request) {
 
     // Send notification email to business owner
     await resend.emails.send({
-      from: "Pure Blinds Website <onboarding@resend.dev>",
+      from: "Pure Blinds <info@pure-blinds.nl>",
       to: env.CONTACT_EMAIL,
       subject: `Nieuw contactformulier bericht van ${name}`,
       html: `
@@ -124,7 +124,7 @@ export async function POST(request: Request) {
 
     // Send confirmation email to customer
     await resend.emails.send({
-      from: "Pure Blinds Website <onboarding@resend.dev>",
+      from: "Pure Blinds <info@pure-blinds.nl>",
       to: email,
       subject: "We ontvingen uw bericht - Pure Blinds",
       html: `
