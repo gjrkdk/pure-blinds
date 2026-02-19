@@ -228,7 +228,7 @@ export default function DimensionConfigurator({
             onChange={handleWidthChange}
             aria-invalid={!!fieldErrors.width}
             aria-describedby={fieldErrors.width ? "width-error" : undefined}
-            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors bg-white rounded-lg ${
+            className={`w-full px-4 py-3 border text-base text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors bg-white rounded-lg ${
               fieldErrors.width ? "border-red-500" : "border-border"
             }`}
             placeholder="bijv. 100"
@@ -257,7 +257,7 @@ export default function DimensionConfigurator({
             onChange={handleHeightChange}
             aria-invalid={!!fieldErrors.height}
             aria-describedby={fieldErrors.height ? "height-error" : undefined}
-            className={`w-full px-4 py-3 border text-sm text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors bg-white rounded-lg ${
+            className={`w-full px-4 py-3 border text-base text-foreground placeholder:text-muted/60 focus:outline-none focus:border-foreground transition-colors bg-white rounded-lg ${
               fieldErrors.height ? "border-red-500" : "border-border"
             }`}
             placeholder="bijv. 150"
