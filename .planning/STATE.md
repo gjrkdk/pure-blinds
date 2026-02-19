@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** v1.4 Production Ready — Phase 21: Cart UX
+**Current focus:** v1.4 Production Ready — Phase 22: Checkout & Order Tracking
 
 ## Current Position
 
-Phase: 21 of 22 (Cart UX)
-Plan: 2 of 4 in current phase
+Phase: 22 of 22 (Checkout & Order Tracking)
+Plan: 2 of 2 in current phase
 Status: In progress
-Last activity: 2026-02-19 — Phase 21 Plan 02 complete (mobile cart icon with badge in header)
+Last activity: 2026-02-19 — Phase 22 Plan 02 complete (kleurstaal tag on Draft Orders with color samples)
 
 Progress: [██████████████░░░░░░] 70% (21/30 plans complete)
 
@@ -23,7 +23,7 @@ Progress: [██████████████░░░░░░] 70% (21
 - Total v1.1 execution time: 465s (7m 45s)
 - Total v1.2 execution time: 1,481s (24m 41s)
 - Total v1.3 execution time: 1,180s (19m 40s)
-- Total v1.4 execution time: ~153s (2m 33s so far)
+- Total v1.4 execution time: ~194s (3m 14s so far)
 
 **By Milestone:**
 
@@ -54,6 +54,9 @@ Recent decisions affecting v1.4:
 - [21-02]: Mobile cart icon uses useSyncExternalStore hydration guard (same pattern as CartIcon) to avoid SSR mismatch
 - [21-02]: Badge styling matches desktop CartIcon (bg-foreground, text-accent-foreground) per locked nav styling decision
 - [21-02]: Pulse animation via scale-125/scale-100 transition (300ms) — no external animation library needed
+- [22-02]: kleurstaal tag applied when ANY item is a sample (not only all-sample orders)
+- [22-02]: Sample identification uses item.type === "sample" (CartItem.type field)
+- [22-02]: Tag-only approach — no label prefixes on sample line item titles
 
 ### Pending Todos
 
@@ -90,9 +93,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 21-02-PLAN.md (Phase 21 Cart UX — mobile cart icon with badge)
+Stopped at: Completed 22-02-PLAN.md (Phase 22 Checkout & Order Tracking — kleurstaal tag on sample Draft Orders)
 Resume file: None
-Next step: Continue Phase 21 Plan 03
+Next step: Phase 22 complete — all plans finished
 
 ---
-*Last updated: 2026-02-19 after Phase 21 Plan 02 execution*
+*Last updated: 2026-02-19 after Phase 22 Plan 02 execution*

@@ -234,7 +234,7 @@ Plans:
 
 Plans:
 - [ ] 22-01-PLAN.md — VAT-inclusive price labels and smart cart clearing with Shopify order verification
-- [ ] 22-02-PLAN.md — kleurstaal tag on Draft Orders with sample items
+- [x] 22-02-PLAN.md — kleurstaal tag on Draft Orders with sample items
 
 ## Progress
 
@@ -261,7 +261,7 @@ Plans:
 | 19. Bug Fixes | v1.4 | 1/1 | Complete | 2026-02-19 |
 | 20. Environment Configuration | v1.4 | Complete    | 2026-02-19 | 2026-02-19 |
 | 21. Cart UX | 2/2 | Complete    | 2026-02-19 | - |
-| 22. Checkout & Order Tracking | v1.4 | 0/2 | Not started | - |
+| 22. Checkout & Order Tracking | v1.4 | 1/2 | In progress | - |
 
 ---
-*Last updated: 2026-02-19 after v1.4 roadmap creation*
+*Last updated: 2026-02-19 after Phase 22 Plan 02 execution*
