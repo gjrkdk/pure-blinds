@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useDebounce } from "use-debounce";
 import { useCartStore } from "@/lib/cart/store";
 import { formatPrice } from "@/lib/pricing/calculator";
@@ -19,6 +20,8 @@ export default function DimensionConfigurator({
   productId,
   productName,
 }: DimensionConfiguratorProps) {
+  const router = useRouter();
+
   // State management
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
@@ -28,8 +31,7 @@ export default function DimensionConfigurator({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const [addedFeedback, setAddedFeedback] = useState(false);
-  const [sampleFeedback, setSampleFeedback] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   // Cart store
   const addItem = useCartStore((state) => state.addItem);
@@ -54,6 +56,7 @@ export default function DimensionConfigurator({
   const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setWidth(value);
+    setAddedToCart(false);
 
     const validationError = validateField("width", value);
     setFieldErrors((prev) => ({
@@ -65,6 +68,7 @@ export default function DimensionConfigurator({
   const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setHeight(value);
+    setAddedToCart(false);
 
     const validationError = validateField("height", value);
     setFieldErrors((prev) => ({
@@ -178,23 +182,22 @@ export default function DimensionConfigurator({
       priceInCents: price,
     });
 
-    // Show feedback for 2 seconds
-    setAddedFeedback(true);
-    setTimeout(() => {
-      setAddedFeedback(false);
-    }, 2000);
+    setAddedToCart(true);
+  };
+
+  // Reset form to initial state (called by "Nog een toevoegen")
+  const handleResetForm = () => {
+    setWidth("");
+    setHeight("");
+    setPrice(null);
+    setError(null);
+    setFieldErrors({});
+    setAddedToCart(false);
   };
 
   // Handle add sample to cart
   const handleAddSample = () => {
-    if (hasSample || sampleFeedback) return;
-
     addSample({ productId, productName });
-
-    setSampleFeedback(true);
-    setTimeout(() => {
-      setSampleFeedback(false);
-    }, 2000);
   };
 
   // Determine if Add to Cart button should be enabled
@@ -202,7 +205,7 @@ export default function DimensionConfigurator({
     price !== null &&
     !loading &&
     Object.keys(fieldErrors).length === 0 &&
-    !addedFeedback;
+    !addedToCart;
 
   return (
     <div className="space-y-6">
@@ -287,26 +290,49 @@ export default function DimensionConfigurator({
         )}
       </div>
 
-      {/* Add to Cart button */}
+      {/* Add to Cart button area */}
       <div className="mt-6 space-y-3">
-        <button
-          onClick={handleAddToCart}
-          disabled={!canAddToCart}
-          className="w-full bg-accent text-accent-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed border-border rounded-lg"
-        >
-          {addedFeedback ? "Toegevoegd!" : "Toevoegen aan winkelwagen"}
-        </button>
-        <button
-          onClick={handleAddSample}
-          disabled={hasSample || sampleFeedback}
-          className="w-full border border-border bg-white text-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg"
-        >
-          {sampleFeedback
-            ? "Kleurstaal toegevoegd!"
-            : hasSample
-              ? "Kleurstaal in winkelwagen"
-              : "Kleurstaal bestellen"}
-        </button>
+        {addedToCart ? (
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => router.push("/winkelwagen")}
+              className="w-full bg-accent text-accent-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 rounded-lg"
+            >
+              Naar winkelwagen &rarr;
+            </button>
+            <button
+              onClick={handleResetForm}
+              className="w-full bg-neutral-100 text-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 rounded-lg"
+            >
+              Nog een toevoegen
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={handleAddToCart}
+            disabled={!canAddToCart}
+            className="w-full bg-accent text-accent-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed border-border rounded-lg"
+          >
+            Toevoegen
+          </button>
+        )}
+
+        {/* Sample button */}
+        {hasSample ? (
+          <button
+            onClick={() => router.push("/winkelwagen")}
+            className="w-full bg-accent text-accent-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 rounded-lg"
+          >
+            Bekijk winkelwagen &rarr;
+          </button>
+        ) : (
+          <button
+            onClick={handleAddSample}
+            className="w-full border border-border bg-white text-foreground py-3 text-sm font-medium tracking-wide transition-opacity hover:opacity-80 rounded-lg"
+          >
+            Kleurstaal bestellen
+          </button>
+        )}
       </div>
     </div>
   );
