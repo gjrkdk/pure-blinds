@@ -48,6 +48,9 @@ Recent decisions affecting v1.4:
 - [20-01]: SHOPIFY_PRODUCT_MAP stored as single JSON-encoded env var rather than 2N individual vars for catalog scalability
 - [20-01]: .env.example is gitignored per project convention (prior PR #10 explicitly removed it from tracking)
 - [20-01]: getShopifyIds returns undefined for unmapped products rather than throwing, preserving draft order resilience
+- [21-01]: addedToCart persists until explicit user action (no auto-reset timer) — gives clear post-add navigation
+- [21-01]: No animation on button transition — instant swap per locked UX decision
+- [21-01]: Naar winkelwagen and Bekijk winkelwagen use primary accent style; Nog een toevoegen uses bg-neutral-100 (muted)
 - [21-02]: Mobile cart icon uses useSyncExternalStore hydration guard (same pattern as CartIcon) to avoid SSR mismatch
 - [21-02]: Badge styling matches desktop CartIcon (bg-foreground, text-accent-foreground) per locked nav styling decision
 - [21-02]: Pulse animation via scale-125/scale-100 transition (300ms) — no external animation library needed
