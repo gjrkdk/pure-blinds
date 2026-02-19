@@ -14,7 +14,7 @@ import { buildBreadcrumbSchema } from "@/lib/schema/breadcrumb";
 import { loadPricingMatrix } from "@/lib/pricing/loader";
 import MeasurementGuide from "@/components/product/measurement-guide";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pureblinds.nl";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://pure-blinds.nl";
 
 export async function generateMetadata({
   params,

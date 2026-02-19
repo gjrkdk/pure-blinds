@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://pureblinds.nl';
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://pure-blinds.nl';
   const orgSchema = buildOrganizationSchema(BASE_URL);
   const faqSchema = buildFaqSchema(FAQ_ITEMS);
 
