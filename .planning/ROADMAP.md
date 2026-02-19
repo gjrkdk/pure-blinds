@@ -187,10 +187,10 @@ Plans:
   2. The env validation in `src/lib/env.ts` no longer references `SHOPIFY_PRODUCT_ID`
   3. Pricing matrix JSON files declare `"currency": "EUR"` — the USD value is gone
   4. The domain fallback in `src/lib/env.ts` resolves to `pure-blinds.nl`, not `pureblinds.nl`
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 19-01: Fix env vars, remove dead config, correct currency metadata and domain fallback
+- [ ] 19-01-PLAN.md — Fix env vars, remove dead config, correct currency metadata and domain fallback
 
 ### Phase 20: Environment Configuration
 **Goal**: Shopify product and variant IDs are resolved from environment variables at runtime, enabling separate dev and production Shopify stores
