@@ -8,7 +8,7 @@ import { JsonLd } from '@/lib/schema/jsonld'
 import { buildBlogPostSchema } from '@/lib/schema/blog'
 import { buildBreadcrumbSchema } from '@/lib/schema/breadcrumb'
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://pureblinds.nl';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://pure-blinds.nl';
 
 export async function generateStaticParams() {
   return posts.map((post) => ({
