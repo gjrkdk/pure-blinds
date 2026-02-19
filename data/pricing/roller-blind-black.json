@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "lastUpdated": "2026-02-13",
   "description": "Black rollerblind pricing matrix",
-  "currency": "USD",
+  "currency": "EUR",
   "priceUnit": "cents",
   "dimensions": {
     "width": {

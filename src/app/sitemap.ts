@@ -3,7 +3,7 @@ import { getAllProducts, getProductUrl } from '@/lib/product/catalog'
 import { posts } from '../../.velite'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://pureblinds.nl'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://pure-blinds.nl'
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
