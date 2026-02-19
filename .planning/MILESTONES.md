@@ -117,3 +117,36 @@
 
 ---
 
+
+## v1.4 Production Ready (Shipped: 2026-02-19)
+
+**Delivered:** Production-ready webshop with environment-based Shopify configuration, improved cart UX with split buttons and mobile visibility, VAT display, and sample order tracking.
+
+**Phases completed:** 19-22 (6 plans, ~8 tasks)
+
+**Key accomplishments:**
+
+- Eliminated 4 env/config bugs: stale NEXT_PUBLIC_SITE_URL, dead SHOPIFY_PRODUCT_ID, USD currency metadata, and incorrect domain fallbacks across 13 files
+- SHOPIFY_PRODUCT_MAP JSON env var with Zod GID validation enables dev/prod Shopify store switching without code changes
+- Split add-to-cart button transitions to "Naar winkelwagen" + "Nog een toevoegen" after adding; sample button transitions to "Bekijk winkelwagen"
+- Mobile cart icon with animated badge visible next to hamburger menu on all viewports below 768px
+- "Incl. 21% BTW" VAT labels on product configurator, cart line items, and cart total for Dutch regulatory compliance
+- Conditional `kleurstaal` tag on Draft Orders containing color samples for Shopify admin filtering
+
+**Stats:**
+
+- 47 files modified (+2,571/-169 lines)
+- 4,819 lines of TypeScript/TSX (total project)
+- 4 phases, 6 plans, ~8 tasks
+- 1 day (Feb 19), ~194s (~3m 14s) execution time
+
+**Git range:** `fix(19-01)` → `fix(22)`
+
+**Known tech debt:**
+- CHKOUT-02 design delta: cart clears at checkout initiation rather than after payment confirmation (intentional decision, commit `aeedfdd`)
+- Two stale SUMMARY files (22-01, 21-02) describe superseded architecture
+
+**What's next:** Real product photography, contact form backend, scroll animations, content expansion, test coverage.
+
+---
+
