@@ -48,7 +48,7 @@ Requirements for production readiness. Each maps to roadmap phases.
 | Feature | Reason |
 |---------|--------|
 | Separate Draft Order for samples | Adds complexity, tag is sufficient for tracking |
-| Contact form backend | Frontend-only for now, backend submission deferred |
+| Contact form backend | Frontend-only for now, backend submission handling deferred |
 | Product photography | Using placeholder images, real photos added separately |
 | Shopify app version | Different architecture, future milestone |
 | Advanced SEO strategy | Foundation shipped, strategy later |
@@ -59,24 +59,24 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ENV-01 | — | Pending |
-| ENV-02 | — | Pending |
-| CART-01 | — | Pending |
-| CART-02 | — | Pending |
-| CART-03 | — | Pending |
-| CHKOUT-01 | — | Pending |
-| CHKOUT-02 | — | Pending |
-| TRACK-01 | — | Pending |
-| FIX-01 | — | Pending |
-| FIX-02 | — | Pending |
-| FIX-03 | — | Pending |
-| FIX-04 | — | Pending |
+| ENV-01 | Phase 20 | Pending |
+| ENV-02 | Phase 20 | Pending |
+| CART-01 | Phase 21 | Pending |
+| CART-02 | Phase 21 | Pending |
+| CART-03 | Phase 21 | Pending |
+| CHKOUT-01 | Phase 22 | Pending |
+| CHKOUT-02 | Phase 22 | Pending |
+| TRACK-01 | Phase 22 | Pending |
+| FIX-01 | Phase 19 | Pending |
+| FIX-02 | Phase 19 | Pending |
+| FIX-03 | Phase 19 | Pending |
+| FIX-04 | Phase 19 | Pending |
 
 **Coverage:**
 - v1.4 requirements: 12 total
-- Mapped to phases: 0
-- Unmapped: 12
+- Mapped to phases: 12
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 after initial definition*
+*Last updated: 2026-02-19 after v1.4 roadmap creation*

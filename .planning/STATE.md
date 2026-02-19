@@ -5,14 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** v1.4 Production Ready
+**Current focus:** v1.4 Production Ready — Phase 19: Bug Fixes
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-19 — Milestone v1.4 started
+Phase: 19 of 22 (Bug Fixes)
+Plan: 0 of 1 in current phase
+Status: Ready to plan
+Last activity: 2026-02-19 — v1.4 roadmap created (phases 19-22)
+
+Progress: [████████████░░░░░░░░] 60% (18/30 plans complete)
 
 ## Performance Metrics
 
@@ -36,6 +38,10 @@ Last activity: 2026-02-19 — Milestone v1.4 started
 ### Decisions
 
 All decisions logged in PROJECT.md Key Decisions table.
+
+Recent decisions affecting v1.4:
+- [Quick 13]: Cart clearing moved to confirmation page with order ID signal — CHKOUT-02 partially addressed, needs verification
+- [v1.3]: `NEXT_PUBLIC_BASE_URL` is the canonical env var name — FIX-01 removes stale `NEXT_PUBLIC_SITE_URL`
 
 ### Pending Todos
 
@@ -67,9 +73,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Defining v1.4 requirements
+Stopped at: v1.4 roadmap created, ready to plan Phase 19
 Resume file: None
-Next step: Define requirements → create roadmap
+Next step: `/gsd:plan-phase 19`
 
 ---
-*Last updated: 2026-02-19 after v1.4 milestone start*
+*Last updated: 2026-02-19 after v1.4 roadmap creation*
