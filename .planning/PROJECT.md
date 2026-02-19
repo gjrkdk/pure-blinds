@@ -59,6 +59,21 @@ Customers can order custom-dimension roller blinds with accurate matrix-based pr
 
 ### Active
 
+#### Current Milestone: v1.4 Production Ready
+
+**Goal:** Make the webshop production-ready so customers can complete the full purchase flow with proper environment configuration, improved cart UX, VAT display, and sample order tracking.
+
+**Target features:**
+- Environment-based Shopify product/variant IDs (dev vs prod)
+- Split button after add-to-cart with navigation to cart page
+- Cart icon with badge visible on mobile next to hamburger
+- VAT display ("Incl. 21% BTW") on product page + Shopify checkout
+- Smart cart clearing — only after actual purchase completion
+- Shopify order tag `kleurstaal` on Draft Orders with samples
+- Fix env var inconsistencies (NEXT_PUBLIC_SITE_URL, dead SHOPIFY_PRODUCT_ID)
+- Fix pricing matrix currency metadata (USD → EUR)
+- Fix hardcoded domain fallback (pureblinds.nl → pure-blinds.nl)
+
 #### Carried from v1.0
 - [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
 - [ ] Create test products in Shopify store (deferred from Phase 1)
@@ -176,4 +191,4 @@ Customers can order custom-dimension roller blinds with accurate matrix-based pr
 | Next.js MetadataRoute for sitemap/robots | Built-in conventions, no external packages needed | ✓ Good — type-safe, integrates with build pipeline |
 
 ---
-*Last updated: 2026-02-14 after v1.3 milestone*
+*Last updated: 2026-02-19 after v1.4 milestone start*
