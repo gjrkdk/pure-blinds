@@ -71,7 +71,7 @@ Each task was committed atomically:
 
 1. **Task 1: Implement split add-to-cart button and sample button state changes** - `62c2526` (feat)
 
-**Plan metadata:** (docs commit below)
+**Plan metadata:** `6e0d69b` (docs)
 
 ## Files Created/Modified
 - `src/components/dimension-configurator.tsx` - Replaced addedFeedback/sampleFeedback with addedToCart boolean, added useRouter, conditional split-button rendering, handleResetForm, dimension-change resets
@@ -98,6 +98,14 @@ None - no external service configuration required.
 - Split button UX complete and committed
 - Product page now gives customers clear next-step navigation after adding items
 - Ready for Phase 21-02 (remaining cart UX plans)
+
+## Self-Check: PASSED
+
+- `src/components/dimension-configurator.tsx` - FOUND
+- `21-01-SUMMARY.md` - FOUND
+- Commit `62c2526` (feat task) - FOUND
+- Commit `6e0d69b` (docs metadata) - FOUND
+- TypeScript: `npx tsc --noEmit` - 0 errors
 
 ---
 *Phase: 21-cart-ux*
