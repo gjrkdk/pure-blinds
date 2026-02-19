@@ -24,6 +24,8 @@ const envSchema = z.object({
         })
       )
     ),
+  RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
+  CONTACT_EMAIL: z.string().email().default("info@pure-blinds.nl"),
 });
 
 export type Env = z.infer<typeof envSchema>;
