@@ -4,6 +4,7 @@
 
 import catalogData from '../../../data/products.json';
 import type { ProductCatalog, Product, Category, Subcategory } from './types';
+import env from '@/lib/env';
 
 const catalog = catalogData as ProductCatalog;
 
@@ -32,4 +33,8 @@ export function getProductUrl(product: Product): string {
     return `/producten/${product.category}/${product.subcategory}/${product.slug}`;
   }
   return `/producten/${product.category}/${product.slug}`;
+}
+
+export function getShopifyIds(productId: string): { productId: string; variantId: string } | undefined {
+  return env.SHOPIFY_PRODUCT_MAP[productId];
 }
