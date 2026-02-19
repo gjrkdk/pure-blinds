@@ -71,11 +71,12 @@ None.
 | 11 | Add product image, USPs and specification | 2026-02-15 | a36846e |
 | 12 | Add additional product images underneath | 2026-02-15 | 055f66a |
 | 13 | Clear cart only after order completion | 2026-02-18 | d2ec260 |
+| 14 | Use logo icon as favicon | 2026-02-19 | 5f81387 |
 
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: v1.4 milestone completed and archived
+Stopped at: Completed quick task 14 (use-logo-icon-as-favicon)
 Resume file: None
 Next step: /gsd:new-milestone for next version
 
