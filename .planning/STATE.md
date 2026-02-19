@@ -54,6 +54,11 @@ Recent decisions affecting v1.4:
 - [21-02]: Mobile cart icon uses useSyncExternalStore hydration guard (same pattern as CartIcon) to avoid SSR mismatch
 - [21-02]: Badge styling matches desktop CartIcon (bg-foreground, text-accent-foreground) per locked nav styling decision
 - [21-02]: Pulse animation via scale-125/scale-100 transition (300ms) — no external animation library needed
+- [22-01]: Inline 'incl. 21% BTW' on configurator (text-base muted), 'incl. BTW' on cart line items and total — no separate breakdown line
+- [22-01]: ClearCartOnMount accepts orderId prop; does nothing if absent (page handles redirect)
+- [22-01]: verify-order endpoint safe default — any error returns { valid: false }, cart never risks data loss
+- [22-01]: GID normalisation: numeric order_id -> gid://shopify/DraftOrder/${id}; full GIDs used as-is
+- [22-01]: Empty cart CTA changed from /producten to / with Dutch 'Terug naar de winkel' text
 - [22-02]: kleurstaal tag applied when ANY item is a sample (not only all-sample orders)
 - [22-02]: Sample identification uses item.type === "sample" (CartItem.type field)
 - [22-02]: Tag-only approach — no label prefixes on sample line item titles
@@ -93,9 +98,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 22-02-PLAN.md (Phase 22 Checkout & Order Tracking — kleurstaal tag on sample Draft Orders)
+Stopped at: Completed 22-01-PLAN.md (Phase 22 Checkout & Order Tracking — VAT labels and smart cart clearing)
 Resume file: None
 Next step: Phase 22 complete — all plans finished
 
 ---
-*Last updated: 2026-02-19 after Phase 22 Plan 02 execution*
+*Last updated: 2026-02-19 after Phase 22 Plan 01 execution*
