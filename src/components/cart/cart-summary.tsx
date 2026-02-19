@@ -78,7 +78,7 @@ export function CartSummary() {
       <div className="mt-4 flex items-center justify-between">
         <span className="text-sm font-medium text-foreground">Totaal</span>
         <span className="text-lg font-medium text-foreground">
-          {formatPrice(totalPrice)}
+          {formatPrice(totalPrice)}<span className="text-xs font-normal text-muted ml-1">incl. BTW</span>
         </span>
       </div>
 
