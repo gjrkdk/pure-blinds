@@ -1,7 +1,7 @@
 import { GraphqlQueryError } from '@shopify/shopify-api';
 import { createAdminClient } from '@/lib/shopify/client';
 import { CartItem } from '@/lib/cart/types';
-import { getProduct } from '@/lib/product/catalog';
+import { getShopifyIds } from '@/lib/product/catalog';
 
 const DRAFT_ORDER_CREATE = `#graphql
   mutation draftOrderCreate($input: DraftOrderInput!) {
@@ -38,8 +38,8 @@ export async function createDraftOrder(items: CartItem[]): Promise<{ invoiceUrl:
       variables: {
         input: {
           lineItems: items.map(item => {
-            const product = getProduct(item.productId);
-            const variantId = product?.shopifyVariantId;
+            const shopifyIds = getShopifyIds(item.productId);
+            const variantId = shopifyIds?.variantId;
 
             if (item.type === "sample") {
               return {

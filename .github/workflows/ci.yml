@@ -69,6 +69,7 @@ jobs:
       SHOPIFY_ADMIN_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ADMIN_ACCESS_TOKEN }}
       SHOPIFY_API_VERSION: ${{ secrets.SHOPIFY_API_VERSION }}
       NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+      SHOPIFY_PRODUCT_MAP: ${{ secrets.SHOPIFY_PRODUCT_MAP }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
