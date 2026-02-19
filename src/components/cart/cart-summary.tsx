@@ -39,7 +39,6 @@ export function CartSummary() {
       const data = await response.json();
 
       if (response.ok && data.invoiceUrl) {
-        useCartStore.getState().clearCart();
         localStorage.setItem("checkout_started", Date.now().toString());
         window.location.href = data.invoiceUrl;
       } else {
