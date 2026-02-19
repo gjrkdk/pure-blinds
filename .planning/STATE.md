@@ -5,24 +5,25 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** v1.4 Production Ready — Phase 19: Bug Fixes
+**Current focus:** v1.4 Production Ready — Phase 20: Environment Configuration
 
 ## Current Position
 
-Phase: 19 of 22 (Bug Fixes)
+Phase: 20 of 22 (Environment Configuration)
 Plan: 1 of 1 in current phase
 Status: Phase complete
-Last activity: 2026-02-19 — Phase 19 Bug Fixes complete (4 bugs fixed)
+Last activity: 2026-02-19 — Phase 20 Environment Configuration complete (SHOPIFY_PRODUCT_MAP env var)
 
-Progress: [█████████████░░░░░░░] 63% (19/30 plans complete)
+Progress: [██████████████░░░░░░] 67% (20/30 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 29
+- Total plans completed: 30
 - Total v1.1 execution time: 465s (7m 45s)
 - Total v1.2 execution time: 1,481s (24m 41s)
 - Total v1.3 execution time: 1,180s (19m 40s)
+- Total v1.4 execution time: ~153s (2m 33s so far)
 
 **By Milestone:**
 
@@ -44,6 +45,9 @@ Recent decisions affecting v1.4:
 - [v1.3]: `NEXT_PUBLIC_BASE_URL` is the canonical env var name — FIX-01 removes stale `NEXT_PUBLIC_SITE_URL`
 - [19-01]: SHOPIFY_PRODUCT_ID removed from env validation and CI — product IDs come from catalog since Phase 11
 - [19-01]: Pricing JSON currency corrected to EUR — Shopify Draft Orders already used EUR since Phase 5
+- [20-01]: SHOPIFY_PRODUCT_MAP stored as single JSON-encoded env var rather than 2N individual vars for catalog scalability
+- [20-01]: .env.example is gitignored per project convention (prior PR #10 explicitly removed it from tracking)
+- [20-01]: getShopifyIds returns undefined for unmapped products rather than throwing, preserving draft order resilience
 
 ### Pending Todos
 
@@ -52,6 +56,11 @@ Carried from v1.0:
 - Create test products in Shopify store (deferred from Phase 1)
 - Add unit tests for pricing calculator and cart store actions
 - Pricing matrix reference in Draft Order custom attributes (ORDER-04 deferred)
+
+Deployment action required:
+- Add SHOPIFY_PRODUCT_MAP as GitHub Actions secret for CI build
+- Add SHOPIFY_PRODUCT_MAP to Vercel environment variables (production and preview)
+- Add SHOPIFY_PRODUCT_MAP to local .env.local for development
 
 ### Blockers/Concerns
 
@@ -75,9 +84,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 19-01-PLAN.md (Phase 19 Bug Fixes complete)
+Stopped at: Completed 20-01-PLAN.md (Phase 20 Environment Configuration complete)
 Resume file: None
-Next step: `/gsd:plan-phase 20`
+Next step: `/gsd:plan-phase 21`
 
 ---
-*Last updated: 2026-02-19 after Phase 19 Bug Fixes execution*
+*Last updated: 2026-02-19 after Phase 20 Environment Configuration execution*
