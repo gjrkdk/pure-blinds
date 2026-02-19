@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 19 of 22 (Bug Fixes)
-Plan: 0 of 1 in current phase
-Status: Ready to plan
-Last activity: 2026-02-19 — v1.4 roadmap created (phases 19-22)
+Plan: 1 of 1 in current phase
+Status: Phase complete
+Last activity: 2026-02-19 — Phase 19 Bug Fixes complete (4 bugs fixed)
 
-Progress: [████████████░░░░░░░░] 60% (18/30 plans complete)
+Progress: [█████████████░░░░░░░] 63% (19/30 plans complete)
 
 ## Performance Metrics
 
@@ -42,6 +42,8 @@ All decisions logged in PROJECT.md Key Decisions table.
 Recent decisions affecting v1.4:
 - [Quick 13]: Cart clearing moved to confirmation page with order ID signal — CHKOUT-02 partially addressed, needs verification
 - [v1.3]: `NEXT_PUBLIC_BASE_URL` is the canonical env var name — FIX-01 removes stale `NEXT_PUBLIC_SITE_URL`
+- [19-01]: SHOPIFY_PRODUCT_ID removed from env validation and CI — product IDs come from catalog since Phase 11
+- [19-01]: Pricing JSON currency corrected to EUR — Shopify Draft Orders already used EUR since Phase 5
 
 ### Pending Todos
 
@@ -73,9 +75,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: v1.4 roadmap created, ready to plan Phase 19
+Stopped at: Completed 19-01-PLAN.md (Phase 19 Bug Fixes complete)
 Resume file: None
-Next step: `/gsd:plan-phase 19`
+Next step: `/gsd:plan-phase 20`
 
 ---
-*Last updated: 2026-02-19 after v1.4 roadmap creation*
+*Last updated: 2026-02-19 after Phase 19 Bug Fixes execution*

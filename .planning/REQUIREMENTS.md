@@ -29,10 +29,10 @@ Requirements for production readiness. Each maps to roadmap phases.
 
 ### Bug Fixes
 
-- [ ] **FIX-01**: All pages use `NEXT_PUBLIC_BASE_URL` consistently (remove `NEXT_PUBLIC_SITE_URL` references)
-- [ ] **FIX-02**: Remove dead `SHOPIFY_PRODUCT_ID` from env validation
-- [ ] **FIX-03**: Pricing matrix JSON currency metadata corrected from USD to EUR
-- [ ] **FIX-04**: Hardcoded domain fallback corrected from `pureblinds.nl` to `pure-blinds.nl`
+- [x] **FIX-01**: All pages use `NEXT_PUBLIC_BASE_URL` consistently (remove `NEXT_PUBLIC_SITE_URL` references)
+- [x] **FIX-02**: Remove dead `SHOPIFY_PRODUCT_ID` from env validation
+- [x] **FIX-03**: Pricing matrix JSON currency metadata corrected from USD to EUR
+- [x] **FIX-04**: Hardcoded domain fallback corrected from `pureblinds.nl` to `pure-blinds.nl`
 
 ## Future Requirements
 
@@ -67,10 +67,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CHKOUT-01 | Phase 22 | Pending |
 | CHKOUT-02 | Phase 22 | Pending |
 | TRACK-01 | Phase 22 | Pending |
-| FIX-01 | Phase 19 | Pending |
-| FIX-02 | Phase 19 | Pending |
-| FIX-03 | Phase 19 | Pending |
-| FIX-04 | Phase 19 | Pending |
+| FIX-01 | Phase 19 | Complete |
+| FIX-02 | Phase 19 | Complete |
+| FIX-03 | Phase 19 | Complete |
+| FIX-04 | Phase 19 | Complete |
 
 **Coverage:**
 - v1.4 requirements: 12 total
