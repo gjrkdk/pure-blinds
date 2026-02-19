@@ -215,11 +215,11 @@ Plans:
   2. After adding a sample to cart, the sample button label changes to "Bekijk winkelwagen →" and clicking it navigates to the cart page
   3. On mobile, a cart icon with an item count badge is visible in the header next to the hamburger menu icon
   4. The cart badge count updates immediately when items are added or removed
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 21-01: Split add-to-cart button and sample button state update
-- [ ] 21-02: Mobile cart icon with badge in header
+- [ ] 21-01: Split add-to-cart button and sample button state changes
+- [ ] 21-02: Mobile cart icon with animated badge in header
 
 ### Phase 22: Checkout & Order Tracking
 **Goal**: Customers see the VAT-inclusive price before checkout, cart state survives browser navigation after purchase, and sample orders are tagged in Shopify for operations
