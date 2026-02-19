@@ -230,11 +230,11 @@ Plans:
   2. Visiting `/bevestiging` without a valid order query parameter does not clear the cart
   3. Cart is cleared only when the confirmation page receives a confirmed Shopify order ID (purchase completion signal)
   4. Draft Orders in Shopify that include at least one sample line item carry the `kleurstaal` tag, visible in the Shopify admin
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 22-01: VAT display on product page and smart cart clearing on confirmation
-- [ ] 22-02: kleurstaal tag on Draft Orders with sample items
+- [ ] 22-01-PLAN.md — VAT-inclusive price labels and smart cart clearing with Shopify order verification
+- [ ] 22-02-PLAN.md — kleurstaal tag on Draft Orders with sample items
 
 ## Progress
 
@@ -260,7 +260,7 @@ Plans:
 | 18. Sitemap & Robots | v1.3 | 1/1 | Complete | 2026-02-14 |
 | 19. Bug Fixes | v1.4 | 1/1 | Complete | 2026-02-19 |
 | 20. Environment Configuration | v1.4 | Complete    | 2026-02-19 | 2026-02-19 |
-| 21. Cart UX | 2/2 | Complete   | 2026-02-19 | - |
+| 21. Cart UX | 2/2 | Complete    | 2026-02-19 | - |
 | 22. Checkout & Order Tracking | v1.4 | 0/2 | Not started | - |
 
 ---
