@@ -33,10 +33,14 @@ export async function createDraftOrder(items: CartItem[]): Promise<{ invoiceUrl:
 
   const client = createAdminClient();
 
+  // Tag Draft Orders containing at least one color sample for operations filtering
+  const hasSamples = items.some(item => item.type === "sample");
+
   try {
     const response = await client.request(DRAFT_ORDER_CREATE, {
       variables: {
         input: {
+          ...(hasSamples && { tags: ["kleurstaal"] }),
           lineItems: items.map(item => {
             const shopifyIds = getShopifyIds(item.productId);
             const variantId = shopifyIds?.variantId;
