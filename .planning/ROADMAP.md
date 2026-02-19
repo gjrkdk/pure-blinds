@@ -201,10 +201,10 @@ Plans:
   2. Deploying to production with prod env vars causes the Draft Order to reference production Shopify IDs without any code change
   3. The `.env.example` (or equivalent) documents the required Shopify ID env vars for both dev and prod environments
   4. Products.json no longer contains Shopify product or variant ID values
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 20-01: Extract Shopify IDs to env vars, update products.json, update Draft Order creation
+- [ ] 20-01: Extract Shopify IDs to SHOPIFY_PRODUCT_MAP env var, update product catalog and Draft Order creation
 
 ### Phase 21: Cart UX
 **Goal**: The add-to-cart and sample flows give customers clear next-step navigation, and the cart is always visible on mobile
