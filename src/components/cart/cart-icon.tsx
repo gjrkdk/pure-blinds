@@ -15,10 +15,13 @@ export default function CartIcon() {
 
   useEffect(() => {
     if (mounted && itemCount !== prevCountRef.current && itemCount > 0) {
-      setBadgePulse(true)
+      const raf = requestAnimationFrame(() => setBadgePulse(true))
       const timer = setTimeout(() => setBadgePulse(false), 300)
       prevCountRef.current = itemCount
-      return () => clearTimeout(timer)
+      return () => {
+        cancelAnimationFrame(raf)
+        clearTimeout(timer)
+      }
     }
     prevCountRef.current = itemCount
   }, [itemCount, mounted])
