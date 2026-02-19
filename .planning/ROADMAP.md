@@ -172,7 +172,7 @@ Plans:
 **Milestone Goal:** Make the webshop production-ready with correct environment configuration, improved cart UX, VAT display, and sample order tracking so customers can complete the full purchase flow reliably.
 
 - [x] **Phase 19: Bug Fixes** - Eliminate env var inconsistencies, dead config, and data errors (completed 2026-02-19)
-- [ ] **Phase 20: Environment Configuration** - Environment-based Shopify IDs for dev/prod separation
+- [x] **Phase 20: Environment Configuration** - Environment-based Shopify IDs for dev/prod separation (completed 2026-02-19)
 - [ ] **Phase 21: Cart UX** - Split add-to-cart button, sample button update, mobile cart icon
 - [ ] **Phase 22: Checkout & Order Tracking** - VAT display, smart cart clearing, sample order tagging
 
@@ -204,7 +204,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 20-01: Extract Shopify IDs to SHOPIFY_PRODUCT_MAP env var, update product catalog and Draft Order creation
+- [x] 20-01: Extract Shopify IDs to SHOPIFY_PRODUCT_MAP env var, update product catalog and Draft Order creation
 
 ### Phase 21: Cart UX
 **Goal**: The add-to-cart and sample flows give customers clear next-step navigation, and the cart is always visible on mobile
@@ -258,8 +258,8 @@ Plans:
 | 16. Dutch Content & Metadata | v1.3 | 4/4 | Complete | 2026-02-14 |
 | 17. Structured Data | v1.3 | 2/2 | Complete | 2026-02-14 |
 | 18. Sitemap & Robots | v1.3 | 1/1 | Complete | 2026-02-14 |
-| 19. Bug Fixes | 1/1 | Complete    | 2026-02-19 | - |
-| 20. Environment Configuration | v1.4 | 0/1 | Not started | - |
+| 19. Bug Fixes | v1.4 | 1/1 | Complete | 2026-02-19 |
+| 20. Environment Configuration | v1.4 | 1/1 | Complete | 2026-02-19 |
 | 21. Cart UX | v1.4 | 0/2 | Not started | - |
 | 22. Checkout & Order Tracking | v1.4 | 0/2 | Not started | - |
 

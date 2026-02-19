@@ -9,8 +9,8 @@ Requirements for production readiness. Each maps to roadmap phases.
 
 ### Environment & Configuration
 
-- [ ] **ENV-01**: Shopify product/variant IDs loaded from environment variables, not hardcoded in products.json
-- [ ] **ENV-02**: Dev and prod environments use separate Shopify stores with their own product IDs
+- [x] **ENV-01**: Shopify product/variant IDs loaded from environment variables, not hardcoded in products.json
+- [x] **ENV-02**: Dev and prod environments use separate Shopify stores with their own product IDs
 
 ### Cart UX
 
@@ -59,8 +59,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ENV-01 | Phase 20 | Pending |
-| ENV-02 | Phase 20 | Pending |
+| ENV-01 | Phase 20 | Complete |
+| ENV-02 | Phase 20 | Complete |
 | CART-01 | Phase 21 | Pending |
 | CART-02 | Phase 21 | Pending |
 | CART-03 | Phase 21 | Pending |
