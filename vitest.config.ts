@@ -7,6 +7,16 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
+    env: {
+      SHOPIFY_STORE_DOMAIN: 'test.myshopify.com',
+      SHOPIFY_ADMIN_ACCESS_TOKEN: 'shpat_test',
+      SHOPIFY_PRODUCT_MAP: JSON.stringify({
+        test: {
+          productId: 'gid://shopify/Product/1',
+          variantId: 'gid://shopify/ProductVariant/1',
+        },
+      }),
+    },
     exclude: [
       '**/node_modules/**',
       '**/dist/**',

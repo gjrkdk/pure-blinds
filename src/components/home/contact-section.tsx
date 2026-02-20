@@ -8,11 +8,14 @@ export function ContactSection() {
     email: "",
     phone: "",
     message: "",
+    honeypot: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [apiError, setApiError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newErrors: Record<string, string> = {};
@@ -37,7 +40,38 @@ export function ContactSection() {
     }
 
     setErrors({});
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setApiError("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          setApiError("Te veel verzoeken. Probeer het later opnieuw.");
+        } else {
+          let message = "Er is iets misgegaan. Probeer het later opnieuw.";
+          try {
+            const data = await response.json();
+            if (data.error) message = data.error;
+          } catch {
+            // ignore JSON parse errors
+          }
+          setApiError(message);
+        }
+        setIsSubmitting(false);
+        return;
+      }
+
+      setSubmitted(true);
+    } catch {
+      setApiError("Er is iets misgegaan. Probeer het later opnieuw.");
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -172,7 +206,7 @@ export function ContactSection() {
                     strokeLinejoin="round"
                   >
                     <line x1="12" y1="2" x2="12" y2="8" />
-                    <path d="M12 8c-2.8 0-5 2.2-5 5 0 1.9 1.1 3.6 2.7 4.4.2.1.5.1.6-.1l.4-1.5c.1-.2 0-.4-.1-.6-.5-.6-.8-1.4-.8-2.2 0-1.9 1.6-3.5 3.5-3.5s3.5 1.6 3.5 3.5c0 2.3-1 4.2-2.5 4.2-.8 0-1.4-.7-1.2-1.5.2-1 .6-2.1.6-2.8 0-.6-.3-1.1-1-1.1-.8 0-1.4.8-1.4 1.9 0 .7.2 1.2.2 1.2l-.9 3.6c-.3 1.2-.1 2.7 0 2.8 0 .1.2.1.3.1.1-.1 1.8-2.2 2.2-3.4l.5-1.8c.3.5.9.9 1.7.9 2.2 0 3.7-2 3.7-4.7C17.5 8.9 15.3 7 12.5 7z" />
+                    <path d="M12 8c-2.8 0-5 2.2-5 5 0 1.9 1.1 3.6 2.7 4.4.2.1.5.1.6-.1l.4-1.5c.1-.2 0-.4-.1-.6-.5-.6-.8-1.4-.8-2.2 0-1.9 1.6-3.5 3.5-3.5s3.5 1.6 3.5 3.5c0 2.3-1 4-2.5 4-.8 0-1.4-.7-1.2-1.5.2-1 .6-2.1.6-2.8 0-.6-.3-1.1-1-1.1-.8 0-1.4.8-1.4 1.9 0 .7.2 1.2.2 1.2l-.9 3.6c-.3 1.2-.1 2.7 0 2.8 0 .1.2.1.3.1.1-.1 1.8-2.2 2.2-3.4l.5-1.8c.3.5.9.9 1.7.9 2.2 0 3.7-2 3.7-4.7C17.5 8.9 15.3 7 12.5 7z" />
                   </svg>
                 </a>
                 <a
@@ -213,6 +247,23 @@ export function ContactSection() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  {/* Honeypot field — visually hidden, attracts bots */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute opacity-0 h-0 w-0 overflow-hidden"
+                  >
+                    <label htmlFor="website">Website</label>
+                    <input
+                      type="text"
+                      id="website"
+                      name="honeypot"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={formData.honeypot}
+                      onChange={handleChange}
+                    />
+                  </div>
+
                   <div>
                     <label
                       htmlFor="name"
@@ -298,11 +349,16 @@ export function ContactSection() {
                     )}
                   </div>
 
+                  {apiError && (
+                    <p className="text-xs text-red-500">{apiError}</p>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full bg-neutral-800 text-accent-foreground py-3 text-sm font-medium tracking-wide transition-colors hover:bg-neutral-700 rounded-lg"
+                    disabled={isSubmitting}
+                    className={`w-full bg-neutral-800 text-accent-foreground py-3 text-sm font-medium tracking-wide transition-colors hover:bg-neutral-700 rounded-lg${isSubmitting ? " opacity-50 cursor-not-allowed" : ""}`}
                   >
-                    Verstuur bericht
+                    {isSubmitting ? "Versturen..." : "Verstuur bericht"}
                   </button>
                 </form>
               )}

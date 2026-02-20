@@ -57,7 +57,7 @@ export function QuantityInput({ quantity, onUpdate }: QuantityInputProps) {
         onChange={handleChange}
         onBlur={handleBlur}
         aria-label="Quantity"
-        className="h-8 w-10 border-x border-border bg-transparent text-center text-sm text-foreground"
+        className="h-8 w-10 border-x border-border bg-transparent text-center text-base text-foreground"
       />
 
       <button

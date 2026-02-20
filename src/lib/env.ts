@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-export type ShopifyProductMap = Record<string, { productId: string; variantId: string }>;
+export type ShopifyProductMap = Record<
+  string,
+  { productId: string; variantId: string }
+>;
 
 const envSchema = z.object({
   SHOPIFY_STORE_DOMAIN: z.string().min(1, "SHOPIFY_STORE_DOMAIN is required"),
@@ -21,18 +24,14 @@ const envSchema = z.object({
         z.object({
           productId: z.string().startsWith("gid://shopify/Product/"),
           variantId: z.string().startsWith("gid://shopify/ProductVariant/"),
-        })
-      )
+        }),
+      ),
     ),
+  RESEND_API_KEY: z.string().optional(),
+  CONTACT_EMAIL: z.string().email().default("robin@raamdeluxe.nl"),
 });
 
+const env = envSchema.parse(process.env);
+
 export type Env = z.infer<typeof envSchema>;
-
-// Parse only on the server — client components import this module
-// transitively (via catalog.ts → store.ts) but never use server-only values.
-const env =
-  typeof window === "undefined"
-    ? envSchema.parse(process.env)
-    : ({} as z.infer<typeof envSchema>);
-
 export default env;
