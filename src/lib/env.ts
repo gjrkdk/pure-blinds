@@ -33,11 +33,21 @@ const envSchema = z.object({
 
 export type Env = z.infer<typeof envSchema>;
 
-// Parse only on the server — client components import this module
-// transitively (via catalog.ts → store.ts) but never use server-only values.
-const env =
-  typeof window === "undefined"
-    ? envSchema.parse(process.env)
-    : ({} as z.infer<typeof envSchema>);
+// Lazy singleton — env is validated on first access at runtime, not at
+// module-evaluation / build time.  This prevents CI builds from failing
+// when server-only secrets (e.g. RESEND_API_KEY) are unavailable.
+let _env: z.infer<typeof envSchema> | null = null;
+
+function getEnv(): z.infer<typeof envSchema> {
+  if (typeof window !== "undefined") return {} as z.infer<typeof envSchema>;
+  if (!_env) _env = envSchema.parse(process.env);
+  return _env;
+}
+
+const env = new Proxy({} as z.infer<typeof envSchema>, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getEnv(), prop, receiver);
+  },
+});
 
 export default env;
