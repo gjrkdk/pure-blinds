@@ -27,27 +27,11 @@ const envSchema = z.object({
         }),
       ),
     ),
-  RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required"),
+  RESEND_API_KEY: z.string().optional(),
   CONTACT_EMAIL: z.string().email().default("robin@raamdeluxe.nl"),
 });
 
+const env = envSchema.parse(process.env);
+
 export type Env = z.infer<typeof envSchema>;
-
-// Lazy singleton — env is validated on first access at runtime, not at
-// module-evaluation / build time.  This prevents CI builds from failing
-// when server-only secrets (e.g. RESEND_API_KEY) are unavailable.
-let _env: z.infer<typeof envSchema> | null = null;
-
-function getEnv(): z.infer<typeof envSchema> {
-  if (typeof window !== "undefined") return {} as z.infer<typeof envSchema>;
-  if (!_env) _env = envSchema.parse(process.env);
-  return _env;
-}
-
-const env = new Proxy({} as z.infer<typeof envSchema>, {
-  get(_target, prop, receiver) {
-    return Reflect.get(getEnv(), prop, receiver);
-  },
-});
-
 export default env;
