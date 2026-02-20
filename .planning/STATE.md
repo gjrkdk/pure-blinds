@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 Phase: 22 of 22 (all complete)
 Plan: All plans complete
 Status: Milestone v1.4 shipped
-Last activity: 2026-02-19 - Completed quick task 16: Prevent mobile zoom on width/height inputs
+Last activity: 2026-02-20 - Completed quick task 17: Remove mobile zoom on contact form input fields
 
 Progress: [████████████████████] 100% (35/35 plans complete across all milestones)
 
