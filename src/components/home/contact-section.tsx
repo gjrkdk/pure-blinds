@@ -278,7 +278,7 @@ export function ContactSection() {
                       placeholder="Jan Jansen"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors rounded-lg"
+                      className="w-full border border-border bg-surface px-4 py-3 text-base text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors rounded-lg"
                     />
                     {errors.name && (
                       <p className="text-xs text-red-500 mt-1">{errors.name}</p>
@@ -299,7 +299,7 @@ export function ContactSection() {
                       placeholder="janjansen@email.nl"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors rounded-lg"
+                      className="w-full border border-border bg-surface px-4 py-3 text-base text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors rounded-lg"
                     />
                     {errors.email && (
                       <p className="text-xs text-red-500 mt-1">
@@ -322,7 +322,7 @@ export function ContactSection() {
                       placeholder="+31 20 123 4567"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors rounded-lg"
+                      className="w-full border border-border bg-surface px-4 py-3 text-base text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors rounded-lg"
                     />
                   </div>
 
@@ -340,7 +340,7 @@ export function ContactSection() {
                       placeholder="Hallo, ik wil graag meer weten over..."
                       value={formData.message}
                       onChange={handleChange}
-                      className="w-full border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors resize-none rounded-lg"
+                      className="w-full border border-border bg-surface px-4 py-3 text-base text-foreground placeholder:text-muted/50 focus:outline-none focus:border-foreground transition-colors resize-none rounded-lg"
                     />
                     {errors.message && (
                       <p className="text-xs text-red-500 mt-1">
