@@ -3,8 +3,6 @@ import { z } from "zod";
 import { Resend } from "resend";
 import env from "@/lib/env";
 
-const resend = new Resend(env.RESEND_API_KEY);
-
 const contactSchema = z.object({
   name: z.string().min(1, "Naam is verplicht").max(100, "Naam is te lang"),
   email: z.string().email("Ongeldig e-mailadres"),
@@ -83,6 +81,7 @@ export async function POST(request: Request) {
     }
 
     // Send notification email to business owner
+    const resend = new Resend(env.RESEND_API_KEY);
     await resend.emails.send({
       from: "Pure Blinds <info@pure-blinds.nl>",
       to: env.CONTACT_EMAIL,
