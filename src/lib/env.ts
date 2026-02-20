@@ -31,7 +31,10 @@ const envSchema = z.object({
   CONTACT_EMAIL: z.string().email().default("robin@raamdeluxe.nl"),
 });
 
-const env = envSchema.parse(process.env);
+const env =
+  typeof window === "undefined"
+    ? envSchema.parse(process.env)
+    : ({} as z.infer<typeof envSchema>);
 
 export type Env = z.infer<typeof envSchema>;
 export default env;
