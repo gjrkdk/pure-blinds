@@ -1,700 +1,599 @@
-# Architecture Research: Dutch Content & SEO Integration
+# Architecture Research: GA4 E-commerce Tracking & GDPR Consent
 
-**Domain:** Dutch content & SEO integration in Next.js 15 App Router
-**Researched:** 2026-02-14
+**Domain:** Analytics and cookie consent integration in Next.js 15 App Router headless Shopify webshop
+**Researched:** 2026-02-22
 **Confidence:** HIGH
 
-## Executive Summary
-
-This research analyzes how Dutch content, metadata, structured data (JSON-LD), sitemap generation, robots.txt, OpenGraph tags, and category removal integrate with the existing Next.js 15 App Router architecture for Pure Blinds webshop.
-
-**Key Finding:** Next.js 15's Metadata API and file-based metadata conventions (sitemap.ts, robots.ts) provide first-class SEO support without external packages. Dutch content can be implemented as single-locale inline content without i18n routing complexity. Build order is dependency-driven: data updates → route removal → content updates → SEO infrastructure.
-
-## Current Architecture (Baseline)
-
-### Existing System Structure
+## Existing Architecture (Baseline)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │                    PRESENTATION LAYER                         │
-│  Next.js App Router Pages (Server Components + Client)       │
-│  /                    /products/[...slug]     /cart           │
-│  └─ DimensionConfigurator (client)                            │
+│  Server Components (pages, footer, blog, product copy)        │
+│  Client Components (header, dimension-configurator, cart)     │
 ├──────────────────────────────────────────────────────────────┤
 │                     API LAYER                                 │
-│  /api/pricing (POST)  /api/checkout (POST)  /api/health      │
-│  └─ Zod validation → Domain logic → JSON response            │
+│  /api/pricing (POST)   /api/checkout (POST)   /api/health    │
 ├──────────────────────────────────────────────────────────────┤
 │                   DOMAIN LOGIC LAYER                          │
 │  ┌─────────────┐  ┌────────────┐  ┌──────────────────┐      │
-│  │  Pricing    │  │  Product   │  │    Cart          │      │
-│  │  Engine     │  │  Catalog   │  │   Store          │      │
-│  │             │  │            │  │  (Zustand)       │      │
+│  │  Pricing    │  │  Product   │  │  Cart (Zustand)  │      │
+│  │  Engine     │  │  Catalog   │  │  localStorage    │      │
 │  └─────────────┘  └────────────┘  └──────────────────┘      │
-│  ┌──────────────────┐  ┌──────────────────┐                  │
-│  │    Shopify       │  │    Blog          │                  │
-│  │  Integration     │  │   (Velite)       │                  │
-│  │  (Draft Orders)  │  │                  │                  │
-│  └──────────────────┘  └──────────────────┘                  │
+│  ┌───────────────────────────────────────────────────┐       │
+│  │  Shopify Admin API (Draft Orders → invoiceUrl)    │       │
+│  └───────────────────────────────────────────────────┘       │
 ├──────────────────────────────────────────────────────────────┤
-│                      DATA LAYER                               │
-│  data/products.json                                           │
-│  data/pricing/*.json                                          │
-│  content/posts/*.mdx (Velite)                                 │
-│  localStorage (cart state)                                    │
+│                  EXTERNAL INTEGRATIONS                        │
+│  Shopify checkout domain (payment, order creation)            │
+│  Vercel (hosting, edge network)                               │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-### Current Metadata State
+**Key facts for analytics integration:**
+- Shopify checkout happens on Shopify's domain — the app cannot run JavaScript there
+- Cart is cleared at checkout initiation (`clearCart()` in cart-summary.tsx before redirect)
+- Return URL is `/bevestiging` — this is the only purchase signal the app receives
+- No order ID passes back from Shopify to `/bevestiging` via URL (Draft Order invoiceUrl does not append order reference automatically)
+- All existing interactive components are `"use client"` — analytics hooks can be added to them directly
+- Root layout is a Server Component — analytics scripts must be injected via a client boundary or `next/script`
 
-- **Root layout:** `lang="en"`, generic English title/description
-- **Page metadata:** Minimal or none on most routes
-- **Structured data:** None (no JSON-LD)
-- **Sitemap:** Not generated
-- **Robots.txt:** Not configured
-- **OpenGraph:** Not configured
+---
 
-## Target Architecture: Dutch + SEO
-
-### Enhanced System Structure
+## Target Architecture: Analytics + Consent
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    App Router Layer                          │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                   │
-│  │ layout.ts│  │ page.tsx │  │ sitemap.ts│                   │
-│  │ (root)   │  │ (route)  │  │ robots.ts │                   │
-│  └────┬─────┘  └────┬─────┘  └────┬──────┘                   │
-│       │ metadata    │ generate     │ static                   │
-│       │ object      │ Metadata()   │ generation               │
-├───────┴─────────────┴──────────────┴──────────────────────────┤
-│                    Metadata API Layer                         │
+┌──────────────────────────────────────────────────────────────┐
+│                    PRESENTATION LAYER                         │
+│  ┌─────────────────────────────────────────────────────┐     │
+│  │  app/layout.tsx (Server Component)                  │     │
+│  │  └─ <GoogleAnalytics /> (Client)  ← NEW             │     │
+│  │  └─ <CookieBanner />   (Client)  ← NEW             │     │
+│  └─────────────────────────────────────────────────────┘     │
+│                                                              │
+│  DimensionConfigurator (client) — fires view_item, add_to_cart│
+│  CartSummary (client)          — fires begin_checkout        │
+│  BevestigingPage (server shell + client tracker)            │
+│  └─ <PurchaseTracker /> (client) ← NEW                      │
+├──────────────────────────────────────────────────────────────┤
+│                   ANALYTICS LAYER (new)                      │
 │  ┌──────────────────────────────────────────────────────┐    │
-│  │  Metadata Object / generateMetadata()                │    │
-│  │  - title, description, openGraph                     │    │
-│  │  - alternates (canonical, hreflang)                  │    │
-│  │  - robots, keywords                                  │    │
+│  │  lib/analytics/                                      │    │
+│  │  ├── events.ts      — typed gtag() wrappers          │    │
+│  │  ├── consent.ts     — consent read/write (localStorage)   │
+│  │  └── types.ts       — GA4EcommerceItem, ConsentState  │    │
+│  └──────────────────────────────────────────────────────┘    │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  components/analytics/                               │    │
+│  │  ├── google-analytics.tsx  — script loader + consent default │
+│  │  ├── cookie-banner.tsx     — UI + consent update     │    │
+│  │  └── purchase-tracker.tsx  — fires purchase event    │    │
 │  └──────────────────────────────────────────────────────┘    │
 ├──────────────────────────────────────────────────────────────┤
-│                    Content Layer                             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                   │
-│  │ Dutch    │  │ Product  │  │ Blog MDX │                   │
-│  │ Content  │  │ JSON     │  │ (Velite) │                   │
-│  │ (inline) │  │ Data     │  │          │                   │
-│  └──────────┘  └──────────┘  └──────────┘                   │
-├──────────────────────────────────────────────────────────────┤
-│                 Structured Data Layer                        │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  JSON-LD <script> tags in page components            │    │
-│  │  - Product schema (products)                         │    │
-│  │  - FAQPage schema (FAQ sections)                     │    │
-│  │  - LocalBusiness schema (root layout)                │    │
-│  │  - BreadcrumbList schema (breadcrumbs component)     │    │
-│  └──────────────────────────────────────────────────────┘    │
+│                  EXTERNAL INTEGRATIONS                        │
+│  GA4 (Google Analytics 4) — receives events via gtag()       │
+│  Shopify checkout domain (unchanged)                         │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-### Component Responsibilities
+---
 
-| Component | Responsibility | Typical Implementation |
-|-----------|----------------|------------------------|
-| `layout.tsx` (root) | Global metadata, lang="nl", LocalBusiness JSON-LD | Static Metadata object + JSON-LD script tag |
-| `page.tsx` (routes) | Page-specific metadata, Dutch content, page-specific JSON-LD | generateMetadata() for dynamic routes, static Metadata for static routes |
-| `sitemap.ts` | Generate sitemap.xml with all routes | Export default function returning MetadataRoute.Sitemap array |
-| `robots.ts` | Generate robots.txt | Export default function returning Robots object |
-| Product catalog | Single source of truth for product data | JSON file with Dutch translations, imported by catalog utilities |
-| Blog posts (Velite) | MDX content with frontmatter | Velite schema with Dutch content fields |
-| Breadcrumbs component | BreadcrumbList JSON-LD | Client or server component with embedded JSON-LD |
+## New Components (What Gets Built)
 
-## Recommended Project Structure
+### Components Added
+
+| Component | Type | Location | Purpose |
+|-----------|------|----------|---------|
+| `GoogleAnalytics` | Client | `components/analytics/google-analytics.tsx` | Loads gtag.js script, sets consent defaults, tracks page views |
+| `CookieBanner` | Client | `components/analytics/cookie-banner.tsx` | GDPR consent UI, reads/writes localStorage, calls gtag consent update |
+| `PurchaseTracker` | Client | `components/analytics/purchase-tracker.tsx` | Fires `purchase` event on `/bevestiging`, deduplicates via sessionStorage |
+
+### Library Modules Added
+
+| Module | Location | Purpose |
+|--------|----------|---------|
+| `events.ts` | `lib/analytics/events.ts` | Typed wrappers for GA4 ecommerce events |
+| `consent.ts` | `lib/analytics/consent.ts` | Consent state persistence and reading |
+| `types.ts` | `lib/analytics/types.ts` | Shared GA4 item shape and consent types |
+
+### Existing Components Modified
+
+| Component | File | Change |
+|-----------|------|--------|
+| `DimensionConfigurator` | `components/dimension-configurator.tsx` | Call `trackViewItem()` on price load, `trackAddToCart()` on add |
+| `CartSummary` | `components/cart/cart-summary.tsx` | Call `trackBeginCheckout()` before redirect |
+| `BevestigingPage` | `app/bevestiging/page.tsx` | Add `<PurchaseTracker />` client component |
+| Root layout | `app/layout.tsx` | Add `<GoogleAnalytics />` and `<CookieBanner />` |
+
+---
+
+## Recommended Project Structure (additions only)
 
 ```
 src/
 ├── app/
-│   ├── layout.tsx                    # MODIFY: lang="nl", global metadata, LocalBusiness JSON-LD
-│   ├── page.tsx                      # MODIFY: Dutch content, homepage metadata
-│   ├── sitemap.ts                    # NEW: Sitemap generation
-│   ├── robots.ts                     # NEW: Robots.txt generation
-│   ├── products/
-│   │   ├── page.tsx                  # MODIFY: Dutch content
-│   │   ├── roller-blinds/
-│   │   │   ├── page.tsx              # MODIFY: Dutch content, metadata
-│   │   │   ├── transparent-roller-blinds/
-│   │   │   │   └── page.tsx          # MODIFY: Dutch content, metadata
-│   │   │   └── blackout-roller-blinds/
-│   │   │       └── page.tsx          # MODIFY: Dutch content, metadata
-│   │   └── [...slug]/
-│   │       └── page.tsx              # MODIFY: generateMetadata(), Product JSON-LD
-│   ├── blog/
-│   │   ├── page.tsx                  # MODIFY: Dutch content, metadata
-│   │   └── [slug]/
-│   │       └── page.tsx              # MODIFY: generateMetadata(), Article JSON-LD
-│   ├── cart/
-│   │   └── page.tsx                  # MODIFY: Dutch content, noindex robots
-│   └── confirmation/
-│       └── page.tsx                  # MODIFY: Dutch content, noindex robots
+│   ├── layout.tsx                    # MODIFY: add <GoogleAnalytics />, <CookieBanner />
+│   └── bevestiging/
+│       └── page.tsx                  # MODIFY: add <PurchaseTracker />
 ├── components/
-│   ├── layout/
-│   │   ├── breadcrumbs.tsx           # MODIFY: BreadcrumbList JSON-LD
-│   │   ├── header.tsx                # MODIFY: Dutch navigation labels
-│   │   └── footer.tsx                # MODIFY: Dutch footer content
-│   ├── home/
-│   │   ├── faq-section.tsx           # MODIFY: Dutch FAQs + FAQPage JSON-LD
-│   │   └── [other sections]          # MODIFY: Dutch content
-│   └── seo/                          # NEW: SEO utility components
-│       ├── json-ld.tsx               # JSON-LD wrapper component
-│       └── schema-generators.ts      # Schema generation utilities
-├── lib/
-│   ├── product/
-│   │   ├── catalog.ts                # MODIFY: Handle Dutch product data
-│   │   └── types.ts                  # MODIFY: Add Dutch fields to types
-│   ├── metadata/                     # NEW: Metadata utilities
-│   │   ├── generators.ts             # generateMetadata helpers
-│   │   ├── constants.ts              # Default metadata, site config
-│   │   └── types.ts                  # Metadata type definitions
-│   └── seo/                          # NEW: SEO utilities
-│       ├── structured-data.ts        # JSON-LD generation utilities
-│       └── sitemap-helpers.ts        # Sitemap generation helpers
-├── data/
-│   ├── products.json                 # MODIFY: Add Dutch names/descriptions, remove venetian/textiles
-│   ├── pricing/
-│   │   ├── roller-blind-white.json   # Keep
-│   │   ├── roller-blind-black.json   # Keep
-│   │   ├── [venetian-blinds-25mm.json] # REMOVE
-│   │   └── [custom-textile.json]     # REMOVE
-│   └── seo/                          # NEW: SEO data
-│       └── faqs.json                 # Dutch FAQ data (optional, or inline)
-└── content/
-    └── posts/
-        └── *.mdx                     # MODIFY: Dutch blog posts
+│   └── analytics/                    # NEW directory
+│       ├── google-analytics.tsx      # Script loader + consent default init
+│       ├── cookie-banner.tsx         # GDPR banner UI + consent update
+│       └── purchase-tracker.tsx      # Fires purchase event on confirmation page
+└── lib/
+    └── analytics/                    # NEW directory
+        ├── events.ts                 # trackViewItem, trackAddToCart, trackBeginCheckout, trackPurchase
+        ├── consent.ts                # getConsent, setConsent (localStorage wrapper)
+        └── types.ts                  # GA4EcommerceItem, ConsentState
 ```
 
-### Structure Rationale
-
-- **app/ follows Next.js 15 conventions:** Metadata files (sitemap.ts, robots.ts) at root level for automatic generation
-- **components/seo/ for reusable SEO logic:** JSON-LD wrapper, schema generators avoid duplication across pages
-- **lib/metadata/ centralizes metadata logic:** Shared metadata generation functions, constants, types
-- **lib/seo/ for structured data utilities:** Separate from metadata as it's injected differently (script tags vs meta tags)
-- **data/ remains single source of truth:** Product catalog modified with Dutch content, deprecated products removed
-- **No i18n routing needed:** Single Dutch locale, no multi-language routing complexity
+---
 
 ## Architectural Patterns
 
-### Pattern 1: Metadata API Integration
+### Pattern 1: Script Injection with Consent Default
 
-**What:** Next.js 15 Metadata API via static `metadata` object or dynamic `generateMetadata()` function
+**What:** Load GA4 via `next/script` with `strategy="afterInteractive"`, set consent defaults to `denied` before any measurement occurs.
 
-**When to use:**
-- Static pages (homepage, category pages): Use `export const metadata: Metadata = {...}`
-- Dynamic pages (product details, blog posts): Use `export async function generateMetadata({ params }): Promise<Metadata> {...}`
+**When to use:** Always — this is the GDPR-safe baseline. GA4 sends cookieless pings even with consent denied (behavioral modeling), but no cookies are set.
 
 **Trade-offs:**
-- **Pros:** Type-safe, automatic head tag generation, streaming support, no manual head management
-- **Cons:** Can't use both metadata object and generateMetadata in same file, requires Server Components
+- `afterInteractive` means gtag loads after page is interactive — no impact on LCP or FID
+- `beforeInteractive` is tempting but unnecessary; consent must default to denied regardless of load order
+- `@next/third-parties/google` GoogleAnalytics component does not support consent mode as of early 2025 (confirmed by community reports) — use raw `next/script` instead
 
 **Example:**
-```typescript
-// Static metadata (src/app/products/roller-blinds/page.tsx)
-import type { Metadata } from 'next'
+```tsx
+// components/analytics/google-analytics.tsx
+"use client";
 
-export const metadata: Metadata = {
-  title: 'Rolgordijnen op Maat | Pure Blinds',
-  description: 'Bestel rolgordijnen op maat online. Direct prijzen, premium kwaliteit.',
-  openGraph: {
-    title: 'Rolgordijnen op Maat | Pure Blinds',
-    description: 'Bestel rolgordijnen op maat online.',
-    images: ['/og-roller-blinds.jpg'],
-  },
-}
+import Script from "next/script";
 
-// Dynamic metadata (src/app/products/[...slug]/page.tsx)
-export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
-  const { slug } = await params
-  const productSlug = slug[slug.length - 1]
-  const product = getProductBySlug(productSlug)
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
-  if (!product) return {}
-
-  return {
-    title: `${product.name} | Pure Blinds`,
-    description: product.description,
-    openGraph: {
-      title: product.name,
-      description: product.description,
-      images: [product.imageUrl || '/og-default.jpg'],
-      type: 'product',
-    },
-  }
-}
-```
-
-### Pattern 2: JSON-LD Structured Data Injection
-
-**What:** Render JSON-LD structured data as `<script type="application/ld+json">` tags within page components
-
-**When to use:**
-- Product pages: Product schema
-- FAQ sections: FAQPage schema
-- Root layout: LocalBusiness schema
-- Breadcrumbs: BreadcrumbList schema
-- Blog posts: Article schema
-
-**Trade-offs:**
-- **Pros:** Separate from metadata, flexible placement, multiple schemas per page, can be dynamic
-- **Cons:** XSS risk if not escaped properly, must manually ensure valid JSON, not part of Metadata API
-
-**Example:**
-```typescript
-// lib/seo/structured-data.ts
-export function generateProductSchema(product: Product, url: string) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    description: product.description,
-    offers: {
-      '@type': 'AggregateOffer',
-      priceCurrency: 'EUR',
-      lowPrice: '49.99',
-      highPrice: '299.99',
-      availability: 'https://schema.org/InStock',
-    },
-    brand: {
-      '@type': 'Brand',
-      name: 'Pure Blinds',
-    },
-  }
-}
-
-// components/seo/json-ld.tsx
-export function JsonLd({ data }: { data: object }) {
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(data).replace(/</g, '\\u003c'),
-      }}
-    />
-  )
-}
-
-// src/app/products/[...slug]/page.tsx
-import { JsonLd } from '@/components/seo/json-ld'
-import { generateProductSchema } from '@/lib/seo/structured-data'
-
-export default async function ProductPage({ params }: { params: Promise<{ slug: string[] }> }) {
-  const { slug } = await params
-  const product = getProductBySlug(slug[slug.length - 1])
-
-  const productSchema = generateProductSchema(product, `https://pureblinds.nl${getProductUrl(product)}`)
+export function GoogleAnalytics() {
+  if (!GA_ID || process.env.NODE_ENV !== "production") return null;
 
   return (
     <>
-      <JsonLd data={productSchema} />
-      {/* Page content */}
+      {/* Set consent defaults before any measurement */}
+      <Script id="ga-consent-default" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('consent', 'default', {
+            'analytics_storage': 'denied',
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied'
+          });
+        `}
+      </Script>
+      {/* Load GA4 */}
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        strategy="afterInteractive"
+      />
+      {/* Initialize GA4 */}
+      <Script id="ga-init" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_ID}');
+        `}
+      </Script>
     </>
-  )
+  );
 }
 ```
 
-### Pattern 3: Sitemap Generation with Static Routes
+### Pattern 2: Consent State via localStorage
 
-**What:** Generate sitemap.xml programmatically using `sitemap.ts` file convention
+**What:** Store consent decision in `localStorage` as JSON. Client component reads on mount, updates via `gtag('consent', 'update', ...)` when user decides.
 
-**When to use:**
-- All static routes (homepage, category pages, subcategory pages)
-- All product routes (from catalog)
-- All blog posts (from Velite)
+**When to use:** This pattern (localStorage, not cookies) is appropriate because:
+- GDPR requires consent for analytics cookies — but storing the consent preference itself in localStorage is generally accepted
+- Avoids needing a `Set-Cookie` header from a server route
+- Simpler than cookie-based approach with Next.js 15's async `cookies()` API
 
 **Trade-offs:**
-- **Pros:** Automatic XML generation, type-safe, integrates with build process, no external packages
-- **Cons:** Regenerates on every build (fine for static sites), manual route management
+- localStorage is cleared if user clears browser data — banner re-appears, which is correct GDPR behavior
+- No cross-device sync — also acceptable for consent
+- Server components cannot read localStorage — consent state is client-only, which is correct (analytics scripts are client-only)
 
 **Example:**
 ```typescript
-// src/app/sitemap.ts
-import type { MetadataRoute } from 'next'
-import { getAllProducts, getProductUrl } from '@/lib/product/catalog'
-import { posts } from '@/.velite'
+// lib/analytics/consent.ts
+export type ConsentValue = "granted" | "denied" | null;
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://pureblinds.nl'
+const CONSENT_KEY = "cookie_consent";
 
-  // Static routes
-  const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/products`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/products/roller-blinds`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/products/roller-blinds/transparent-roller-blinds`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/products/roller-blinds/blackout-roller-blinds`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.6,
-    },
-  ]
+export function getConsent(): ConsentValue {
+  if (typeof window === "undefined") return null;
+  try {
+    return localStorage.getItem(CONSENT_KEY) as ConsentValue;
+  } catch {
+    return null;
+  }
+}
 
-  // Product routes
-  const products = getAllProducts().filter(p =>
-    p.category === 'roller-blinds' // Exclude removed categories
-  )
-  const productRoutes: MetadataRoute.Sitemap = products.map(product => ({
-    url: `${baseUrl}${getProductUrl(product)}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
-  }))
-
-  // Blog routes
-  const blogRoutes: MetadataRoute.Sitemap = posts.map(post => ({
-    url: `${baseUrl}${post.permalink}`,
-    lastModified: new Date(post.date),
-    changeFrequency: 'yearly' as const,
-    priority: 0.5,
-  }))
-
-  return [...staticRoutes, ...productRoutes, ...blogRoutes]
+export function setConsent(value: "granted" | "denied"): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(CONSENT_KEY, value);
+  } catch {
+    // localStorage blocked (private mode, storage full)
+  }
 }
 ```
 
-### Pattern 4: Dutch Content Without i18n Routing
+### Pattern 3: Typed Event Wrappers
 
-**What:** Single-locale Dutch content stored inline in components and data files, no routing-based internationalization
+**What:** Wrap `window.gtag()` calls in typed functions co-located in `lib/analytics/events.ts`. All ecommerce event calls go through these wrappers.
 
-**When to use:**
-- Single target market (Netherlands)
-- No multi-language requirements
-- Simpler architecture preferred
+**When to use:** Always — prevents typos in event names, enforces correct parameter shapes, enables easy testing/mocking.
 
 **Trade-offs:**
-- **Pros:** No i18n library, no routing complexity, simpler build, faster page loads, easier debugging
-- **Cons:** Difficult to add second language later, Dutch content hardcoded in components
-- **Migration cost:** Low initially, medium-high if internationalization needed later
+- Thin wrapper adds negligible overhead
+- Centralizes all GA4 event logic — easier to modify or swap analytics provider later
+- `window.gtag` may not exist if GA4 failed to load — guard required
 
 **Example:**
 ```typescript
-// data/products.json (Dutch names/descriptions)
-{
-  "id": "roller-blind-white",
-  "name": "Wit Rolgordijn",
-  "description": "Strak wit rolgordijn op maat gemaakt. Voer je gewenste breedte en hoogte in voor een directe prijsopgave.",
-  "category": "roller-blinds",
-  "subcategory": "transparent-roller-blinds",
-  "details": [
-    { "label": "Materiaal", "value": "Stof" },
-    { "label": "Kleur", "value": "Wit" },
-    { "label": "Afmetingen", "value": "10–200 cm (breedte & hoogte)" },
-    { "label": "Productietijd", "value": "3–5 werkdagen" }
-  ]
+// lib/analytics/types.ts
+export interface GA4EcommerceItem {
+  item_id: string;        // productId
+  item_name: string;      // productName with dimensions
+  item_category: string;  // "rolgordijnen"
+  price: number;          // EUR value (not cents)
+  quantity: number;
 }
 
-// src/app/products/roller-blinds/page.tsx (inline Dutch)
-export default function RollerBlindsPage() {
-  return (
-    <div>
-      <h1>Rolgordijnen</h1>
-      <p>Kies uit ons assortiment rolgordijnen op maat. Verkrijgbaar in transparante en verduisterende uitvoeringen.</p>
-    </div>
-  )
+// lib/analytics/events.ts
+import type { GA4EcommerceItem } from "./types";
+
+function gtag(...args: unknown[]): void {
+  if (typeof window === "undefined") return;
+  if (typeof window.gtag !== "function") return;
+  window.gtag(...(args as Parameters<typeof window.gtag>));
+}
+
+export function trackViewItem(item: GA4EcommerceItem): void {
+  gtag("event", "view_item", {
+    currency: "EUR",
+    value: item.price,
+    items: [item],
+  });
+}
+
+export function trackAddToCart(item: GA4EcommerceItem): void {
+  gtag("event", "add_to_cart", {
+    currency: "EUR",
+    value: item.price * item.quantity,
+    items: [item],
+  });
+}
+
+export function trackBeginCheckout(items: GA4EcommerceItem[], totalValue: number): void {
+  gtag("event", "begin_checkout", {
+    currency: "EUR",
+    value: totalValue,
+    items,
+  });
+}
+
+export function trackPurchase(transactionId: string, items: GA4EcommerceItem[], totalValue: number): void {
+  gtag("event", "purchase", {
+    transaction_id: transactionId,
+    currency: "EUR",
+    value: totalValue,
+    items,
+  });
 }
 ```
+
+### Pattern 4: Purchase Tracking on Confirmation Page
+
+**What:** The purchase event must fire on `/bevestiging` — but there is a critical constraint: the cart is cleared before Shopify redirect, so cart data is no longer available in Zustand store when `/bevestiging` loads.
+
+**Solution:** Store cart snapshot in `sessionStorage` at checkout initiation, read it on `/bevestiging`, fire `purchase` event, then clear the snapshot. Use `sessionStorage` (not `localStorage`) so snapshot auto-clears when browser session ends.
+
+**Deduplication:** Store the fired transaction ID in `sessionStorage` to prevent duplicate events on page refresh.
+
+**Transaction ID:** Since Shopify does not pass an order ID back to `/bevestiging` via URL parameters (the Draft Order `invoiceUrl` does not carry a return reference by default), generate a client-side transaction ID from the cart contents hash at checkout initiation. This is sufficient for GA4 deduplication within a session.
+
+**Trade-offs:**
+- sessionStorage approach is robust against same-session page refreshes
+- No server-side order ID means no cross-browser deduplication, but this is acceptable for a small store
+- If real Shopify order ID is needed later: append a custom query param to the invoiceUrl before redirect (Shopify passes custom query params through to the checkout URL per API announcement)
+
+**Example:**
+```typescript
+// Snapshot stored at checkout (cart-summary.tsx)
+const snapshot = {
+  items: items.map(item => toGA4Item(item)),
+  totalValue: totalPrice / 100,
+  transactionId: `pb-${Date.now()}`, // client-generated, unique per session
+};
+sessionStorage.setItem("checkout_analytics", JSON.stringify(snapshot));
+```
+
+```tsx
+// components/analytics/purchase-tracker.tsx
+"use client";
+
+import { useEffect } from "react";
+import { trackPurchase } from "@/lib/analytics/events";
+
+export function PurchaseTracker() {
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("checkout_analytics");
+      if (!raw) return;
+
+      const { items, totalValue, transactionId } = JSON.parse(raw);
+
+      // Deduplication: don't fire if already fired this session
+      const firedKey = `purchase_fired_${transactionId}`;
+      if (sessionStorage.getItem(firedKey)) return;
+
+      trackPurchase(transactionId, items, totalValue);
+      sessionStorage.setItem(firedKey, "1");
+      sessionStorage.removeItem("checkout_analytics");
+    } catch {
+      // Parsing errors — fail silently, analytics is non-critical
+    }
+  }, []);
+
+  return null; // renders nothing
+}
+```
+
+---
 
 ## Data Flow
 
-### SEO Metadata Flow
+### Consent Flow
 
 ```
-Page Component Request
+Browser loads page
     ↓
-Next.js evaluates metadata export
+GoogleAnalytics component mounts
     ↓
-Static metadata object OR generateMetadata() called
+gtag consent default: all → "denied"   (before any measurement)
     ↓
-Metadata API generates <head> tags
-    ↓ (parallel)
-HTML sent to client with meta tags in <head>
+CookieBanner mounts, checks localStorage
+    ↓
+  ┌── "granted" found → gtag consent update → "granted"
+  │                   → banner stays hidden
+  │
+  ├── "denied" found  → banner stays hidden (user already declined)
+  │
+  └── null (no choice) → show banner
+            ↓
+        User accepts → setConsent("granted")
+                     → gtag consent update → "granted"
+        User declines → setConsent("denied")
+                     → gtag consent stays "denied"
 ```
 
-### Structured Data Flow
+### E-commerce Event Flow
 
 ```
-Page Component Render (Server Component)
-    ↓
-JSON-LD generation function called with data
-    ↓
-JsonLd component renders <script> tag
-    ↓
-<script> included in HTML sent to client
-    ↓
-Search engine crawlers parse JSON-LD
+Product page renders (Server Component)
+    └─ DimensionConfigurator mounts (Client Component)
+            ↓
+    User enters dimensions → price loaded from /api/pricing
+            ↓
+    trackViewItem() → gtag("event", "view_item", {...})
+            ↓
+    User clicks "Toevoegen"
+            ↓
+    addItem() → Zustand store updated
+    trackAddToCart() → gtag("event", "add_to_cart", {...})
+
+Cart page (/winkelwagen) — CartSummary
+    User clicks "Afrekenen"
+            ↓
+    trackBeginCheckout() → gtag("event", "begin_checkout", {...})
+    Store snapshot in sessionStorage
+    clearCart() [existing behavior]
+            ↓
+    window.location.href = invoiceUrl (Shopify checkout domain)
+
+[Shopify handles payment — app has no JS here]
+
+Shopify redirects to /bevestiging
+    └─ PurchaseTracker mounts
+            ↓
+    Reads sessionStorage["checkout_analytics"]
+    trackPurchase() → gtag("event", "purchase", {...})
+    Marks transaction as fired in sessionStorage
+    Clears checkout_analytics snapshot
 ```
 
-### Sitemap Generation Flow
+### Consent Update Path (Banner Interaction)
 
 ```
-Build time: next build
+CookieBanner → user clicks "Accepteren"
     ↓
-sitemap.ts exports default function called
-    ↓
-Function queries product catalog, blog posts
-    ↓
-Returns array of route objects
-    ↓
-Next.js generates /sitemap.xml
-    ↓
-Available at https://domain.com/sitemap.xml
+setConsent("granted")        → localStorage["cookie_consent"] = "granted"
+gtag consent update granted  → GA4 now sets cookies and tracks fully
+banner hides (state update)
 ```
 
-### Key Data Flows
-
-1. **Product metadata generation:** Product page renders → generateMetadata() reads product from catalog → returns Metadata object → Next.js generates meta tags
-2. **Product schema injection:** Product page renders → generateProductSchema() creates schema object → JsonLd component renders script tag → included in HTML
-3. **Sitemap compilation:** Build runs → sitemap.ts queries catalog + Velite posts → returns unified route list → Next.js generates XML
-4. **Dutch content rendering:** Component imports from JSON catalog or uses inline Dutch strings → renders to client
-
-## Scaling Considerations
-
-| Scale | Architecture Adjustments |
-|-------|--------------------------|
-| 0-1k products | Current approach: Static JSON catalog, build-time sitemap generation |
-| 1k-10k products | Incremental Static Regeneration (ISR) for product pages, split sitemap using generateSitemaps() |
-| 10k+ products | Database-backed catalog, dynamic sitemap generation, consider CDN caching |
-
-### Scaling Priorities
-
-1. **First bottleneck:** Build time for sitemap with large product catalog
-   - **Fix:** Use `generateSitemaps()` to create multiple sitemap files (sitemap index)
-   - **Example:** `/sitemap/0.xml`, `/sitemap/1.xml`, etc.
-2. **Second bottleneck:** JSON catalog size in client bundles
-   - **Fix:** Move to server-only imports, use database for product queries
-   - **Note:** Already server-side with current architecture, but JSON parsed at build time
-
-## Anti-Patterns
-
-### Anti-Pattern 1: Reusing English Metadata for All Pages
-
-**What people do:** Set metadata once in root layout, don't override in child routes
-**Why it's wrong:** Generic metadata doesn't help SEO, missed opportunity for targeted keywords
-**Do this instead:** Every route should have specific, descriptive metadata matching Dutch content
-
-### Anti-Pattern 2: Mixing i18n Library with Single-Locale Content
-
-**What people do:** Install next-intl or react-i18next for single Dutch locale
-**Why it's wrong:** Adds complexity, bundle size, slower builds for zero benefit when not supporting multiple languages
-**Do this instead:** Use inline Dutch content, JSON with Dutch values, simple approach
-
-### Anti-Pattern 3: Manual Meta Tag Management
-
-**What people do:** Bypass Metadata API, use `<Head>` or manual `<meta>` tags in components
-**Why it's wrong:** Breaks Next.js optimization, streaming, type safety, automatic deduplication
-**Do this instead:** Always use Metadata API (metadata object or generateMetadata())
-
-### Anti-Pattern 4: Generating JSON-LD at Client Side
-
-**What people do:** Create JSON-LD in client components or useEffect hooks
-**Why it's wrong:** Search engines may not execute JavaScript, slower indexing, not in initial HTML
-**Do this instead:** Render JSON-LD in Server Components so it's in initial HTML response
-
-### Anti-Pattern 5: Forgetting noindex for Non-Public Pages
-
-**What people do:** Leave cart, checkout, confirmation pages indexable
-**Why it's wrong:** Wastes crawl budget, creates thin content, confuses users in search results
-**Do this instead:** Add `robots: { index: false, follow: false }` to metadata for private pages
-
-**Example:**
-```typescript
-// src/app/cart/page.tsx
-export const metadata: Metadata = {
-  title: 'Winkelwagen | Pure Blinds',
-  robots: {
-    index: false,
-    follow: false,
-  },
-}
-```
-
-### Anti-Pattern 6: Not Escaping JSON-LD Content
-
-**What people do:** Use `dangerouslySetInnerHTML` with user input or unescaped content
-**Why it's wrong:** XSS vulnerability, security risk
-**Do this instead:** Always escape `<` characters: `JSON.stringify(data).replace(/</g, '\\u003c')`
+---
 
 ## Integration Points
 
-### External Services
+### New vs. Modified — Explicit Map
 
-| Service | Integration Pattern | Notes |
-|---------|---------------------|-------|
-| Google Search Console | Submit sitemap.xml | After deployment, submit https://pureblinds.nl/sitemap.xml |
-| Schema.org validators | Test JSON-LD | Use Rich Results Test, Schema Markup Validator |
-| OpenGraph debuggers | Test OG tags | Facebook Sharing Debugger, LinkedIn Post Inspector |
+| File | Status | Change Description |
+|------|--------|--------------------|
+| `app/layout.tsx` | MODIFY | Add `<GoogleAnalytics />` and `<CookieBanner />` inside `<body>` |
+| `app/bevestiging/page.tsx` | MODIFY | Add `<PurchaseTracker />` client component |
+| `components/dimension-configurator.tsx` | MODIFY | Call `trackViewItem()` when price loads; `trackAddToCart()` on add |
+| `components/cart/cart-summary.tsx` | MODIFY | Call `trackBeginCheckout()` and store sessionStorage snapshot before redirect |
+| `components/analytics/google-analytics.tsx` | NEW | Script loader with consent default initialization |
+| `components/analytics/cookie-banner.tsx` | NEW | GDPR consent banner UI and update logic |
+| `components/analytics/purchase-tracker.tsx` | NEW | Reads sessionStorage snapshot, fires purchase event |
+| `lib/analytics/events.ts` | NEW | Typed gtag wrappers for all 4 ecommerce events |
+| `lib/analytics/consent.ts` | NEW | localStorage consent read/write |
+| `lib/analytics/types.ts` | NEW | `GA4EcommerceItem`, `ConsentState` types |
+| `.env.local` | MODIFY | Add `NEXT_PUBLIC_GA_MEASUREMENT_ID` |
+
+### External Service Boundaries
+
+| Service | Integration Point | Direction | Notes |
+|---------|------------------|-----------|-------|
+| Google Analytics 4 | `window.gtag()` calls in browser | App → GA4 | Respects consent state; only fires if `analytics_storage: granted` for cookie-based tracking |
+| Shopify Checkout | `invoiceUrl` redirect | App → Shopify | One-way; no data comes back from Shopify to the app |
+| Shopify (return) | `/bevestiging` page load | Shopify → App | Only the page load, no query params with order data |
 
 ### Internal Boundaries
 
 | Boundary | Communication | Notes |
 |----------|---------------|-------|
-| Metadata API ↔ Product Catalog | Direct import | Product data imported in generateMetadata(), synchronous |
-| Sitemap ↔ Product Catalog | Direct import | Catalog queried at build time, must be pure function |
-| Sitemap ↔ Velite Blog | Import from .velite output | Posts array imported, type-safe |
-| JSON-LD ↔ Components | Function call | Schema generators called with component data |
-| Root Layout ↔ Child Pages | Metadata inheritance | Child metadata merged with parent, can override |
+| `lib/analytics/events.ts` ↔ components | Direct function import | No React context needed — pure function calls |
+| `lib/analytics/consent.ts` ↔ `CookieBanner` | Direct import | Banner owns consent write; GoogleAnalytics reads on init |
+| `CartSummary` ↔ `PurchaseTracker` | sessionStorage | Decoupled across page boundary; sessionStorage is the hand-off mechanism |
+| Analytics layer ↔ Zustand cart store | None | Analytics reads cart data directly from store state at event time; no coupling through store |
 
-## Migration Strategy for Category Removal
+---
 
-### Affected Integration Points
+## Anti-Patterns
 
-1. **Product catalog (data/products.json):**
-   - Remove venetian-blinds and textiles entries
-   - Update filters in sitemap generation
+### Anti-Pattern 1: Firing Events Before Consent
 
-2. **Route files:**
-   - Delete `/src/app/products/venetian-blinds/`
-   - Delete `/src/app/products/textiles/`
+**What people do:** Call `trackAddToCart()` immediately, assuming consent will come later or handle itself.
+**Why it's wrong:** GA4 Consent Mode v2 will respect the `analytics_storage: denied` state and not set cookies, but events still fire and cookieless pings are sent. For strict GDPR compliance, do not fire any events until consent is granted — or accept that cookieless pings are GDPR-safe per Google's implementation.
+**Do this instead:** Decide explicitly: either (a) fire events always and rely on Consent Mode v2 to gate cookies (Google's recommended approach, legally accepted in most EU jurisdictions), or (b) gate all event calls behind a consent check. For Pure Blinds, option (a) is simpler and sufficient.
 
-3. **Sitemap generation:**
-   - Filter products: `getAllProducts().filter(p => p.category === 'roller-blinds')`
+### Anti-Pattern 2: Using `@next/third-parties/google` for Consent Mode
 
-4. **Pricing files:**
-   - Remove `/data/pricing/venetian-blinds-25mm.json`
-   - Remove `/data/pricing/custom-textile.json`
+**What people do:** Use the `GoogleAnalytics` component from `@next/third-parties/google` and try to add consent mode on top.
+**Why it's wrong:** As of early 2025, this component does not support Consent Mode v2. The community reports it "just does not work" for consent configurations.
+**Do this instead:** Use raw `next/script` with manual gtag initialization as shown in Pattern 1.
 
-5. **Type definitions:**
-   - Update category type unions if hardcoded
+### Anti-Pattern 3: Reading Cart from Zustand on `/bevestiging`
 
-### Safe Removal Order
+**What people do:** Try to read cart items from the Zustand store on the confirmation page to populate the purchase event.
+**Why it's wrong:** The cart is cleared before the Shopify redirect (`clearCart()` in `cart-summary.tsx`). By the time `/bevestiging` renders, the store is empty.
+**Do this instead:** Store a snapshot in `sessionStorage` at checkout initiation, read it on `/bevestiging`.
 
-1. Remove route files (prevents 200 responses)
-2. Update product catalog (removes data source)
-3. Update sitemap filter (prevents orphaned URLs)
-4. Remove pricing files (cleanup)
-5. Test build, verify sitemap excludes removed categories
+### Anti-Pattern 4: Storing Consent in a Cookie (Without a Backend)
 
-## Build Order Recommendations
+**What people do:** Try to set `Set-Cookie` headers for consent in a Server Action or API route.
+**Why it's wrong:** Adds unnecessary server-side complexity. GDPR consent state for analytics is a client-side concern — the server doesn't need it.
+**Do this instead:** Use `localStorage`. If the preference is lost (cleared storage), the banner re-appears, which is the correct behavior.
 
-Based on dependency analysis, recommended implementation order:
+### Anti-Pattern 5: SSR Hydration Mismatch with Consent Banner
 
-### Phase 1: Foundation (No Dependencies)
-1. **Root layout lang change:** `<html lang="nl">` (single line change)
-2. **Create lib/metadata/constants.ts:** Site-wide metadata defaults, base URL
-3. **Create lib/seo/structured-data.ts:** Schema generator utilities
-4. **Create components/seo/json-ld.tsx:** JSON-LD wrapper component
+**What people do:** Render banner visibility based on `localStorage` in the initial server render.
+**Why it's wrong:** `localStorage` is not accessible during SSR — causes hydration errors.
+**Do this instead:** Default to `null` (no banner) during SSR; check `localStorage` in `useEffect` after mount to determine visibility.
 
-### Phase 2: Data Layer (Depends on Phase 1 constants)
-5. **Update data/products.json:** Dutch names, descriptions; remove venetian-blinds, textiles
-6. **Remove deprecated pricing files:** venetian-blinds-25mm.json, custom-textile.json
-7. **Update lib/product/types.ts:** Ensure types match Dutch data structure
+```tsx
+// Correct pattern
+const [consent, setConsent] = useState<ConsentValue>(null);
 
-### Phase 3: Route Removal (Depends on Phase 2 data)
-8. **Delete deprecated routes:** /products/venetian-blinds/, /products/textiles/
-9. **Test product catalog functions:** Verify no references to removed categories
+useEffect(() => {
+  setConsent(getConsent()); // runs client-side only
+}, []);
 
-### Phase 4: Static Routes Content (Depends on Phase 2 data)
-10. **Update homepage (/):** Dutch content, metadata, LocalBusiness JSON-LD
-11. **Update products overview (/products):** Dutch content, metadata
-12. **Update category page (/products/roller-blinds):** Dutch content, metadata
-13. **Update subcategory pages:** transparent-roller-blinds, blackout-roller-blinds
+// null = not yet checked → render nothing (avoid flash)
+if (consent !== null) return null; // already decided
+// Show banner when consent is null after mount check
+```
 
-### Phase 5: Dynamic Routes Metadata (Depends on Phase 4)
-14. **Update product detail page:** generateMetadata(), Product JSON-LD
-15. **Update blog index:** Dutch content, metadata
-16. **Update blog post page:** generateMetadata(), Article JSON-LD (optional)
+### Anti-Pattern 6: Purchase Event Without Deduplication
 
-### Phase 6: Components (Depends on Phase 4 content)
-17. **Update Header:** Dutch navigation labels
-18. **Update Footer:** Dutch footer content
-19. **Update Breadcrumbs:** Dutch labels, BreadcrumbList JSON-LD
-20. **Update FAQ section:** Dutch FAQs, FAQPage JSON-LD
-21. **Update other home sections:** Dutch content
+**What people do:** Fire `purchase` event on every load of `/bevestiging`.
+**Why it's wrong:** Users sometimes reload the confirmation page — duplicate purchase events inflate revenue reporting.
+**Do this instead:** Use `sessionStorage` to mark a transaction as fired, check before firing.
 
-### Phase 7: SEO Infrastructure (Depends on all previous phases)
-22. **Create sitemap.ts:** Generate from catalog + blog posts
-23. **Create robots.ts:** Configure crawling rules
-24. **Add noindex to cart/confirmation:** Prevent indexing
+---
 
-### Phase 8: Polish (Depends on Phase 7)
-25. **Add OpenGraph images:** opengraph-image.jpg files per route (optional)
-26. **Test all metadata:** Validate with tools
-27. **Test all JSON-LD:** Validate with Rich Results Test
+## Scaling Considerations
 
-### Dependency Rationale
+| Scale | Architecture Adjustments |
+|-------|--------------------------|
+| 0-10k monthly sessions | Current approach: client-side gtag, localStorage consent, sessionStorage snapshot |
+| 10k-100k monthly sessions | Consider server-side analytics events via GA4 Measurement Protocol for purchase (more reliable, no browser issues) |
+| 100k+ monthly sessions | Server-side tagging with GA4 for all critical events; client-side as fallback only |
 
-- **Phase 1 before 2:** Constants needed by data updates
-- **Phase 2 before 3:** Data must be updated before routes removed (prevents broken references)
-- **Phase 3 before 4:** Clean slate before content updates
-- **Phase 4 before 5:** Static route patterns inform dynamic route patterns
-- **Phase 5 before 6:** Components reference routes, better to have route metadata ready
-- **Phase 6 before 7:** Sitemap needs all routes finalized
-- **Phase 7 before 8:** Infrastructure must exist before optimization
+### Scaling Priorities
 
-### Critical Path
+1. **First improvement (if needed):** Pass a real Shopify order ID back through invoiceUrl query param. Shopify supports custom query params on invoice URLs that survive the checkout redirect. Adds reliable transaction ID for GA4 deduplication across sessions.
+2. **Second improvement (if needed):** GA4 Measurement Protocol for purchase event — fire server-side from a webhook or Shopify order webhook. Eliminates dependency on browser-side tracking for the most critical event.
 
-**Fastest path to working Dutch site with SEO:**
-Phase 1 (#1) → Phase 2 (#5, #6) → Phase 3 (#8) → Phase 4 (#10-13) → Phase 7 (#22, #23)
+---
 
-This gives:
-- Dutch language attribute
-- Dutch product data
-- Removed deprecated categories
-- Dutch static pages
-- Sitemap and robots.txt
+## Build Order
 
-Remaining phases (5, 6, 8) are enhancements that can be done incrementally.
+Dependencies determine this order — later steps require earlier steps to exist.
+
+### Step 1: Analytics Foundation (no dependencies)
+Create `lib/analytics/` module with types, consent utilities, and event wrappers. No UI, no integration yet. This is pure TypeScript — testable in isolation.
+
+Files: `lib/analytics/types.ts`, `lib/analytics/consent.ts`, `lib/analytics/events.ts`
+
+### Step 2: Script Loader + Consent Init (depends on Step 1)
+Build `GoogleAnalytics` component. Add to `app/layout.tsx`. This establishes the gtag presence that all event calls depend on. Test: GA4 measurement ID loaded in production, consent defaults to denied, no cookies set initially.
+
+Files: `components/analytics/google-analytics.tsx`, modify `app/layout.tsx`
+
+### Step 3: Cookie Banner (depends on Step 2)
+Build `CookieBanner` component. Reads consent from localStorage, shows if no decision, updates gtag on accept/decline. Add to `app/layout.tsx` alongside `GoogleAnalytics`.
+
+Test: Banner appears on first visit, hides after choice, choice persists on reload, gtag consent updates correctly.
+
+Files: `components/analytics/cookie-banner.tsx`, modify `app/layout.tsx`
+
+### Step 4: Product Funnel Events (depends on Step 1 + Step 2)
+Instrument `DimensionConfigurator` for `view_item` and `add_to_cart`. These events fire in existing client components — just import and call the typed wrappers.
+
+Files: modify `components/dimension-configurator.tsx`
+
+### Step 5: Checkout Event + Snapshot (depends on Step 1 + Step 4)
+Instrument `CartSummary` for `begin_checkout`. Simultaneously, store the sessionStorage snapshot of cart items and transaction ID before the Shopify redirect. These two changes must happen together — the snapshot is what enables Step 6.
+
+Files: modify `components/cart/cart-summary.tsx`
+
+### Step 6: Purchase Tracking (depends on Step 5)
+Build `PurchaseTracker` component. Reads sessionStorage snapshot, fires `purchase` event, deduplicates. Add to `/bevestiging` page.
+
+Files: `components/analytics/purchase-tracker.tsx`, modify `app/bevestiging/page.tsx`
+
+### Dependency Graph
+
+```
+Step 1 (lib/analytics/)
+    ├─→ Step 2 (GoogleAnalytics script)
+    │       └─→ Step 3 (CookieBanner)
+    ├─→ Step 4 (view_item, add_to_cart)
+    └─→ Step 5 (begin_checkout + snapshot)
+                └─→ Step 6 (purchase)
+```
+
+Steps 3, 4, and 5 can be built in parallel once Step 2 is complete. Step 6 must follow Step 5.
+
+---
 
 ## Sources
 
-**Next.js 15 Metadata API:**
-- [Functions: generateMetadata | Next.js](https://nextjs.org/docs/app/api-reference/functions/generate-metadata)
-- [Getting Started: Metadata and OG images | Next.js](https://nextjs.org/docs/app/getting-started/metadata-and-og-images)
-- [Next.js 15 SEO: Complete Guide to Metadata & Optimization](https://www.digitalapplied.com/blog/nextjs-seo-guide)
-
-**Sitemap Generation:**
-- [Metadata Files: sitemap.xml | Next.js](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap)
-- [Functions: generateSitemaps | Next.js](https://nextjs.org/docs/app/api-reference/functions/generate-sitemaps)
-
-**Robots.txt:**
-- [Metadata Files: robots.txt | Next.js](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots)
-
-**JSON-LD Structured Data:**
-- [Guides: JSON-LD | Next.js](https://nextjs.org/docs/app/guides/json-ld)
-- [JSON‑LD in Next.js 15 App Router: product, blog and breadcrumb schemas](https://medium.com/@sureshdotariya/json-ld-in-next-js-15-app-router-product-blog-and-breadcrumb-schemas-f752b7422c4f)
-
-**OpenGraph Images:**
-- [Metadata Files: opengraph-image and twitter-image | Next.js](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/opengraph-image)
-
-**Internationalization:**
-- [Guides: Internationalization | Next.js](https://nextjs.org/docs/pages/guides/internationalization)
-- [Next.js App Router internationalization (i18n)](https://next-intl.dev/docs/getting-started/app-router)
-
-**Hreflang and Locale Metadata:**
-- [How to Use Canonical Tags and Hreflang for in Next.js 15](https://www.buildwithmatija.com/blog/nextjs-advanced-seo-multilingual-canonical-tags)
-- [Next.js 15 SEO: Complete Guide to Metadata & Optimization](https://www.digitalapplied.com/blog/nextjs-seo-guide)
+- [Measure ecommerce | Google Analytics Developer Docs](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce) — HIGH confidence, official
+- [Set up consent mode | Google Tag Platform](https://developers.google.com/tag-platform/security/guides/consent) — HIGH confidence, official
+- [Consent Mode v2 – Simo Ahava's blog](https://www.simoahava.com/analytics/consent-mode-v2-google-tags/) — HIGH confidence, authoritative GA4 reference
+- [GA4 Recommended Events | Google Developers](https://developers.google.com/analytics/devguides/collection/ga4/reference/events) — HIGH confidence, official
+- [How to Build a GDPR Cookie Banner in Next.js 15+ | Frontend Weekly](https://medium.com/front-end-weekly/how-to-build-a-gdpr-cookie-banner-in-next-js-15-ga4-consent-mode-cloudfront-geo-detection-aae0961e89c5) — MEDIUM confidence, current (2025)
+- [Configuring Google Cookies Consent with Next.js 15 | Medium](https://medium.com/@sdanvudi/configuring-google-cookies-consent-with-next-js-15-ca159a2bea13) — MEDIUM confidence, confirms `@next/third-parties` limitation
+- [NextJS 13: Google Analytics in Consent Mode with Cookie Banner | gaudion.dev](https://gaudion.dev/blog/setup-google-analytics-with-gdpr-compliant-cookie-consent-in-nextjs13) — MEDIUM confidence, pattern is valid for Next.js 15 App Router
+- [Minimize duplicate key events with transaction IDs | Analytics Help](https://support.google.com/analytics/answer/12313109) — HIGH confidence, official GA4 deduplication guidance
+- [useSearchParams | Next.js Docs](https://nextjs.org/docs/app/api-reference/functions/use-search-params) — HIGH confidence, official
+- [Query parameters added to Draft Order invoice_url get copied to checkout URL | Shopify Community](https://community.shopify.com/c/api-announcements/query-parameters-added-to-a-draft-order-invoice-url-now-get/m-p/314399) — MEDIUM confidence, Shopify announcement
 
 ---
-*Architecture research for: Dutch content & SEO integration in Next.js 15 App Router*
-*Researched: 2026-02-14*
+*Architecture research for: GA4 e-commerce tracking & GDPR consent in Next.js 15 App Router*
+*Researched: 2026-02-22*

@@ -1,483 +1,231 @@
 # Stack Research
 
-**Domain:** Dutch E-commerce SEO & Localization
-**Researched:** 2026-02-14
+**Domain:** GA4 E-commerce Analytics + GDPR Cookie Consent (Next.js 15 App Router)
+**Milestone:** v1.5 Analytics & Privacy
+**Researched:** 2026-02-22
 **Confidence:** HIGH
+
+---
 
 ## Executive Summary
 
-For adding Dutch content, SEO meta tags, structured data, and GEO optimization to an existing Next.js 15 App Router application, **NO external dependencies are required**. Next.js 15 (v16.1.6) provides native built-in APIs for all required functionality:
+Two new libraries are required for this milestone. Everything else is built on existing stack primitives.
 
-- **Metadata API** for meta tags, OpenGraph, Twitter cards, hreflang
-- **File conventions** for sitemap.xml and robots.txt generation
-- **Native JSON-LD** support for structured data (Product, FAQ, LocalBusiness schemas)
-- **Built-in i18n** capabilities for language/locale specification
+**Add:**
+- `@next/third-parties@16.1.6` — official Next.js GA4 integration (GoogleAnalytics component + sendGAEvent)
+- `vanilla-cookieconsent@3.1.0` — GDPR consent banner with Google Consent Mode v2 support
 
-The only recommended addition is **schema-dts** (dev dependency) for TypeScript type safety when authoring JSON-LD structured data.
+**Do not add:**
+- GTM (Google Tag Manager) — unnecessary indirection for a developer-controlled codebase
+- `react-cookie-consent` or other consent wrappers — vanilla-cookieconsent has zero runtime dependencies and full Consent Mode v2 support
+- Any server-side analytics library — GA4 client-side tracking is sufficient for this webshop
 
-**Key Decision:** Do NOT add next-intl, next-sitemap, or react-schemaorg. Next.js native features are superior for single-language sites.
+All GA4 event firing and consent gate logic is implemented in custom client components using these two libraries. No additional dependencies needed.
+
+---
 
 ## Recommended Stack Additions
 
-### Type Safety for Structured Data
+### Core Libraries
 
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
-| schema-dts | ^1.1.5 | TypeScript types for Schema.org JSON-LD | Google-maintained TypeScript definitions for all Schema.org types. Provides compile-time validation for Product, FAQ, LocalBusiness schemas. Zero runtime cost (types-only package). |
+| `@next/third-parties` | 16.1.6 | GA4 script loading + event dispatch | Official Vercel/Next.js library. Loads gtag.js after hydration (not blocking), provides `GoogleAnalytics` component and `sendGAEvent` function. Version matches installed Next.js. No wrapper overhead. HIGH confidence — official docs verified. |
+| `vanilla-cookieconsent` | 3.1.0 | GDPR consent banner + consent state persistence | Zero runtime dependencies (MIT, 152 kB unpacked). Supports all 7 Google Consent Mode v2 signals. Persists consent in a cookie. Works as a plain `useEffect`-initialized client component in App Router. No React-specific wrapper needed. HIGH confidence — npm verified, official docs verified. |
 
-### No Framework Changes Required
+### No Additional Libraries Needed
 
-**Existing Stack Remains:**
-- Next.js 16.1.6 (already installed as "next": "16.1.6")
-- TypeScript
-- All existing dependencies
+The following capabilities are covered by existing dependencies or platform primitives:
+
+| Capability | How Covered |
+|------------|-------------|
+| Purchase event data after Shopify redirect | `sessionStorage` (browser API) — store cart snapshot before `clearCart()`, read on `/bevestiging` |
+| Consent state reading in components | `vanilla-cookieconsent` JS API (`CookieConsent.acceptedService()`) |
+| Conditional GA script loading | `@next/third-parties` `GoogleAnalytics` component rendered only after consent granted |
+| Event typing | Inline TypeScript — no separate analytics type package needed |
+| Zustand cart state | Already installed at v5.0.10 |
+
+---
 
 ## Installation
 
 ```bash
-# Only add type definitions for structured data
-npm install -D schema-dts
+# Analytics + consent (both runtime dependencies)
+npm install @next/third-parties@latest vanilla-cookieconsent@latest
 ```
 
-## Next.js 15 Built-In SEO Features (No Installation Needed)
+Both are runtime (not dev) because they run in the browser.
 
-### 1. Metadata API (Built-in)
+---
 
-**What it does:** Generates meta tags, OpenGraph, Twitter cards, canonical URLs, hreflang
-**Already available:** Yes, imported from `'next'` as `Metadata` type
-**Current usage:** Project already uses this in `src/app/layout.tsx`
+## Integration Architecture
 
-**Key capabilities:**
-- `metadata` object for static metadata
-- `generateMetadata()` function for dynamic metadata
-- Hierarchical metadata merging from root → page
-- Full TypeScript support with `Metadata` type
+### Consent-Gated GA4 Loading Pattern
 
-**Dutch market specifics:**
+The `GoogleAnalytics` component from `@next/third-parties` must only render after the user grants analytics consent. The consent state lives in a cookie managed by `vanilla-cookieconsent`.
+
+```
+Root Layout (Server Component)
+└── ConsentProvider (Client Component, 'use client')
+    ├── CookieBanner (initializes vanilla-cookieconsent in useEffect)
+    └── {consent === 'granted'} ? <GoogleAnalytics gaId="G-XXXX" /> : null
+```
+
+The `ConsentProvider` reads the cookie on mount and subscribes to consent change events from `vanilla-cookieconsent`. When consent is granted, it renders `<GoogleAnalytics>`. This satisfies Consent Mode v2: GA script never loads without explicit consent.
+
+### Consent Mode v2 Default State
+
+Before `<GoogleAnalytics>` loads, push default denied state to `window.dataLayer`:
+
 ```typescript
-export const metadata: Metadata = {
-  metadataBase: new URL('https://pureblinds.nl'),
-  title: 'Maatwerk Rolgordijnen Online',
-  description: 'Bestel rolgordijnen op maat online...',
-  openGraph: {
-    locale: 'nl_NL',
-    type: 'website',
-    siteName: 'Pure Blinds',
-  },
-  alternates: {
-    canonical: 'https://pureblinds.nl',
-    languages: {
-      'nl-NL': 'https://pureblinds.nl',
-    },
-  },
-}
+// Must fire before GA script, in a <Script strategy="beforeInteractive"> or inline
+window.dataLayer = window.dataLayer || [];
+function gtag(...args: unknown[]) { window.dataLayer.push(args); }
+gtag('consent', 'default', {
+  analytics_storage: 'denied',
+  ad_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied',
+});
 ```
 
-### 2. Sitemap Generation (Built-in)
+This ensures GA loads in modeling mode rather than full tracking if the banner hasn't been answered yet.
 
-**What it does:** Creates sitemap.xml automatically
-**File convention:** `app/sitemap.ts` or `app/sitemap.xml`
-**Already available:** Yes (Next.js 15.0+)
+### Purchase Event Pattern (Shopify Redirect Problem)
 
-**Implementation pattern:**
-```typescript
-// src/app/sitemap.ts
-import type { MetadataRoute } from 'next'
+The cart is cleared at checkout initiation (CHKOUT-02 decision). When Shopify redirects back to `/bevestiging`, cart state is already empty. Solution: save a purchase snapshot to `sessionStorage` before clearing cart.
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: 'https://pureblinds.nl',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-    {
-      url: 'https://pureblinds.nl/rolgordijnen',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-  ]
-}
+```
+Checkout flow:
+1. User clicks "Afrekenen" in CartSummary
+2. Before clearCart() → write snapshot to sessionStorage('purchase-pending')
+3. Cart clears, user redirects to Shopify invoice_url
+4. Shopify redirects back to /bevestiging
+5. Client component on /bevestiging reads sessionStorage
+6. Fires GA4 `purchase` event with snapshot data
+7. Clears sessionStorage
 ```
 
-**Advanced features:**
-- Dynamic sitemap generation from database/CMS
-- Image sitemaps (product images)
-- Multiple sitemaps via `generateSitemaps()` for large catalogs (50k+ URLs)
-- Cached by default unless using Dynamic APIs
+`sessionStorage` survives cross-tab navigation within the same browser session but not across browser restarts, which is adequate for same-session checkout flows.
 
-### 3. Robots.txt Generation (Built-in)
+### E-commerce Event Placement
 
-**What it does:** Creates robots.txt for search engine crawlers
-**File convention:** `app/robots.ts` or `app/robots.txt`
-**Already available:** Yes (Next.js 15.0+)
+| Event | Where | Trigger |
+|-------|-------|---------|
+| `view_item` | Product detail page (client component) | On mount |
+| `add_to_cart` | `useCartStore.addItem` call site | After successful add |
+| `begin_checkout` | CartSummary checkout button | On click, before redirect |
+| `purchase` | `/bevestiging` page (client component) | On mount, reads sessionStorage |
 
-**Implementation pattern:**
-```typescript
-// src/app/robots.ts
-import type { MetadataRoute } from 'next'
+All events use `sendGAEvent` from `@next/third-parties/google`. Guard each call with a consent check to avoid double-firing if consent state changes.
 
-export default function robots(): MetadataRoute.Robots {
-  return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: ['/admin/', '/api/'],
-    },
-    sitemap: 'https://pureblinds.nl/sitemap.xml',
-  }
-}
-```
-
-### 4. JSON-LD Structured Data (Built-in)
-
-**What it does:** Adds Schema.org structured data for rich snippets
-**Implementation:** Inline `<script type="application/ld+json">` in components
-**Already available:** Yes (standard Next.js pattern)
-
-**Recommended with schema-dts:**
-```typescript
-import { Product, LocalBusiness, FAQPage, WithContext } from 'schema-dts'
-
-// In product page component
-const productSchema: WithContext<Product> = {
-  '@context': 'https://schema.org',
-  '@type': 'Product',
-  name: 'Transparant Rolgordijn op Maat',
-  description: 'Hoogwaardig transparant rolgordijn...',
-  image: 'https://pureblinds.nl/products/transparant.jpg',
-  offers: {
-    '@type': 'Offer',
-    price: '49.99',
-    priceCurrency: 'EUR',
-    availability: 'https://schema.org/InStock',
-  },
-}
-
-return (
-  <section>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(productSchema).replace(/</g, '\\u003c'),
-      }}
-    />
-    {/* Product UI */}
-  </section>
-)
-```
-
-**Security note:** Always escape `<` characters to prevent XSS: `.replace(/</g, '\\u003c')`
-
-### 5. Language Specification (Built-in)
-
-**What it does:** Sets HTML lang attribute and hreflang tags
-**Already available:** Yes, via Metadata API
-
-**For Dutch single-language site:**
-```typescript
-// src/app/layout.tsx
-export default function RootLayout({ children }) {
-  return (
-    <html lang="nl-NL"> {/* Change from "en" to "nl-NL" */}
-      <body>{children}</body>
-    </html>
-  )
-}
-
-// Add to metadata in layout.tsx
-export const metadata: Metadata = {
-  alternates: {
-    canonical: '/',
-    languages: {
-      'nl-NL': '/',
-    },
-  },
-}
-```
+---
 
 ## Alternatives Considered
 
 | Recommended | Alternative | When to Use Alternative |
 |-------------|-------------|-------------------------|
-| **Next.js Metadata API** | next-seo package | Never for Next.js 15 App Router. next-seo was designed for Pages Router and adds unnecessary dependency. Metadata API is superior. |
-| **Next.js sitemap.ts** | next-sitemap package | Only if you need advanced sitemap index files or complex post-build processing. Built-in API covers 95% of use cases. |
-| **schema-dts types** | react-schemaorg | Only if you prefer React component API for schemas. schema-dts is lighter (types-only) and more flexible. |
-| **No i18n framework** | next-intl | Only when supporting MULTIPLE languages with locale routing. Overkill for single-language (Dutch-only) site. |
+| `@next/third-parties` GoogleAnalytics | Manual `next/script` + gtag.js | When you need fine-grained script URL control or custom dataLayer name. Not needed here. |
+| `@next/third-parties` GoogleAnalytics | `GoogleTagManager` from same package | Use GTM when a marketing team (not developer) manages tags. For developer-controlled events, direct GA4 is simpler and eliminates GTM latency. |
+| `vanilla-cookieconsent` | `react-cookie-consent` (npm) | Only if you need a React component API with controlled re-renders. vanilla-cookieconsent's useEffect pattern works identically in App Router. |
+| `vanilla-cookieconsent` | Custom consent banner (no library) | Acceptable for MVP, but you lose: built-in cookie persistence, Consent Mode v2 signal mapping, i18n support, WCAG compliance defaults. |
+| `sessionStorage` for purchase data | URL query params from Shopify | Shopify does not reliably pass order data in redirect URL query params for Draft Order invoice_url flows. sessionStorage is the only reliable cross-checkout-boundary option on Basic plan. |
+
+---
 
 ## What NOT to Use
 
 | Avoid | Why | Use Instead |
 |-------|-----|-------------|
-| **next-seo** | Designed for Pages Router, not App Router. Incompatible with Next.js 15 Metadata API patterns. | Built-in Metadata API |
-| **next-intl** | Adds routing complexity, bundle size, and configuration overhead for single-language site. | Built-in metadata.alternates.languages and html lang attribute |
-| **react-helmet** | Client-side meta tag manipulation. Breaks Next.js SSR/SSG optimization. Outdated pattern. | Built-in Metadata API (server-side) |
-| **react-schemaorg** | Runtime dependency for schema generation. schema-dts provides same TypeScript safety without runtime cost. | schema-dts (dev dependency only) |
-| **Manual meta tags** | Writing `<meta>` tags directly in `<head>` bypasses Next.js optimization and breaks metadata merging. | Metadata API with hierarchical merging |
+| **Google Tag Manager** (`GoogleTagManager` component) | Adds 200ms+ median blocking time, requires GTM container management, and creates a second layer of abstraction for events already controlled in code. Overkill for developer-managed tracking. | `GoogleAnalytics` component with `sendGAEvent` directly |
+| **`react-cookie-consent`** | 3.5 kB gzipped React wrapper that does not support Google Consent Mode v2 natively. Requires manual signal mapping. | `vanilla-cookieconsent` (zero dependencies, Consent Mode v2 built-in) |
+| **`@analytics` (DavidWells)** | Plugin system adds abstraction over GA4 that conflicts with Next.js App Router SSR model. Consent Mode v2 integration is a known open issue (GitHub #427). | `@next/third-parties` + `sendGAEvent` directly |
+| **Storing purchase data in localStorage** | localStorage persists across sessions. A returning user could trigger a duplicate purchase event on their next visit if the key was not cleared. | `sessionStorage` — cleared automatically when tab closes |
+| **Server-side GA4 Measurement Protocol** | Valid for server-side event deduplication, but adds complexity (client_id management, session_id propagation) not needed at this scale. Defer to v2.x if accuracy becomes a business requirement. | Client-side `sendGAEvent` |
 
-## Stack Patterns for Dutch E-commerce SEO
+---
 
-### Pattern 1: Product Pages with Structured Data
+## Stack Patterns by Variant
 
-```typescript
-// src/app/rolgordijnen/[category]/[slug]/page.tsx
-import type { Metadata } from 'next'
-import type { Product, WithContext } from 'schema-dts'
+**If user has previously accepted consent (returning visitor):**
+- `vanilla-cookieconsent` reads its own cookie on init and fires `onConsent` callback immediately
+- `ConsentProvider` grants analytics on first render, `<GoogleAnalytics>` mounts before user interaction
+- All page-load events (view_item) fire correctly
 
-export async function generateMetadata({ params }): Promise<Metadata> {
-  const product = await getProduct(params.slug)
+**If user has not yet seen banner (first visit):**
+- GA4 script does not load
+- Consent Mode v2 default `denied` state is set via inline script
+- Events are buffered/dropped until consent is granted
+- Banner appears, user accepts → consent update fires → `<GoogleAnalytics>` mounts
 
-  return {
-    title: `${product.name} | Pure Blinds`,
-    description: product.description,
-    openGraph: {
-      title: product.name,
-      description: product.description,
-      images: [product.image],
-      locale: 'nl_NL',
-      type: 'product.item',
-    },
-  }
-}
+**If user declines consent:**
+- GA4 script never loads
+- No tracking occurs
+- Consent state persisted in cookie for 182 days (vanilla-cookieconsent default)
 
-export default async function ProductPage({ params }) {
-  const product = await getProduct(params.slug)
-
-  const schema: WithContext<Product> = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: product.name,
-    description: product.description,
-    image: product.image,
-    offers: {
-      '@type': 'Offer',
-      price: product.price.toString(),
-      priceCurrency: 'EUR',
-      availability: 'https://schema.org/InStock',
-    },
-  }
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(schema).replace(/</g, '\\u003c'),
-        }}
-      />
-      {/* Product UI */}
-    </>
-  )
-}
-```
-
-### Pattern 2: LocalBusiness Schema for GEO Optimization
-
-```typescript
-// src/app/layout.tsx or specific landing page
-import type { LocalBusiness, WithContext } from 'schema-dts'
-
-const businessSchema: WithContext<LocalBusiness> = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: 'Pure Blinds',
-  description: 'Maatwerk rolgordijnen voor heel Nederland',
-  url: 'https://pureblinds.nl',
-  telephone: '+31-XX-XXX-XXXX',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Straatnaam XX',
-    addressLocality: 'Amsterdam',
-    postalCode: '1234 AB',
-    addressCountry: 'NL',
-  },
-  areaServed: {
-    '@type': 'Country',
-    name: 'Nederland',
-  },
-  priceRange: '€€',
-}
-```
-
-### Pattern 3: FAQ Schema for Category Pages
-
-```typescript
-// src/app/rolgordijnen/page.tsx
-import type { FAQPage, WithContext } from 'schema-dts'
-
-const faqSchema: WithContext<FAQPage> = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Hoe meet ik mijn raam op?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Meet de breedte van uw raam...',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Wat is het verschil tussen transparant en verduisterend?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Transparante rolgordijnen...',
-      },
-    },
-  ],
-}
-```
-
-### Pattern 4: Dynamic Sitemap from Product Database
-
-```typescript
-// src/app/sitemap.ts
-import type { MetadataRoute } from 'next'
-import { getAllProducts, getAllCategories } from '@/lib/data'
-
-export default async function sitemap(): MetadataRoute.Sitemap {
-  const categories = await getAllCategories()
-  const products = await getAllProducts()
-
-  const categoryUrls = categories.map((cat) => ({
-    url: `https://pureblinds.nl/rolgordijnen/${cat.slug}`,
-    lastModified: cat.updatedAt,
-    changeFrequency: 'weekly' as const,
-    priority: 0.8,
-  }))
-
-  const productUrls = products.map((product) => ({
-    url: `https://pureblinds.nl/rolgordijnen/${product.category}/${product.slug}`,
-    lastModified: product.updatedAt,
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
-    images: [product.image],
-  }))
-
-  return [
-    {
-      url: 'https://pureblinds.nl',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 1,
-    },
-    ...categoryUrls,
-    ...productUrls,
-  ]
-}
-```
+---
 
 ## Version Compatibility
 
 | Package | Version | Compatible With | Notes |
 |---------|---------|-----------------|-------|
-| schema-dts | 1.1.5 | Next.js 15+, TypeScript 5+ | Types-only, no runtime dependencies |
-| Next.js | 16.1.6 | All features used | Metadata API stable since v13.2.0, sitemap/robots since v13.3.0 |
-| TypeScript | 5.x | schema-dts 1.1.5 | Required for WithContext and schema types |
-
-**Critical compatibility notes:**
-- Metadata API is Server Components only (cannot use in 'use client' components)
-- File-based metadata (opengraph-image.tsx, etc.) takes precedence over Metadata object
-- `generateMetadata` automatically memoizes fetch requests across components
-
-## Migration from English to Dutch
-
-### Required Changes
-
-1. **Root layout language:**
-   ```typescript
-   // src/app/layout.tsx
-   <html lang="nl-NL"> {/* was: lang="en" */}
-   ```
-
-2. **Metadata locale:**
-   ```typescript
-   export const metadata: Metadata = {
-     openGraph: {
-       locale: 'nl_NL', // was: 'en_US'
-     },
-   }
-   ```
-
-3. **metadataBase:**
-   ```typescript
-   export const metadata: Metadata = {
-     metadataBase: new URL('https://pureblinds.nl'),
-   }
-   ```
-
-4. **Currency in Product schemas:**
-   ```typescript
-   offers: {
-     '@type': 'Offer',
-     priceCurrency: 'EUR', // Netherlands uses Euro
-   }
-   ```
-
-### No Changes Needed
-
-- **No routing changes** (single language, no /nl/ prefix needed)
-- **No locale detection** (always serve Dutch)
-- **No translation framework** (content is Dutch-only)
-
-## SEO Checklist for Netherlands Market
-
-### Meta Tags (via Metadata API)
-- [x] `<html lang="nl-NL">`
-- [x] Title (50-60 characters, Dutch keywords)
-- [x] Description (150-160 characters)
-- [x] OpenGraph tags (og:locale = 'nl_NL')
-- [x] Twitter Card tags
-- [x] Canonical URL
-- [x] hreflang="nl-NL" (via alternates.languages)
-
-### Structured Data (via JSON-LD + schema-dts)
-- [x] Product schema (price in EUR)
-- [x] LocalBusiness schema (address in Netherlands)
-- [x] FAQPage schema (Dutch questions)
-- [x] BreadcrumbList schema (category navigation)
-
-### Crawling & Indexing
-- [x] robots.txt (via robots.ts)
-- [x] sitemap.xml (via sitemap.ts with Dutch URLs)
-- [x] Image sitemaps (product photos)
-
-### GEO Optimization
-- [x] LocalBusiness.address.addressCountry = 'NL'
-- [x] LocalBusiness.areaServed = 'Nederland'
-- [x] Currency: EUR throughout
-- [x] Phone: +31 country code
-- [x] Postal code format: '1234 AB'
-
-## Sources
-
-### Official Next.js Documentation (v16.1.6)
-- [Metadata API](https://nextjs.org/docs/app/getting-started/metadata-and-og-images) — Complete metadata guide (last updated: 2026-02-11)
-- [generateMetadata Reference](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) — Full API specification with alternates, openGraph, twitter fields
-- [sitemap.xml](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) — File convention and MetadataRoute.Sitemap type
-- [robots.txt](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) — File convention and MetadataRoute.Robots type
-- [JSON-LD Guide](https://nextjs.org/docs/app/guides/json-ld) — Recommended patterns for structured data
-
-### Official npm Packages
-- [schema-dts v1.1.5](https://www.npmjs.com/package/schema-dts) — Latest version released 2025-03-01
-- [schema-dts GitHub](https://github.com/google/schema-dts) — Official repository, 1.1k stars
-
-### Community & Best Practices (2026)
-- [Next.js 15 SEO Guide 2026](https://www.sujalbuild.in/blog/nextjs-seo-performance-guide) — MEDIUM confidence (WebSearch verified)
-- [Complete Guide to SEO in Next.js 15](https://medium.com/@thomasaugot/the-complete-guide-to-seo-optimization-in-next-js-15-1bdb118cffd7) — MEDIUM confidence (community practices)
-- [Next.js Internationalization Guide](https://nextjs.org/docs/app/guides/internationalization) — HIGH confidence (official docs, 2026-02-11)
-
-**Confidence Assessment:**
-- **Next.js built-in features:** HIGH (official documentation, verified API references)
-- **schema-dts usage:** HIGH (official Google package, npm verified)
-- **Dutch market specifics:** MEDIUM (based on standard i18n practices + Schema.org country codes)
-- **SEO best practices:** MEDIUM (WebSearch verified with official docs crosscheck)
+| `@next/third-parties` | 16.1.6 | Next.js 16.1.6, React 19.2.3 | Version is kept in sync with Next.js. Always install with `@latest` alongside Next.js upgrades. |
+| `vanilla-cookieconsent` | 3.1.0 | All browsers (no React dependency) | Latest stable published ~1 year ago. Zero dependencies. `next` tag on npm points to 3.0.0-rc.17 (do not use). |
+| `sendGAEvent` | part of @next/third-parties | Requires `<GoogleAnalytics>` in parent tree | Function uses `window.dataLayer`. Will silently no-op if GA component not mounted (safe to call regardless). |
 
 ---
 
-*Stack research for: Pure Blinds Dutch E-commerce SEO*
-*Researched: 2026-02-14*
-*Next research: Phase-specific implementation patterns*
+## GA4 E-commerce Event Schema
+
+Required parameters per event (HIGH confidence — Google developer docs verified):
+
+```typescript
+// view_item
+sendGAEvent('event', 'view_item', {
+  currency: 'EUR',
+  value: priceInEuros,
+  items: [{ item_id, item_name, price, quantity }],
+});
+
+// add_to_cart
+sendGAEvent('event', 'add_to_cart', {
+  currency: 'EUR',
+  value: priceInEuros,
+  items: [{ item_id, item_name, price, quantity }],
+});
+
+// begin_checkout
+sendGAEvent('event', 'begin_checkout', {
+  currency: 'EUR',
+  value: cartTotalInEuros,
+  items: cartItems.map(toGA4Item),
+});
+
+// purchase (required fields)
+sendGAEvent('event', 'purchase', {
+  transaction_id: string,  // required — use Shopify order ID or UUID generated pre-checkout
+  currency: 'EUR',
+  value: orderTotalInEuros,
+  items: orderItems.map(toGA4Item),
+});
+```
+
+`transaction_id` for the purchase event is the critical constraint. Since Shopify does not reliably surface the order ID in the redirect URL for Basic-plan Draft Order flows, generate a UUID at checkout initiation, store it in the `sessionStorage` snapshot, and use it as `transaction_id`. This prevents duplicate purchase events on browser back/refresh.
+
+---
+
+## Sources
+
+- [Next.js Third-Party Libraries Docs (v16.1.6)](https://nextjs.org/docs/app/guides/third-party-libraries) — GoogleAnalytics component, sendGAEvent API, sendGTMEvent API. HIGH confidence — official docs, verified 2026-02-22.
+- `@next/third-parties` npm: version 16.1.6, published 23 days ago (2026-02-22 reference). HIGH confidence — npm registry.
+- `vanilla-cookieconsent` npm: version 3.1.0, MIT, zero dependencies. HIGH confidence — npm registry.
+- [vanilla-cookieconsent Google Consent Mode docs](https://cookieconsent.orestbida.com/advanced/google-consent-mode.html) — 7 consent signals, gtag integration pattern. HIGH confidence — official docs.
+- [GA4 Ecommerce Measurement](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce) — Required parameters for view_item, add_to_cart, begin_checkout, purchase. HIGH confidence — Google developer docs.
+- [Google Consent Mode Setup](https://developers.google.com/tag-platform/security/guides/consent) — Default denied state, gtag('consent', 'default') pattern. HIGH confidence — Google official docs.
+- WebSearch: "GA4 consent mode v2 Next.js App Router 2025" — MEDIUM confidence, multiple community sources agree on useEffect + dataLayer pattern.
+- WebSearch: "vanilla-cookieconsent v3 Next.js App Router" — MEDIUM confidence, StackBlitz examples and community guides confirm useEffect initialization pattern works in App Router.
+
+---
+
+*Stack research for: Pure Blinds v1.5 Analytics & Privacy*
+*Researched: 2026-02-22*

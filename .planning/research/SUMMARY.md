@@ -1,296 +1,228 @@
 # Project Research Summary
 
-**Project:** Pure Blinds - Dutch Rolgordijnen E-commerce Webshop
-**Domain:** Dutch SEO & Content Localization for Next.js 15 E-commerce
-**Researched:** 2026-02-14
+**Project:** Pure Blinds — v1.5 Analytics & Privacy
+**Domain:** GA4 E-commerce Analytics + GDPR Cookie Consent (Next.js 15 App Router, headless Shopify)
+**Researched:** 2026-02-22
 **Confidence:** HIGH
 
 ## Executive Summary
 
-Pure Blinds is transforming from a placeholder English site to a competitive Dutch rolgordijnen (roller blinds) webshop. The research reveals that success in this market requires three critical elements: native-quality Dutch content with informal "je" tone, comprehensive SEO infrastructure using Next.js 15's built-in features, and proper category cleanup with 301 redirects before any content changes.
+Pure Blinds v1.5 is a focused analytics and legal-compliance milestone: add GA4 e-commerce funnel tracking to a headless Shopify storefront while meeting Dutch GDPR requirements enforced by the Autoriteit Persoonsgegevens (AP). The AP issued 50 enforcement warnings in April 2025 specifically targeting consent banners that bury the reject option, making compliant implementation non-optional. The recommended approach is to load GA4 unconditionally via raw `next/script` with all four Consent Mode v2 parameters defaulted to `denied`, layer a custom Dutch-language consent banner on top that updates consent state via `gtag('consent', 'update', ...)`, and instrument the four standard funnel events (`view_item`, `add_to_cart`, `begin_checkout`, `purchase`) using typed wrappers over `window.gtag()`.
 
-The recommended approach is to leverage Next.js 15's native capabilities (Metadata API, sitemap.ts, robots.ts) without external SEO packages, implement Dutch content as single-locale inline text (no i18n routing complexity), and structure work in a dependency-driven order: data cleanup first, then content translation, then SEO infrastructure. This avoids the common pitfall of removing categories without redirects or launching with machine-translated Dutch that destroys trust.
+Only two library additions are needed: `vanilla-cookieconsent@3.1.0` for the GDPR consent UI (zero dependencies, native Consent Mode v2 support), and `@next/third-parties@16.1.6` for `sendGAEvent` event dispatch. Critically, the `<GoogleAnalytics>` component from `@next/third-parties/google` must not be used for script initialization — it does not support Consent Mode v2 as of early 2025. The most architecturally complex challenge is the `purchase` event: the Shopify checkout lives on a separate domain, the cart is cleared before the redirect, and Shopify does not pass an order ID back to `/bevestiging` for Basic-plan Draft Order flows. The solution is a `sessionStorage` snapshot of cart contents and a client-generated UUID stored at checkout initiation, read and fired on the confirmation page with a deduplication guard.
 
-The key risk is translation quality. The Dutch market has zero tolerance for poor translation - 90%+ of searches are in Dutch, but machine-translated content is worse than good English. Native speaker review is non-negotiable. Secondary risks include metadata streaming breaking social media bots and missing 301 redirects causing SEO damage when removing venetian-blinds and textiles categories.
+The three primary risks are: (1) firing GA4 with incorrect consent initialization order, which is a GDPR violation with real fine exposure; (2) cross-domain session breaks between `pure-blinds.nl` and the Shopify checkout domain that silently destroy acquisition attribution; and (3) missing or duplicate `purchase` events caused by the cart-clear-before-redirect pattern. All three are well-understood and have concrete prevention strategies documented in research. Execute phases in strict dependency order: consent infrastructure and cross-domain setup first, then funnel events, then the consent banner UI polish.
+
+---
 
 ## Key Findings
 
 ### Recommended Stack
 
-**NO external dependencies required** for SEO functionality. Next.js 15 (already installed as v16.1.6) provides native built-in APIs for all required functionality: Metadata API for meta tags, file conventions for sitemap.xml and robots.txt, native JSON-LD support for structured data. This is a major simplification over older approaches that required next-seo, next-sitemap, or i18n frameworks.
+Only two library additions are needed. Everything else — Zustand, `next/script`, TypeScript, `sessionStorage`/`localStorage` — is already in the stack.
 
 **Core technologies:**
-- Next.js 16.1.6 (existing): Metadata API, sitemap/robots.ts conventions — already installed, zero changes needed
-- schema-dts (v1.1.5, dev dependency only): TypeScript types for Schema.org JSON-LD — Google-maintained, compile-time validation, zero runtime cost
-- No i18n framework: Single Dutch locale, inline content — avoids next-intl complexity for single-language site
+- `@next/third-parties@16.1.6`: Official Next.js GA4 integration — use `sendGAEvent` for event dispatch only. Do **not** use its `<GoogleAnalytics>` component for consent-mode-aware script loading; it does not support Consent Mode v2 as of early 2025 (confirmed in Next.js GitHub discussion #66718).
+- `vanilla-cookieconsent@3.1.0`: Zero-dependency GDPR consent banner (MIT, 152 kB unpacked) with native Consent Mode v2 signal mapping and cookie persistence. Initialized in `useEffect` in a Client Component — works identically in App Router.
+- `next/script` (built-in): Used directly for GA4 initialization and consent default scripts. Both consent-default script and `gtag.js` src script must use `strategy="afterInteractive"`; consent default must appear before the gtag.js script in DOM order.
+- `sessionStorage` (browser API): Sole mechanism for passing cart snapshot and transaction ID across the Shopify checkout boundary. `localStorage` is used for consent persistence only.
 
-**Critical decision:** Do NOT add next-intl, next-sitemap, or react-schemaorg. Next.js native features are superior for single-language sites. The only recommended addition is schema-dts as a dev dependency for type-safe structured data authoring.
+**What not to add:** Google Tag Manager (adds latency, unnecessary abstraction for developer-controlled events), `react-cookie-consent` (no Consent Mode v2 support), server-side GA4 Measurement Protocol (justified only at 10k+ monthly sessions), any SaaS consent platform (external dependency, monthly cost, timing complexity).
+
+See full detail: `.planning/research/STACK.md`
 
 ### Expected Features
 
-**Must have (table stakes):**
-- Dutch homepage hero with "Rolgordijnen op maat" value proposition — every Dutch webshop starts here
-- Product type differentiation (transparant vs verduisterend) — market standard, customers expect to choose
-- Measurement instructions (inmeetinstructies) — custom products require clear "op de dag" vs "in de dag" guidance
-- Free color samples offer (gratis kleurstalen) — industry standard trust builder, all competitors offer this
-- Delivery time transparency (7-14 werkdagen) — custom products need clear expectations
-- FAQ section with domain-specific questions — customers research extensively before buying custom blinds
-- Trust signals (Thuiswinkel Waarborg reference) — 91% recognition rate, 64% find webshops more trustworthy
-- Price transparency ("tot 40% goedkoper") — competitive market emphasizes value pricing
+**Must have (table stakes — P1, v1.5 launch):**
+- Cookie consent banner — Dutch-language, "Accepteer alles" and "Weiger alles" at equal visual prominence; no buried reject option; site fully functional without consent. Legal requirement; AP actively enforcing with fines up to €900,000.
+- GA4 Consent Mode v2 loading — all 4 parameters (`analytics_storage`, `ad_storage`, `ad_user_data`, `ad_personalization`) defaulted to `denied` before gtag fires; updated to `granted` on accept.
+- `view_item` event — fires on product detail page mount with `item_id`, `item_name`, `price`, `currency: 'EUR'`.
+- `add_to_cart` event — fires when user adds item to cart via the existing Zustand store call site.
+- `begin_checkout` event — fires on checkout button click, before Shopify redirect.
+- `purchase` event on `/bevestiging` — fires with `transaction_id` (client-generated UUID from sessionStorage snapshot) and full `items` array. Highest complexity; no Shopify order ID available without extra work on Basic plan.
+- `transaction_id` deduplication guard — `sessionStorage` key prevents duplicate purchase events on page refresh within session; `localStorage` key prevents cross-session duplicates.
+- VAT-inclusive EUR values on all monetary events — matches Dutch consumer pricing law and existing cart data format.
 
-**Should have (competitive differentiators):**
-- Direct-from-factory messaging — builds trust through transparency, justifies pricing
-- Room-specific guidance (slaapkamer, badkamer, dakraam) — helps customers make informed choices
-- Sustainability messaging (isolerende eigenschappen) — 2026 trend: natural materials, energy efficiency
-- Blog content: buying guides ("Welk rolgordijn voor welke kamer?") — educational approach builds authority
-- Step-by-step configurator explanation — reduces anxiety about custom ordering process
+**Should have (P2, add after core tracking is validated):**
+- `view_item_list` on category/subcategory pages — upper funnel visibility.
+- `select_item` on product card click — product merchandising data.
+- `view_cart` on cart page — cart abandonment analysis.
+- Consent re-prompt on banner version change.
+- Consent mode region restriction (EEA only) — reduces friction for non-EU traffic.
 
 **Defer (v2+):**
-- Live chat support — Dutch market prefers email/phone, requires staffing
-- Virtual room visualizer — high complexity, low conversion impact for blinds
-- Product reviews — new shop has no reviews yet, empty sections hurt trust
-- Multi-language support — Netherlands-only market is sufficient, avoid splitting focus
+- Server-side GA4 via Measurement Protocol — requires separate infrastructure; not justified until high traffic volumes where adblocker data loss is significant.
+- `add_payment_info` / `add_shipping_info` — require Shopify Plus checkout extensibility.
+- Google Ads conversion tracking — requires `ad_user_data` consent; most Dutch users will decline.
+- GA4 audiences for remarketing — depends on ad consent, unlikely to be widely granted by Dutch users.
 
-**Anti-features (commonly requested, but problematic):**
-- Real-time price comparison widgets — drives customers away before value is established
-- Hyper-local SEO (per-city landing pages) — thin content penalty risk, maintenance burden
-- Blog posts about unrelated topics — dilutes domain authority for rolgordijnen keywords
+See full detail: `.planning/research/FEATURES.md`
 
 ### Architecture Approach
 
-Next.js 15 App Router's Metadata API and file-based metadata conventions provide first-class SEO support without external packages. Dutch content implemented as single-locale inline content (components + JSON data) without i18n routing complexity. Build order is dependency-driven: data updates → route removal → content updates → SEO infrastructure. This prevents broken references and ensures clean architecture.
+The analytics layer is entirely additive: three new Client Components (`GoogleAnalytics`, `CookieBanner`, `PurchaseTracker`) and one new `lib/analytics/` module (`events.ts`, `consent.ts`, `types.ts`). Four existing components receive targeted modifications. No server API routes are needed; all consent and event logic runs in the browser. The root layout remains a Server Component with client analytics components injected at the body level.
 
 **Major components:**
-1. Metadata API Layer — Static `metadata` object for static pages, `generateMetadata()` for dynamic routes; hierarchical merging from root to page level
-2. Content Layer — Dutch content in data/products.json for product catalog, inline Dutch in page components for static content
-3. Structured Data Layer — JSON-LD `<script>` tags in page components using schema-dts types; Product schema for products, FAQPage for FAQ, LocalBusiness for root layout
-4. SEO Infrastructure — sitemap.ts generates sitemap.xml from catalog + blog at build time, robots.ts configures crawling rules
-5. Product Catalog — data/products.json remains single source of truth; modified with Dutch translations, venetian-blinds and textiles categories removed
+1. `components/analytics/google-analytics.tsx` — loads gtag.js via two ordered `<Script>` tags: inline consent default first, then `src` script. The `GoogleAnalytics` component from `@next/third-parties` is not used for this. Built first; all `sendGAEvent` calls depend on this being in the tree.
+2. `components/analytics/cookie-banner.tsx` — GDPR banner UI, reads/writes `localStorage` consent state in `useEffect` (SSR-safe), calls `gtag('consent', 'update', ...)` on user action. Must default to `null` state during SSR to avoid hydration mismatch.
+3. `components/analytics/purchase-tracker.tsx` — reads `sessionStorage` snapshot on `/bevestiging` mount, fires `purchase` event, deduplicates via `sessionStorage` fired-flag, clears snapshot. Wrapped in `<Suspense fallback={null}>` to prevent Next.js route deopting from `useSearchParams()`.
+4. `lib/analytics/events.ts` — typed wrappers (`trackViewItem`, `trackAddToCart`, `trackBeginCheckout`, `trackPurchase`) over `window.gtag()`, guarded against missing gtag. Centralizes all event logic.
+5. `lib/analytics/consent.ts` — `getConsent()` / `setConsent()` localStorage helpers with SSR guards.
+6. `lib/analytics/types.ts` — `GA4EcommerceItem`, `ConsentState` types shared across components.
 
-**Critical pattern:** Use static metadata for critical pages (homepage, main categories) to avoid metadata streaming issues with social media bots. Reserve `generateMetadata()` for truly dynamic content (product details, blog posts).
+**Existing components modified:**
+- `app/layout.tsx` — add `<GoogleAnalytics />` and `<CookieBanner />` inside `<body>`
+- `components/dimension-configurator.tsx` — call `trackViewItem()` on price load, `trackAddToCart()` on add
+- `components/cart/cart-summary.tsx` — call `trackBeginCheckout()` and store `sessionStorage` snapshot before redirect
+- `app/bevestiging/page.tsx` — add `<PurchaseTracker />` inside `<Suspense>`
+
+**Build order (dependency-driven):**
+```
+Step 1: lib/analytics/ module (types, consent, events)
+    ├── Step 2: google-analytics.tsx + layout.tsx modification
+    │       └── Step 3: cookie-banner.tsx + layout.tsx modification
+    ├── Step 4: view_item + add_to_cart in dimension-configurator.tsx
+    └── Step 5: begin_checkout + sessionStorage snapshot in cart-summary.tsx
+                └── Step 6: purchase-tracker.tsx + bevestiging/page.tsx modification
+```
+
+Steps 3, 4, and 5 can proceed in parallel once Step 2 is complete. Step 6 must follow Step 5.
+
+See full detail: `.planning/research/ARCHITECTURE.md`
 
 ### Critical Pitfalls
 
-1. **Removing product categories without 301 redirects** — Deleting venetian-blinds and textiles routes without redirects causes loss of search rankings, broken backlinks, and poor UX. Google may interpret sudden 404 spike as quality issue. MUST implement 301 redirects in next.config.js BEFORE removing routes, redirect to relevant pages (not homepage), and update sitemap immediately. Address in Phase 1 before any other changes.
+1. **Consent default not set before GA4 script fires** — if `gtag('consent', 'default', ...)` runs after `gtag.js` loads, GA4 defaults to `analytics_storage: granted`. This is a GDPR violation and will cause attribution issues. Prevention: use two `<Script strategy="afterInteractive">` tags in exact DOM order — inline consent default script first, then the `gtag.js` src script. Never use `@next/third-parties/google` `<GoogleAnalytics>` for this purpose.
 
-2. **Dutch translation quality destroying trust** — Machine translation creates unnatural phrasing, grammar errors (de/het articles), wrong terminology, and formal/informal mismatch (u vs je). 90%+ of Dutch searches are in Dutch, but poor Dutch is worse than good English. MUST use native Dutch speaker (Netherlands, not Belgium), create terminology glossary, reference competitor websites, and test with native speakers before launch. Non-negotiable for ecommerce trust. Address in Phase 2 during content creation.
+2. **Cross-domain session break at Shopify checkout** — JavaScript-based redirects (`window.location.href`) do not trigger GA4's automatic `_gl` linker decoration, so `purchase` events record "(direct)/(none)" source instead of the real acquisition channel. Prevention: configure cross-domain measurement in GA4 Admin; add `*.myshopify.com` and `checkout.shopify.com` to "Unwanted Referrals"; manually decorate the checkout URL with the `_gl` linker parameter before firing the redirect.
 
-3. **Metadata streaming breaking social media bots** — Next.js 15 streams metadata after initial HTML, but Facebook/LinkedIn/WhatsApp bots are HTML-limited and can't execute JavaScript. Open Graph tags end up in `<body>` instead of `<head>`, causing broken social preview cards. MUST use static metadata object (not `generateMetadata`) for critical pages, configure `htmlLimitedBots` in next.config.js to block streaming for social bots, and test with Facebook Sharing Debugger before launch. Address in Phase 2 when implementing meta tags.
+3. **Cart cleared before `/bevestiging` — no items data for purchase event** — the existing `clearCart()` call happens before the Shopify redirect. By the time `/bevestiging` loads, the Zustand store is empty and no `items` array can be populated. Prevention: snapshot cart items to `sessionStorage` at checkout initiation (before `clearCart()`); read from snapshot on confirmation page, never from the store.
 
-4. **Open Graph locale format breaking social sharing** — Using `nl-NL` (hyphen) instead of `nl_NL` (underscore) causes Facebook/LinkedIn to ignore locale metadata. Open Graph protocol requires underscore format, unlike hreflang which uses hyphen. MUST use `locale: 'nl_NL'` in openGraph object and use `property="og:locale"` not `name="og:locale"` in meta tags. Validate with social media debuggers. Address in Phase 2.
+4. **Duplicate purchase events on page refresh** — GA4's `transaction_id` deduplication only applies within a session; a page refresh starts a new session. Prevention: store the fired `transaction_id` in `sessionStorage` (and `localStorage` for cross-session safety); check before firing and skip if already sent.
 
-5. **Structured data XSS vulnerability** — Direct `JSON.stringify()` in JSON-LD `<script>` tags without sanitization creates XSS risk if product data contains `</script>` injection. MUST replace `<` with `\\u003c` using `.replace(/</g, '\\u003c')` or use serialize-javascript package. Never inject raw user input without validation. Address in Phase 3 when implementing Schema.org markup.
+5. **Dutch GDPR dark patterns on consent banner** — Dutch AP warned 50 organisations in April 2025 for burying the reject option. A colored "Accept" button with a gray/smaller "Reject" link is now legally documented as a violation. Prevention: equal-prominence "Accepteer alles" and "Weiger alles" buttons at the top layer; Dutch-language copy throughout; `_ga` cookie must not appear in browser before consent is granted.
+
+6. **`useSearchParams` without Suspense deopts `/bevestiging` page** — if `PurchaseTracker` uses `useSearchParams()` without a `<Suspense>` boundary, Next.js makes the entire route client-side rendered, producing a blank-flash page and breaking server-rendered metadata. Prevention: wrap `PurchaseTracker` in `<Suspense fallback={null}>`.
+
+7. **GA4 script conditionally rendered behind consent check** — blocking the `<Script src="gtag.js">` from loading until consent is granted disables Consent Mode v2 Advanced modeling (Google cannot send even anonymized cookieless pings for opted-out users). Prevention: always load gtag.js unconditionally with `analytics_storage: denied` as default; only the cookies it writes require consent, not the script itself.
+
+See full detail: `.planning/research/PITFALLS.md`
+
+---
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure:
+Research identifies a clear build dependency chain. Consent infrastructure and cross-domain configuration must exist before events can fire meaningfully. The analytics module must exist before any component can import event functions. The checkout snapshot must be stored before the purchase tracker can read it. This dictates three sequential phases with defined internal build order within each phase.
 
-### Phase 1: Category Cleanup & Route Restructuring
-**Rationale:** MUST come first to prevent SEO damage. Removing categories without proper redirects loses rankings and creates poor UX. Data layer must be clean before content updates to avoid broken references.
+### Phase 1: GA4 Foundation & Cross-Domain Setup
 
-**Delivers:**
-- Removed venetian-blinds and textiles categories from product catalog
-- 301 redirects configured in next.config.js for all removed routes
-- Updated sitemap filter to exclude removed categories
-- Clean data foundation for Dutch content
+**Rationale:** Consent initialization order, script loading pattern, cross-domain referral exclusion, and SPA page view tracking are all prerequisites for any event instrumentation. Getting these wrong either creates GDPR exposure or silently corrupts all subsequent attribution data. No event code should be written until this phase is verified working in GA4 DebugView.
 
-**Addresses:**
-- Pitfall #1 (missing 301 redirects)
-- Pitfall #7 (sitemap contains removed routes)
-- Clean slate for content translation
+**Delivers:** GA4 property receiving page views with correct Consent Mode v2 defaults (no `_ga` cookie before consent); cross-domain session continuity with Shopify checkout; SPA route-change page views tracked via `usePathname()` + `useEffect` pattern.
 
-**Avoids:**
-- Loss of search engine rankings
-- Broken backlinks from external sites
-- Wasted crawl budget on removed pages
-- 404 errors for users with bookmarks
+**Addresses (from FEATURES.md):** GA4 Consent Mode v2 loading (4 parameters); GA4 property configured with measurement ID (admin prerequisite, not code); SPA page view tracking.
 
-**Research flag:** Standard pattern (well-documented 301 redirect implementation), skip research-phase.
+**Avoids (from PITFALLS.md):** Pitfall 3 (consent default not set before GA4 script), Pitfall 4 (GA4 script blocked by CMP entirely), Pitfall 1 (cross-domain session break at Shopify checkout), Pitfall 5 (SPA page views not firing on route changes).
 
-### Phase 2: Dutch Content & Metadata
-**Rationale:** Content quality is non-negotiable for ecommerce trust. All pages need unique Dutch content and metadata before SEO infrastructure to ensure social bots get proper tags. Static metadata for critical pages prevents streaming issues.
+**Research flag:** Standard patterns — all covered by official docs and ARCHITECTURE.md Pattern 1. Skip research-phase; implement directly from documented patterns.
 
-**Delivers:**
-- Root layout lang="nl-NL" attribute
-- Homepage Dutch copy (hero, about, services sections)
-- Category/subcategory Dutch copy (rolgordijnen, transparante, verduisterende)
-- Product page template Dutch copy
-- FAQ Dutch content (8-12 questions)
-- Dutch meta tags (title, description) for all pages
-- Open Graph tags with nl_NL locale
-- Blog post: "Welk rolgordijn voor welke kamer?" buying guide
+### Phase 2: E-Commerce Event Instrumentation
 
-**Addresses:**
-- Must-have features: Dutch homepage, product differentiation, FAQ, trust signals
-- Pitfall #3 (translation quality) — native speaker review required
-- Pitfall #2 (metadata streaming) — static metadata for critical pages
-- Pitfall #4 (Open Graph locale) — nl_NL with underscore
-- Pitfall #9 (duplicate meta descriptions) — unique descriptions per page
+**Rationale:** Depends entirely on Phase 1 (gtag must be in the DOM tree before `window.gtag()` calls work). The `purchase` event and the sessionStorage snapshot strategy must be designed and built together — the `cart-summary.tsx` write and the `purchase-tracker.tsx` read are a single atomic unit and must not be split across work sessions.
 
-**Uses:**
-- Next.js Metadata API (built-in)
-- Competitor content patterns from FEATURES.md research
-- Tone of voice: friendly "je", helpful, clear
+**Delivers:** Full GA4 e-commerce funnel: `view_item` → `add_to_cart` → `begin_checkout` → `purchase` with deduplication and complete `items` arrays verified in DebugView. Revenue attribution operational. `lib/analytics/` typed event module complete.
 
-**Avoids:**
-- Machine-translated Dutch destroying trust
-- Generic metadata hurting SEO
-- Social media preview failures
-- Language mismatch confusing users
+**Addresses (from FEATURES.md):** All four P1 funnel events; `transaction_id` deduplication; `currency: 'EUR'` on all monetary events.
 
-**Research flag:** Content-focused phase, no technical research needed. Translation quality verification required (native speaker review).
+**Uses (from STACK.md):** `sendGAEvent` from `@next/third-parties`; `sessionStorage` snapshot pattern; client-generated `pb-${Date.now()}` UUID as `transaction_id`.
 
-### Phase 3: Structured Data & Rich Snippets
-**Rationale:** After content is stable, add Schema.org markup for rich search results. Requires finalized Dutch content to populate schema fields. Technical implementation using schema-dts for type safety.
+**Avoids (from PITFALLS.md):** Pitfall 10 (cart cleared before `/bevestiging` — no items data), Pitfall 7 (duplicate purchase events on page refresh), Pitfall 2 (purchase event depends on fragile page load), Pitfall 6 (`useSearchParams` without Suspense deopting page).
 
-**Delivers:**
-- schema-dts installed (dev dependency)
-- Product schema for product pages (price in EUR, availability)
-- FAQPage schema for FAQ section
-- LocalBusiness schema in root layout (GEO optimization)
-- BreadcrumbList schema in breadcrumbs component
-- JSON-LD wrapper component with XSS protection
+**Research flag:** Straightforward for `view_item`, `add_to_cart`, `begin_checkout`. The Shopify Draft Order purchase tracking pattern (sessionStorage snapshot + UUID as `transaction_id`) is MEDIUM confidence — validate with a real test checkout and DebugView inspection before marking complete. Also verify whether the Shopify `invoiceUrl` return redirect appends any query parameters that could provide a real order reference.
 
-**Addresses:**
-- Competitive feature: structured data for rich results eligibility
-- Pitfall #5 (JSON-LD XSS) — proper escaping with .replace(/</g, '\\u003c')
-- SEO enhancement through rich snippets
+### Phase 3: Cookie Consent Banner
 
-**Uses:**
-- schema-dts types (Google-maintained)
-- Next.js JSON-LD pattern (script tags in components)
+**Rationale:** The banner UI is the most legally sensitive component. Building it after the analytics foundation means the consent update path (`gtag('consent', 'update', ...)`) can be tested end-to-end against a live GA4 property. Consent state restoration on return visits (including returning from Shopify checkout) must be designed alongside the banner, not added later.
 
-**Implements:**
-- Structured Data Layer from architecture (Pattern 2: JSON-LD Injection)
+**Delivers:** GDPR-compliant Dutch-language cookie consent banner: "Accepteer alles" / "Weiger alles" equal visual prominence at top layer; consent persisted in `localStorage` (vanilla-cookieconsent default) with `sessionStorage` fallback; consent state correctly restored on the Shopify redirect back to `/bevestiging` without banner re-appearing; re-consent trigger on banner version change; no `_ga` cookie set before user accepts.
 
-**Avoids:**
-- XSS vulnerability through unescaped JSON
-- Invalid schema markup hurting SEO
-- Missing required schema properties
+**Addresses (from FEATURES.md):** Cookie consent banner (legal requirement); consent withdrawal as easy as granting; no cookie wall; consent persisted across sessions (12-month validity); Dutch AP compliance requirements (equal prominence, no pre-ticked boxes, informed Dutch-language copy, consent timestamp/version stored).
 
-**Research flag:** Standard pattern (well-documented Schema.org implementation), skip research-phase. Validate with Rich Results Test during implementation.
+**Uses (from STACK.md):** `vanilla-cookieconsent@3.1.0` for banner UI, persistence, and Consent Mode v2 signal mapping.
 
-### Phase 4: Sitemap & Robots.txt
-**Rationale:** After all routes and content are finalized, generate sitemap and configure crawling rules. Depends on product catalog cleanup (Phase 1) and content finalization (Phase 2). Ensures search engines crawl efficiently.
+**Avoids (from PITFALLS.md):** Pitfall 8 (Dutch GDPR dark patterns — AP enforcement), Pitfall 9 (consent state not restored on return visits — race condition with GA4 init), Pitfall 3 (consent default racing against GA4 first events).
 
-**Delivers:**
-- sitemap.ts generating sitemap.xml from catalog + blog
-- robots.txt via robots.ts with crawling rules
-- noindex robots meta for cart/confirmation pages
-- Sitemap submitted to Google Search Console
-
-**Addresses:**
-- SEO infrastructure requirement
-- Pitfall #7 (sitemap contains removed routes) — filter excludes removed categories
-- Pitfall #8 (robots.txt blocking pages) — only block admin/api routes
-
-**Uses:**
-- Next.js sitemap.ts file convention (built-in)
-- Next.js robots.ts file convention (built-in)
-- MetadataRoute types for type safety
-
-**Implements:**
-- SEO Infrastructure from architecture (Pattern 3: Sitemap Generation)
-
-**Avoids:**
-- Outdated sitemap wasting crawl budget
-- Accidentally blocking public pages
-- Missing sitemap reference in robots.txt
-
-**Research flag:** Standard pattern (Next.js file conventions), skip research-phase.
+**Research flag:** Needs careful AP compliance checklist review — the December 2025 AP guidance update introduced nuances beyond April 2025 enforcement. Use the "Looks Done But Isn't" checklist from PITFALLS.md as the acceptance criteria. The consent restoration timing (Pitfall 9) may require a server-side cookie read approach in `app/layout.tsx` using `cookies()` from `next/headers`; validate whether `vanilla-cookieconsent`'s cookie name/format is readable server-side before committing to the `localStorage`-only approach.
 
 ### Phase Ordering Rationale
 
-1. **Phase 1 before Phase 2:** Data layer must be clean before content updates to prevent broken references. Redirects must be in place before announcing Dutch launch to preserve SEO equity.
-
-2. **Phase 2 before Phase 3:** Structured data requires finalized Dutch content to populate schema fields. No point generating schemas for placeholder English content.
-
-3. **Phase 3 before Phase 4:** Sitemap should include structured data pages so rich results can be crawled. Though not strictly dependent, logical to finalize on-page SEO before submission infrastructure.
-
-4. **Critical path:** Phase 1 → Phase 2 → Phase 4 provides working Dutch site with SEO. Phase 3 (structured data) is enhancement that can be done in parallel or after Phase 4 if needed.
-
-5. **Dependency diagram:**
-   ```
-   Phase 1 (Data Cleanup)
-       ↓
-   Phase 2 (Dutch Content) ← must wait for clean data
-       ↓
-   Phase 3 (Structured Data) ← must wait for Dutch content
-       ↓
-   Phase 4 (Sitemap/Robots) ← must wait for finalized routes
-   ```
-
-6. **Pitfall avoidance:** This order prevents all 10 critical pitfalls discovered in research by addressing foundational issues (redirects, data cleanup) before building on top (content, SEO).
+- Phase 1 before Phase 2: `window.gtag()` must exist in the DOM tree before any `sendGAEvent` or `trackX()` calls are wired into components. Cross-domain configuration is an admin step but must be verified before testing purchase attribution.
+- Phase 2 before Phase 3 (recommended, not strictly required): Testing the `gtag('consent', 'update', ...)` call in Phase 3 is more meaningful when funnel events are already firing — a live DebugView makes consent state changes observable. Phase 3 can be parallelized with Phase 2 for the banner UI build, as long as the `consent.ts` module (built in Phase 2 Step 1) is available.
+- Steps 5 and 6 within Phase 2 are atomic: the `sessionStorage` snapshot write (in `cart-summary.tsx`) and the `purchase-tracker.tsx` read must be built, tested, and deployed together.
 
 ### Research Flags
 
-**Phases likely needing deeper research during planning:**
-- None — all phases use standard Next.js patterns and well-documented SEO practices
+**Phases needing deeper validation during execution:**
+- **Phase 2 (purchase event):** Shopify Draft Order + headless custom storefront is a niche combination with limited official documentation. Verify with a real test checkout (not just code review) whether the `sessionStorage` snapshot survives the Shopify cross-domain redirect back to `/bevestiging`. Also check whether Shopify appends any order reference to the return URL for this plan/flow type.
+- **Phase 3 (consent restoration):** Verify the exact cookie name and format that `vanilla-cookieconsent@3.1.0` uses, and whether it is accessible server-side via `cookies()` in `app/layout.tsx`. This determines whether an inline script approach for consent restoration is needed or whether `vanilla-cookieconsent`'s built-in `onConsent` callback is sufficient.
 
 **Phases with standard patterns (skip research-phase):**
-- **Phase 1:** Standard 301 redirect implementation in next.config.js, documented in Next.js guides
-- **Phase 2:** Content translation (requires native speaker, not technical research) + standard Metadata API usage
-- **Phase 3:** Schema.org markup follows official examples, schema-dts has comprehensive documentation
-- **Phase 4:** Next.js file conventions for sitemap.ts and robots.ts are well-documented
+- **Phase 1:** GA4 script loading, cross-domain setup, SPA page view tracking — all patterns provided verbatim in ARCHITECTURE.md with official source references.
+- **Phase 2 (non-purchase events):** `view_item`, `add_to_cart`, `begin_checkout` are straightforward instrumentation in existing client components using the typed event wrappers.
 
-**Validation during implementation:**
-- Phase 2: Native Dutch speaker review required (content quality, not research)
-- Phase 2: Test with Facebook Sharing Debugger, LinkedIn Post Inspector (validation, not research)
-- Phase 3: Test with Google Rich Results Test, Schema Markup Validator (validation, not research)
-- Phase 4: Test with Google Search Console robots.txt tester (validation, not research)
+---
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Next.js 15 built-in features verified in official docs (v16.1.6 released 2026-02-11), schema-dts verified on npm (v1.1.5 Google-maintained) |
-| Features | MEDIUM-HIGH | Based on competitor analysis of 7+ Dutch rolgordijnen webshops, Dutch SEO expert sources, and industry patterns. Content patterns consistent across market. |
-| Architecture | HIGH | Next.js 15 App Router patterns verified in official docs, metadata API stable since v13.2.0, file conventions since v13.3.0. Single-locale approach well-established. |
-| Pitfalls | HIGH | Verified with official Next.js docs, multiple Dutch SEO sources, ecommerce category removal guides, and GitHub issues for metadata streaming bug. |
+| Stack | HIGH | `@next/third-parties@16.1.6` and `vanilla-cookieconsent@3.1.0` verified on npm registry and official docs. `@next/third-parties` Consent Mode v2 limitation confirmed by GitHub discussion #66718. All browser API usage (`sessionStorage`, `localStorage`) is standard. |
+| Features | HIGH | GA4 event schema verified against Google developer docs. Dutch AP requirements verified against official AP guidance, Hogan Lovells legal analysis, and December 2025 AP guidance update. P1/P2/P3 priority assignments are well-reasoned against legal and business requirements. |
+| Architecture | HIGH | All code patterns verified against official Next.js, GA4, and GDPR sources. Explicit concern: `@next/third-parties/google` `<GoogleAnalytics>` limitation is community-confirmed (GitHub #66718) but not officially documented by Vercel as "does not support Consent Mode" — re-check v16.1.6 release notes before Phase 1 implementation. |
+| Pitfalls | HIGH (cross-domain, consent, SPA, Dutch GDPR) / MEDIUM (Draft Order purchase tracking) | Cross-domain and consent pitfalls verified with multiple official and community sources. The sessionStorage approach for Draft Order purchase tracking is MEDIUM confidence — the specific combination of headless Shopify + Basic plan + Draft Order `invoiceUrl` + custom storefront return URL has limited official documentation. |
 
 **Overall confidence:** HIGH
 
-Research is based on official documentation (Next.js, Schema.org, Open Graph protocol), verified npm packages, multiple Dutch SEO expert sources, and competitive analysis of established Dutch webshops. The stack recommendations are conservative (use built-in features) and architecture patterns are standard for Next.js 15.
-
 ### Gaps to Address
 
-**Translation quality validation:** Research identified that translation quality is critical, but cannot be validated until content is written. **Resolution:** Budget for native Dutch speaker review in Phase 2, use competitor sites as reference for terminology and tone.
+- **Shopify Draft Order return URL query params:** Research found a Shopify community announcement (medium confidence) that custom query params on Draft Order `invoiceUrl` survive the checkout redirect. If confirmed, a real Shopify order name/ID can be used as `transaction_id` instead of a client-generated UUID, improving cross-session deduplication. Validate during Phase 2 by inspecting the actual return URL from a test checkout in browser DevTools.
 
-**Social media bot behavior:** Metadata streaming pitfall is based on known Next.js 15 issue, but social bot behavior can vary. **Resolution:** Test with Facebook Sharing Debugger, LinkedIn Post Inspector during Phase 2 implementation. Use static metadata approach for critical pages as preventive measure.
+- **`vanilla-cookieconsent` server-side cookie readability:** Pitfall 9 recommends server-side consent restoration to prevent a race condition between consent state and the first GA4 events. This requires reading the cookie set by `vanilla-cookieconsent@3.1.0` in `app/layout.tsx` via `cookies()` from `next/headers`. The cookie name (`cc_cookie` by default) and JSON format must be confirmed before implementing the server-side restoration path in Phase 3.
 
-**Redirect destination mapping:** Research recommends redirecting removed categories to relevant pages, but specific mapping depends on existing backlink profile. **Resolution:** Check Google Search Console for indexed pages and backlinks during Phase 1 planning to determine optimal redirect destinations.
+- **`@next/third-parties@16.1.6` Consent Mode support status:** The limitation is community-confirmed against an earlier version. Re-check the v16.1.6 changelog before Phase 1 implementation — if Consent Mode v2 is now supported via the `<GoogleAnalytics>` component, the manual `next/script` approach can be simplified.
 
-**Blog content volume:** Research suggests starting with 1 blog post, but optimal volume for SEO unclear. **Resolution:** Launch with 1 comprehensive buying guide in Phase 2, add additional posts in future phases based on analytics (search queries, FAQ patterns).
-
-**GEO optimization scope:** LocalBusiness schema recommended for Netherlands targeting, but unclear if Google Mijn Bedrijf (Google My Business) integration is needed. **Resolution:** Defer Google Mijn Bedrijf to future phase, implement LocalBusiness schema in Phase 3 as foundation for future local SEO.
+---
 
 ## Sources
 
 ### Primary (HIGH confidence)
-- [Next.js Official Docs: Metadata API](https://nextjs.org/docs/app/getting-started/metadata-and-og-images) — Complete metadata guide (2026-02-11)
-- [Next.js Official Docs: generateMetadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) — Full API specification
-- [Next.js Official Docs: sitemap.xml](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) — File convention and types
-- [Next.js Official Docs: robots.txt](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots) — File convention and types
-- [Next.js Official Docs: JSON-LD](https://nextjs.org/docs/app/guides/json-ld) — Recommended patterns
-- [schema-dts npm](https://www.npmjs.com/package/schema-dts) — v1.1.5, Google-maintained
-- [Open Graph Protocol](https://ogp.me/) — Official OG tag specification
+- [Next.js Third-Party Libraries Docs](https://nextjs.org/docs/app/guides/third-party-libraries) — GoogleAnalytics component, sendGAEvent API
+- [GA4 Ecommerce Measurement — Google Developers](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce) — event schema, required parameters
+- [Set Up Consent Mode on Websites — Google Tag Platform](https://developers.google.com/tag-platform/security/guides/consent) — Consent Mode v2 parameters, default/update pattern
+- [GA4 Transaction ID Deduplication — Analytics Help](https://support.google.com/analytics/answer/12313109) — `transaction_id` as deduplication key
+- [GA4 Recommended Events — Analytics Help](https://support.google.com/analytics/answer/9267735) — full event catalogue
+- [Dutch DPA Cookie Banner Requirements — Autoriteit Persoonsgegevens](https://www.autoriteitpersoonsgegevens.nl/en/themes/internet-and-smart-devices/cookies/clear-cookie-banners) — official AP guidance
+- [vanilla-cookieconsent Google Consent Mode docs](https://cookieconsent.orestbida.com/advanced/google-consent-mode.html) — 7 consent signals, integration pattern
+- [Missing Suspense boundary — Next.js Docs](https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout) — `useSearchParams` Suspense requirement
+- `vanilla-cookieconsent` npm v3.1.0 — zero dependencies, MIT, 152 kB unpacked
+- `@next/third-parties` npm v16.1.6 — version matches installed Next.js
 
 ### Secondary (MEDIUM confidence)
-- [Veneta.com](https://www.veneta.com/rolgordijnen/) — Dutch rolgordijnen competitor content patterns
-- [Raamdecoratie.com](https://www.raamdecoratie.com/) — Competitor analysis for tone/features
-- [123Jaloezie.nl](https://www.123jaloezie.nl/) — Price-focused competitor positioning
-- [SEO voor webshops 2026 - Ranking Masters](https://rankingmasters.nl/seo-webshops) — Dutch SEO best practices
-- [SEO Structuur - Ranking Masters](https://rankingmasters.nl/seo-structuur/) — Category page optimization
-- [Verbeter SEO Categoriepagina's - IMU](https://imu.nl/internet-marketing-kennisbank/webshop-marketing/seo-webwinkel-categoriepaginas/) — 250-300 word guideline
-- [Thuiswinkel Waarborg](https://www.thuiswinkel.org/en/trust/trustmarks/thuiswinkel-waarborg/) — Trust badge recognition (91%)
-- [301 Redirect Best Practices - Volusion](https://www.volusion.com/blog/301-redirect-scenarios-and-best-practices-for-ecommerce/)
-- [App Router pitfalls - imidef](https://imidef.com/en/2026-02-11-app-router-pitfalls) — Metadata streaming issue
+- [Consent Mode v2 — Simo Ahava](https://www.simoahava.com/analytics/consent-mode-v2-google-tags/) — authoritative community reference for Consent Mode technical implementation
+- [Next.js Google Analytics Consent Mode Discussion #66718 — GitHub](https://github.com/vercel/next.js/discussions/66718) — `@next/third-parties` Consent Mode v2 limitation confirmed by community
+- [GDPR Cookie Banner in Next.js 15 — Frontend Weekly](https://medium.com/front-end-weekly/how-to-build-a-gdpr-cookie-banner-in-next-js-15-ga4-consent-mode-cloudfront-geo-detection-aae0961e89c5) — App Router implementation pattern
+- [Dutch DPA Warns 50 Organisations — Nixon Digital](https://www.nixondigital.io/blog/dutch-dpa-cookie-compliance-warning/) — April 2025 enforcement context
+- [Dutch DPA New Guidance December 2025 — Eye on Privacy](https://www.eyeonprivacy.com/2025/12/is-your-websites-cookie-banner-up-to-date-new-guidance-from-dutch-dpa/) — most recent AP guidance update
+- [Dutch DPA Intensifies Cookie Enforcement — Hogan Lovells](https://www.hoganlovells.com/en/publications/dutch-dpa-intensifies-cookie-enforcement-key-takeaways-) — enforcement escalation context
+- [GA4 Cross-Domain Tracking for Headless Shopify — Shopify Community](https://community.shopify.com/t/headless-shopify-ga4-tracking/344188) — headless-specific constraints
+- [Query parameters on Draft Order invoice_url — Shopify Announcement](https://community.shopify.com/c/api-announcements/query-parameters-added-to-a-draft-order-invoice-url-now-get/m-p/314399) — custom params survive checkout redirect
+- [Cross-Domain Tracking GA4 — Simo Ahava](https://www.simoahava.com/gtm-tips/cross-domain-tracking-google-analytics-4/) — `_gl` linker decoration pattern
+- [Top 7 Google Consent Mode Mistakes — Bounteous](https://www.bounteous.com/insights/2025/07/30/top-7-google-consent-mode-mistakes-and-how-fix-them-2025/) — verified pitfall patterns
 
-### Tertiary (LOW confidence)
-- [Dutch SEO Guide - IndigoExtra](https://www.indigoextra.com/blog/dutch-seo) — General Dutch SEO advice
-- [Complete Guide for Dutch SEO - RankTracker](https://www.ranktracker.com/blog/a-complete-guide-for-doing-seo-in-dutch/) — Industry insights
-- [Next.js 15 SEO Guide - Digital Applied](https://www.digitalapplied.com/blog/nextjs-seo-guide) — Community practices
+### Tertiary (LOW confidence — needs validation during implementation)
+- WebSearch: "GA4 consent mode v2 Next.js App Router 2025" — multiple community sources agree on useEffect + dataLayer pattern
+- WebSearch: "vanilla-cookieconsent v3 Next.js App Router" — StackBlitz examples confirm useEffect initialization works in App Router
 
 ---
-*Research completed: 2026-02-14*
+*Research completed: 2026-02-22*
 *Ready for roadmap: yes*
