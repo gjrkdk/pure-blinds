@@ -5,14 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** v1.5 Analytics & Privacy
+**Current focus:** v1.5 Analytics & Privacy — Phase 23: GA4 Foundation
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-22 — Milestone v1.5 started
+Phase: 23 of 25 (GA4 Foundation)
+Plan: 0/? — not yet planned
+Status: Ready to plan
+Last activity: 2026-02-22 — Roadmap created for v1.5 Analytics & Privacy (Phases 23-25)
+
+Progress: [░░░░░░░░░░] 0% (v1.5)
 
 ## Performance Metrics
 
@@ -39,6 +41,11 @@ Last activity: 2026-02-22 — Milestone v1.5 started
 
 All decisions logged in PROJECT.md Key Decisions table.
 
+Recent decisions affecting current work:
+- v1.5 planning: Load gtag.js unconditionally with all 4 Consent Mode v2 parameters defaulted to "denied" — do NOT use @next/third-parties GoogleAnalytics component (no Consent Mode v2 support as of v16.1.6)
+- v1.5 planning: Use vanilla-cookieconsent@3.1.0 for banner UI — zero dependencies, native Consent Mode v2 signal mapping
+- v1.5 planning: sessionStorage cart snapshot before checkout redirect is the only mechanism for purchase event items data (cart is cleared before redirect)
+
 ### Pending Todos
 
 Carried from v1.0:
@@ -53,33 +60,16 @@ Deployment action required:
 
 ### Blockers/Concerns
 
-None.
-
-### Quick Tasks Completed
-
-| # | Description | Date | Commit |
-|---|-------------|------|--------|
-| 3 | Add category page with white and black rollerblinds categories | 2026-02-12 | c98a510 |
-| 4 | Change category page from white/black to transparent/blackout | 2026-02-14 | f6b5383 |
-| 5 | Restructure categories - rollerblinds as main category | 2026-02-14 | d70f986 |
-| 6 | Restructure product URLs to full hierarchical paths | 2026-02-14 | d8ba85c |
-| 7 | Reduce spacing in navigation header | 2026-02-14 | 77239b2 |
-| 9 | Translate product URL slugs and breadcrumbs to Dutch | 2026-02-14 | b4140c9 |
-| 10 | Deployment vercel | 2026-02-14 | a92a5e8 |
-| 11 | Add product image, USPs and specification | 2026-02-15 | a36846e |
-| 12 | Add additional product images underneath | 2026-02-15 | 055f66a |
-| 13 | Clear cart only after order completion | 2026-02-18 | d2ec260 |
-| 14 | Use logo icon as favicon | 2026-02-19 | 5f81387 |
-| 15 | Add contact form backend with Resend email | 2026-02-19 | 11c94bd |
-| 16 | Prevent mobile zoom on width/height inputs | 2026-02-19 | 373f18a |
-| 17 | Remove mobile zoom on contact form inputs | 2026-02-20 | cb6cf32 |
+Research flags for execution:
+- Phase 24 (purchase event): Validate whether sessionStorage snapshot survives Shopify cross-domain redirect back to /bevestiging — requires a real test checkout in DevTools
+- Phase 25 (consent restoration): Confirm vanilla-cookieconsent cookie name/format before deciding between server-side and client-side consent restoration approach
 
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Starting milestone v1.5 Analytics & Privacy
+Stopped at: Roadmap created — v1.5 phases 23-25 defined, ready to plan Phase 23
 Resume file: None
-Next step: Define requirements, then /gsd:plan-phase
+Next step: /gsd:plan-phase 23
 
 ---
-*Last updated: 2026-02-22 after milestone v1.5 start*
+*Last updated: 2026-02-22 after v1.5 roadmap creation*

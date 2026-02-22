@@ -66,27 +66,27 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GA4-01 | — | Pending |
-| GA4-02 | — | Pending |
-| GA4-03 | — | Pending |
-| ECOM-01 | — | Pending |
-| ECOM-02 | — | Pending |
-| ECOM-03 | — | Pending |
-| ECOM-04 | — | Pending |
-| ECOM-05 | — | Pending |
-| ECOM-06 | — | Pending |
-| CONS-01 | — | Pending |
-| CONS-02 | — | Pending |
-| CONS-03 | — | Pending |
-| CONS-04 | — | Pending |
-| CONS-05 | — | Pending |
-| CONS-06 | — | Pending |
+| GA4-01 | Phase 23 | Pending |
+| GA4-02 | Phase 23 | Pending |
+| GA4-03 | Phase 23 | Pending |
+| ECOM-01 | Phase 24 | Pending |
+| ECOM-02 | Phase 24 | Pending |
+| ECOM-03 | Phase 24 | Pending |
+| ECOM-04 | Phase 24 | Pending |
+| ECOM-05 | Phase 24 | Pending |
+| ECOM-06 | Phase 24 | Pending |
+| CONS-01 | Phase 25 | Pending |
+| CONS-02 | Phase 25 | Pending |
+| CONS-03 | Phase 25 | Pending |
+| CONS-04 | Phase 25 | Pending |
+| CONS-05 | Phase 25 | Pending |
+| CONS-06 | Phase 25 | Pending |
 
 **Coverage:**
 - v1.5 requirements: 15 total
-- Mapped to phases: 0
-- Unmapped: 15 ⚠️
+- Mapped to phases: 15
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-22*
-*Last updated: 2026-02-22 after initial definition*
+*Last updated: 2026-02-22 after v1.5 roadmap creation*
