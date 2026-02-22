@@ -82,7 +82,9 @@
   2. GA4 DebugView shows page_view events firing on every App Router route change without a full page reload
   3. A test checkout session from pure-blinds.nl through Shopify checkout back to /bevestiging shows a single continuous GA4 session (no "(direct)/(none)" attribution break)
   4. GA4 property has all four Consent Mode v2 parameters defaulted to "denied" before gtag.js fires — confirmed by checking gtag initialization order in browser Network tab
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 23-01-PLAN.md — Analytics module, Consent Mode v2 Script tags, SPA route tracking, cross-domain linker
 
 ### Phase 24: E-Commerce Events
 **Goal**: The complete GA4 e-commerce funnel — view_item, add_to_cart, begin_checkout, purchase — fires on every relevant user action with correct EUR pricing data, and the purchase event fires exactly once per checkout even on page refresh
@@ -134,7 +136,7 @@
 | 20. Environment Configuration | v1.4 | 1/1 | Complete | 2026-02-19 |
 | 21. Cart UX | v1.4 | 2/2 | Complete | 2026-02-19 |
 | 22. Checkout & Order Tracking | v1.4 | 2/2 | Complete | 2026-02-19 |
-| 23. GA4 Foundation | v1.5 | 0/? | Not started | - |
+| 23. GA4 Foundation | v1.5 | 0/1 | Planned | - |
 | 24. E-Commerce Events | v1.5 | 0/? | Not started | - |
 | 25. Cookie Consent Banner | v1.5 | 0/? | Not started | - |
 
