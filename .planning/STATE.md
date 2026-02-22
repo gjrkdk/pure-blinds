@@ -2,19 +2,19 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-19)
+See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** v1.4 complete — planning next milestone
+**Current focus:** v1.5 Analytics & Privacy — Phase 23: GA4 Foundation
 
 ## Current Position
 
-Phase: 22 of 22 (all complete)
-Plan: All plans complete
-Status: Milestone v1.4 shipped
-Last activity: 2026-02-20 - Completed quick task 17: Remove mobile zoom on contact form input fields
+Phase: 23 of 25 (GA4 Foundation)
+Plan: 1/1 — complete
+Status: Phase complete
+Last activity: 2026-02-22 — Completed 23-01 GA4 Foundation plan
 
-Progress: [████████████████████] 100% (35/35 plans complete across all milestones)
+Progress: [██░░░░░░░░] 20% (v1.5)
 
 ## Performance Metrics
 
@@ -34,12 +34,21 @@ Progress: [████████████████████] 100% (3
 | v1.2 Catalog | 11-14 | 6 | 1,481s (24.7m) | 247s |
 | v1.3 Dutch/SEO | 15-18 | 9 | 1,180s (19.7m) | 131s |
 | v1.4 Production Ready | 19-22 | 6 | ~194s (3.2m) | ~32s |
+| Phase 23-ga4-foundation P01 | 105 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
 ### Decisions
 
 All decisions logged in PROJECT.md Key Decisions table.
+
+Recent decisions affecting current work:
+- v1.5 planning: Load gtag.js unconditionally with all 4 Consent Mode v2 parameters defaulted to "denied" — do NOT use @next/third-parties GoogleAnalytics component (no Consent Mode v2 support as of v16.1.6)
+- v1.5 planning: Use vanilla-cookieconsent@3.1.0 for banner UI — zero dependencies, native Consent Mode v2 signal mapping
+- v1.5 planning: sessionStorage cart snapshot before checkout redirect is the only mechanism for purchase event items data (cart is cleared before redirect)
+- Phase 23-01: Guard analytics on NEXT_PUBLIC_GA4_ID presence (not NODE_ENV) — Vercel preview deployments have NODE_ENV=production, env var is only set in production
+- Phase 23-01: AnalyticsProvider mounted unconditionally outside GA_MEASUREMENT_ID conditional for dev console logging
+- Phase 23-01: Three separate Script tags in root layout for Consent Mode v2 ordering (consent-init inline → gtag.js CDN → config+linker)
 
 ### Pending Todos
 
@@ -55,33 +64,16 @@ Deployment action required:
 
 ### Blockers/Concerns
 
-None.
-
-### Quick Tasks Completed
-
-| # | Description | Date | Commit |
-|---|-------------|------|--------|
-| 3 | Add category page with white and black rollerblinds categories | 2026-02-12 | c98a510 |
-| 4 | Change category page from white/black to transparent/blackout | 2026-02-14 | f6b5383 |
-| 5 | Restructure categories - rollerblinds as main category | 2026-02-14 | d70f986 |
-| 6 | Restructure product URLs to full hierarchical paths | 2026-02-14 | d8ba85c |
-| 7 | Reduce spacing in navigation header | 2026-02-14 | 77239b2 |
-| 9 | Translate product URL slugs and breadcrumbs to Dutch | 2026-02-14 | b4140c9 |
-| 10 | Deployment vercel | 2026-02-14 | a92a5e8 |
-| 11 | Add product image, USPs and specification | 2026-02-15 | a36846e |
-| 12 | Add additional product images underneath | 2026-02-15 | 055f66a |
-| 13 | Clear cart only after order completion | 2026-02-18 | d2ec260 |
-| 14 | Use logo icon as favicon | 2026-02-19 | 5f81387 |
-| 15 | Add contact form backend with Resend email | 2026-02-19 | 11c94bd |
-| 16 | Prevent mobile zoom on width/height inputs | 2026-02-19 | 373f18a |
-| 17 | Remove mobile zoom on contact form inputs | 2026-02-20 | cb6cf32 |
+Research flags for execution:
+- Phase 24 (purchase event): Validate whether sessionStorage snapshot survives Shopify cross-domain redirect back to /bevestiging — requires a real test checkout in DevTools
+- Phase 25 (consent restoration): Confirm vanilla-cookieconsent cookie name/format before deciding between server-side and client-side consent restoration approach
 
 ## Session Continuity
 
-Last session: 2026-02-20
-Stopped at: Completed quick task 17 (remove-mobile-zoom-on-contact-form-input)
+Last session: 2026-02-22
+Stopped at: Completed 23-01-PLAN.md — GA4 Foundation analytics module and root layout integration
 Resume file: None
-Next step: Configure RESEND_API_KEY in Vercel environment variables, then /gsd:new-milestone for next version
+Next step: Phase 24 (e-commerce events) or Phase 25 (cookie consent)
 
 ---
-*Last updated: 2026-02-20 after quick task 17*
+*Last updated: 2026-02-22 after completing Phase 23-01 GA4 Foundation*

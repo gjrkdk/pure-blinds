@@ -1,522 +1,199 @@
-# Feature Research: Dutch Rolgordijnen Content & SEO
+# Feature Research: GA4 E-Commerce Tracking & GDPR Cookie Consent
 
-**Domain:** Dutch rolgordijnen webshop content, SEO, and market positioning
-**Researched:** 2026-02-14
-**Confidence:** MEDIUM-HIGH
+**Domain:** Analytics and privacy for Dutch e-commerce (pure-blinds.nl)
+**Researched:** 2026-02-22
+**Confidence:** HIGH (GA4 event spec verified against official Google docs; Dutch DPA requirements verified against multiple authoritative sources including Autoriteit Persoonsgegevens and recent enforcement actions)
+
+---
 
 ## Feature Landscape
 
 ### Table Stakes (Users Expect These)
 
-Features users assume exist. Missing these = product feels incomplete or untrustworthy.
+Features that any compliant Dutch e-commerce site must have. Missing these = legal exposure or broken analytics.
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Dutch homepage hero with clear value proposition | Every Dutch webshop starts with "Rolgordijnen op maat" messaging | LOW | Existing hero structure just needs Dutch copy |
-| Product type differentiation (transparant vs verduisterend) | Market standard - customers expect to choose between light-filtering and blackout | LOW | Already have subcategories, need Dutch descriptions |
-| Measurement instructions (inmeetinstructies) | Custom products require clear guidance on how to measure | MEDIUM | Need "op de dag" vs "in de dag" explanations with visuals |
-| Free color samples offer (gratis kleurstalen) | Industry standard trust builder, competitors all offer this | MEDIUM | Copy change + future fulfillment process |
-| Delivery time transparency (7-14 werkdagen) | Custom products need clear expectations | LOW | Add to product pages and FAQ |
-| Installation options (zelf monteren of laten monteren) | Customers expect choice between DIY or professional install | LOW | Content-only, actual service deferred |
-| Return policy clarity (maatwerk = geen retourrecht) | Legal requirement for custom products in NL | LOW | Add to footer/FAQ |
-| FAQ section with domain-specific questions | Customers research extensively before buying custom blinds | LOW | Existing FAQ structure, needs Dutch rolgordijnen content |
-| Trust signals (Thuiswinkel Waarborg or similar) | 91% recognition rate, 64% find webshops more trustworthy with it | MEDIUM | Content reference for now, certification deferred |
-| Price transparency ("tot 40% goedkoper" messaging) | Competitive market - all players emphasize value pricing | LOW | Add to hero/category copy |
+| Cookie consent banner with "Accept All" and "Reject All" on first layer | Dutch AP requires equal-prominence accept and reject options visible immediately — no burying reject in layer 2 | MEDIUM | AP issued 50 warnings in April 2025; colored accept + gray reject link now legally problematic |
+| Default GA4 consent to "denied" before user action | GA4 must not set cookies or collect personal data before explicit consent — GDPR requirement | MEDIUM | Set `analytics_storage: 'denied'` before gtag loads; update to `'granted'` on accept |
+| Consent persisted across sessions (12-month validity) | Users cannot be re-asked every page load; consent must survive browser close | LOW | Store in cookie or localStorage; re-prompt annually or on policy change |
+| Consent withdrawal as easy as granting | GDPR requires symmetric revocation — user must be able to undo consent at any time | LOW | Settings button or footer link reopens banner; clearing storage works |
+| No cookie wall (full site access without consent) | Dutch AP explicitly prohibits blocking access for users who decline tracking | LOW | Functional site must work with zero analytics cookies accepted |
+| GA4 property configured with measurement ID | Analytics data collection requires a GA4 property; no data lands without it | LOW | Admin task, not code — but a prerequisite for all other tracking |
+| `view_item` event on product detail page | Standard funnel entry point; GA4 e-commerce reports require this event | LOW | Fires on product page load with item_id, item_name, price, currency |
+| `add_to_cart` event on cart add | Required for GA4 funnel drop-off analysis between browse and checkout | LOW | Already have cart add action in Zustand store — hook in here |
+| `begin_checkout` event on checkout initiation | Required for GA4 funnel between cart and purchase | LOW | Fires when user clicks checkout button; cart contents as items array |
+| `purchase` event on order confirmation | Required for revenue attribution; missing this = no conversion data | HIGH | Hardest event — Shopify handles payment, we handle /bevestiging; no native order ID passed back from Shopify to custom storefront |
+| `transaction_id` on every purchase event | GA4 deduplicates purchases using this field; missing it = duplicate revenue counting | LOW | Must generate or persist a unique ID; Shopify Draft Order ID is ideal but not available at /bevestiging without extra work |
+| Currency in all monetary events | GA4 requires `currency` on all events that send `value`; missing = data discarded | LOW | Always send `"EUR"` for this site |
+| VAT-inclusive `value` matching displayed price | Dutch consumer price law requires VAT-inclusive pricing — analytics value should match | LOW | Already storing prices in EUR cents inclusive of 21% BTW |
+
+---
 
 ### Differentiators (Competitive Advantage)
 
-Features that set the product apart. Not required, but valuable for market positioning.
+Features beyond baseline compliance that improve data quality or user experience.
 
 | Feature | Value Proposition | Complexity | Notes |
 |---------|-------------------|------------|-------|
-| Direct-from-factory messaging | Builds trust through transparency, justifies pricing | LOW | Add to About/homepage copy |
-| Room-specific guidance (slaapkamer, badkamer, dakraam) | Helps customers make informed choices, reduces returns | MEDIUM | Blog post or product page sections |
-| Sustainability messaging (isolerende eigenschappen) | 2026 trend: natural materials, energy efficiency | LOW | Add to product descriptions |
-| Interior trend content (2026 kleuren, botanische prints) | Positions as style authority, not just product vendor | MEDIUM | Blog posts on 2026 trends |
-| Comparison content (duo rolgordijnen vs standaard) | Educational approach builds trust | MEDIUM | Blog post or dedicated comparison page |
-| Step-by-step configurator explanation | Reduces anxiety about custom ordering process | LOW | Add instructional copy to product pages |
-| Personal advisor availability (persoonlijk advies) | Premium service feel, builds confidence | LOW | Copy-only for now, actual service deferred |
-| Same-day sample shipping (voor 16:00 besteld) | Speed differentiator | LOW | Copy claim, fulfillment deferred |
+| GA4 Consent Mode v2 (all 4 parameters) | Enables Google's behavioral modeling for users who decline — recovers some conversion signal from opted-out users | MEDIUM | Four parameters: `analytics_storage`, `ad_storage`, `ad_user_data`, `ad_personalization` — all default denied; standard consent mode only has 2 |
+| `view_item_list` on category/subcategory pages | Fills out upper funnel; enables product list performance analysis | LOW | Fires with items array of visible products; item positions enable impression rank data |
+| `select_item` on product card click | Tracks which product cards convert to product page visits | LOW | Fires on click before navigation; lightweight but useful for product merchandising |
+| `view_cart` event on cart page load | Enables cart abandonment analysis; shows items in cart at abandonment point | LOW | Fires on /cart page with full cart contents |
+| Consent mode region restriction (EEA only) | Defaults consent to denied only for EEA visitors; non-EEA users tracked without banner | MEDIUM | `region: ['BE', 'BG', 'CZ', ...]` in gtag consent default — not required but reduces friction for non-EU traffic |
+| Persistent transaction ID for purchase deduplication | Prevents double-counting if user reloads /bevestiging confirmation page | MEDIUM | Generate UUID on checkout initiation, store in sessionStorage/localStorage, read on /bevestiging |
+| Banner language in Dutch (nl-NL) | Dutch users expect Dutch interface; English banners feel foreign on a Dutch webshop | LOW | All consent copy must be Dutch: "Accepteer alles" / "Weiger alles" / "Mijn keuzes opslaan" |
+| Clear cookie category explanations in banner | Dutch AP requires informed consent — users must know what they are accepting | LOW | One-sentence explanation: analytics cookies track site usage to improve the website |
+| Re-consent trigger on privacy policy change | Users must be re-prompted when cookie purposes materially change | LOW | Version the consent in storage; bump version to force re-display |
+
+---
 
 ### Anti-Features (Commonly Requested, Often Problematic)
 
-Features that seem good but create problems or don't align with market realities.
-
 | Feature | Why Requested | Why Problematic | Alternative |
 |---------|---------------|-----------------|-------------|
-| Live chat support | Competitor pressure, feels modern | Requires staffing, increases costs, Dutch market prefers email/phone | Clear contact form + phone number + detailed FAQ |
-| Real-time price comparison widgets | "Be transparent about pricing" | Drives customers away before value is established | Emphasize quality, service, factory-direct model |
-| Virtual room visualizer | Sounds innovative | High complexity, low conversion impact for blinds | High-quality product photos + room context images |
-| Hyper-local SEO (per city landing pages) | "Rank for every city" | Thin content penalty risk, maintenance burden | Focus on Netherlands-wide + Google Mijn Bedrijf |
-| Multi-currency support | "International expansion" | Adds complexity, Dutch market is large enough | Netherlands-only (EUR), add later if needed |
-| Product reviews on every page | "Social proof everywhere" | New shop = no reviews yet, empty sections hurt trust | Start with FAQ testimonials, add reviews after orders |
-| Blog posts about unrelated topics | "Content marketing = traffic" | Dilutes domain authority for rolgordijnen keywords | Stay focused: buying guides, trends, installation tips |
+| Google Tag Manager (GTM) instead of direct gtag | "Industry standard", flexible | GTM adds complexity, consent mode integration with `@next/third-parties` does not support GTM well in Next.js App Router; as of March 2025, `@next/third-parties` consent mode does not work with GTM | Direct `gtag.js` via `next/script` with manual consent implementation — simpler, fully controllable |
+| Cookie consent library (CookieBot, OneTrust, CookieYes) | "Let a specialist handle GDPR" | SaaS consent platforms add external script dependencies, monthly costs (€10-50+/mo), and consent timing complexity; Dutch DPA rules are clear enough to implement directly | Custom banner with localStorage persistence — no external dependency, no ongoing cost, full control |
+| Blocking GA4 script load entirely until consent | "Safest approach" | Prevents consent mode modeling; when script never loads, Google cannot send even anonymized cookieless pings that feed GA4's behavioral modeling | Load gtag.js on every page with `analytics_storage: 'denied'` default; update to `'granted'` on accept |
+| Cookie wall ("consent or leave") | "Force acceptance for data" | Explicitly prohibited by Dutch AP; can result in fines up to €900,000 or 10% annual turnover | Functional site with optional analytics; no data collected from users who decline |
+| Granular consent categories (analytics / marketing / social) | "More granular = more GDPR-safe" | Overkill for a site that only uses GA4 analytics; more categories = more complex banner = lower consent rate | Two-option banner: "Accepteer alles" / "Weiger alles" with analytics-only explanation |
+| Purchase event on Shopify thank_you page | "Fire event where payment happened" | This is a Shopify-hosted page — no access to Shopify checkout.liquid without Shopify Plus; custom storefront cannot inject scripts there | Fire `purchase` event on /bevestiging with a pre-generated transaction ID stored before the Shopify redirect |
+| Server-side GA4 tracking | "More reliable, bypasses adblockers" | Requires server-side tag container (Google Cloud, separate infrastructure), adds significant complexity and cost — not justified for this stage | Client-side GA4 with consent mode; acceptable data loss from adblockers at this traffic level |
+| Real-time analytics dashboard | "See live traffic" | GA4 real-time view already exists in GA4 interface; custom dashboard adds no value at current scale | Use GA4's built-in reports and explore section |
 
-## Content Feature Dependencies
+---
+
+## Feature Dependencies
 
 ```
-Dutch Homepage Copy
-    └──requires──> Brand Tone Definition (informal, friendly, helpful)
-                       └──requires──> Target Audience Clarity (Dutch homeowners, DIY + professional)
+Cookie Consent Banner
+    └──required by──> GA4 Conditional Loading
+                          └──required by──> All E-Commerce Events
+                                                └──required by──> Purchase Attribution
 
-Product Page Dutch Copy
-    └──requires──> Product Type Understanding (transparant, verduisterend, screen)
-    └──requires──> Technical Specs Translation (lichtdoorlatendheid, isolatie)
+GA4 Property Created (admin)
+    └──required by──> GA4 Conditional Loading
 
-SEO Meta Tags
-    └──requires──> Keyword Research (rolgordijnen op maat, verduisterende rolgordijnen)
-    └──enhances──> All Page Content
+Purchase Event
+    └──requires──> Transaction ID Strategy
+                       └──requires──> Pre-checkout UUID generation
+                                          └──stored in──> localStorage/sessionStorage
+                                                              └──read on──> /bevestiging page
 
-Structured Data (Product, FAQ, LocalBusiness)
-    └──requires──> Dutch Content in Place
-    └──enhances──> Google Rich Results Eligibility
+view_item_list + select_item
+    └──enhances──> view_item (upper funnel context)
 
-Dutch Blog Posts
-    └──requires──> Homepage + Product Pages (foundation first)
-    └──enhances──> Long-tail SEO + Authority Building
+view_cart
+    └──enhances──> begin_checkout (abandonment analysis)
 
-FAQ Dutch Content
-    └──requires──> Product Understanding (measurement, installation, delivery)
-    └──enhances──> Trust + Reduces Support Burden
+Consent Mode v2 (all 4 params)
+    └──enhances──> Consent Mode basic (2 params)
+    └──enables──> Google behavioral modeling for denied users
 ```
 
 ### Dependency Notes
 
-- **Dutch homepage copy requires tone definition:** Cannot write compelling copy without deciding on "je" vs "u", formality level, brand personality
-- **SEO meta tags enhance all page content:** Every page needs Dutch title/description before launch
-- **Blog posts require foundation pages:** Don't publish blog until core product pages have Dutch content
-- **Structured data requires Dutch content:** Schema.org markup needs actual Dutch text, not placeholders
+- **Cookie consent banner is the prerequisite for everything:** GA4 cannot load in cookie-setting mode until consent is granted. The banner must exist and persist consent before any e-commerce event code is written.
+- **Transaction ID strategy must be decided before purchase event:** The /bevestiging page is a Next.js page after redirect from Shopify; Shopify does not pass the order ID back to a custom storefront URL. A UUID must be generated at checkout initiation and survived through the Shopify redirect (localStorage survives cross-domain redirects).
+- **GA4 property is an admin prerequisite:** A measurement ID (G-XXXXXXXXXX) must exist before any implementation. This is a Google Analytics admin step, not a code step.
+- **`view_item_list` requires product list pages:** This event can only be added once the component that renders product lists exists (already exists in v1.4).
+- **Consent mode v2 all-4-parameters setup must happen before gtag fires:** The `gtag('consent', 'default', {...})` call must run before the `<script src="gtag.js">` tag is evaluated. Next.js `next/script` with `strategy="afterInteractive"` and an inline script block that runs first handles this.
 
-## Dutch Content Patterns from Competitor Analysis
-
-### Homepage Content Structure
-
-Based on analysis of veneta.com, raamdecoratie.com, and other Dutch rolgordijnen webshops:
-
-**Hero Section Pattern:**
-- Main headline: "[Product type] op maat" or "Rolgordijnen op maat | Tot [X]% goedkoper"
-- Subheadline: Value proposition (direct from factory, free shipping, guarantee)
-- Primary CTA: "Bekijk de collectie" or "Configureer nu"
-- Secondary element: Trust signal (Thuiswinkel, customer rating, years in business)
-
-**About/USP Section Pattern:**
-- 3-4 key benefits with icons
-- Common themes: "Op maat gemaakt", "Gratis thuisbezorgd", "5 jaar garantie", "Gratis kleurstalen"
-- Conversational tone: "Wij maken rolgordijnen die perfect passen"
-
-**Product Category Pattern:**
-- Category intro: 1-2 paragraphs explaining what the product is and when to use it
-- Common length: 150-300 words
-- Lists application scenarios (slaapkamer, woonkamer, kantoor, badkamer)
-- Mentions customization options (stoffen, kleuren, bediening)
-
-### Product Page Content Structure
-
-**Title Pattern:** "[Product Type] op maat | [Brand]"
-
-**Description Structure:**
-1. Opening paragraph: What it is, main benefit (50-75 words)
-2. Features list: Fabric types, operation methods, size ranges
-3. Customization options: Color, cassette, bottom bar choices
-4. Room-specific guidance: Where it works best
-5. Measurement/installation note: Link to instructions
-
-**Keyword Density Patterns:**
-- Primary: "rolgordijn(en)" appears 4-6 times
-- Secondary: "op maat" appears 2-3 times
-- Tertiary: Product-specific terms (verduisterend, transparant) 2-4 times
-- Avoid keyword stuffing: Natural, helpful language
-
-### FAQ Content Patterns
-
-Common questions found across Dutch rolgordijnen webshops:
-
-**Ordering & Customization:**
-- "Hoe meet ik mijn rolgordijn op?" (Most common question)
-- "Wat is het verschil tussen op de dag en in de dag monteren?"
-- "Kan ik gratis kleurstalen bestellen?"
-- "Welke stoffen zijn er beschikbaar?"
-
-**Delivery & Returns:**
-- "Wat is de levertijd?" (7-14 werkdagen standard answer)
-- "Zijn de verzendkosten gratis?" (Usually free above EUR 100-200)
-- "Kan ik mijn rolgordijn retourneren?" (Maatwerk = no returns)
-- "Wat als het niet past door een meetfout?" (Guarantee/replacement offer)
-
-**Installation & Technical:**
-- "Hoe monteer ik mijn rolgordijn?"
-- "Welk rolgordijn is geschikt voor de badkamer?" (Wood-look, moisture resistant)
-- "Welk rolgordijn voor een slaapkamer?" (Verduisterend)
-- "Kan ik een rolgordijn in een dakraam plaatsen?" (Yes, with side rails)
-
-**Pricing & Service:**
-- "Waarom zijn jullie goedkoper?" (Direct from factory)
-- "Is er garantie?" (Usually 5 years)
-- "Kan ik telefonisch advies krijgen?"
-
-## Dutch SEO Keyword Clusters for Rolgordijnen Market
-
-### Primary Keywords (High Volume, Commercial Intent)
-
-| Keyword Cluster | Search Intent | Content Type | Priority |
-|----------------|---------------|--------------|----------|
-| rolgordijnen op maat | Buy intent | Homepage, Category | P1 |
-| rolgordijnen kopen | Buy intent | Homepage, Category | P1 |
-| verduisterende rolgordijnen | Buy intent | Subcategory | P1 |
-| transparante rolgordijnen | Buy intent | Subcategory | P1 |
-| rolgordijn [kleur] | Product specific | Product pages | P2 |
-
-### Secondary Keywords (Long-tail, Specific Intent)
-
-| Keyword Cluster | Search Intent | Content Type | Priority |
-|----------------|---------------|--------------|----------|
-| rolgordijnen op maat goedkoop | Price comparison | Homepage, About | P2 |
-| rolgordijn slaapkamer verduisterend | Room-specific | Blog, Product | P2 |
-| rolgordijn dakraam | Application-specific | Blog, FAQ | P2 |
-| rolgordijn badkamer | Application-specific | Blog, FAQ | P2 |
-| duo rolgordijn | Product type | Future expansion | P3 |
-
-### Informational Keywords (Blog Content)
-
-| Keyword Cluster | Search Intent | Content Type | Priority |
-|----------------|---------------|--------------|----------|
-| rolgordijn opmeten | How-to research | Blog post | P2 |
-| verschil transparant verduisterend rolgordijn | Product comparison | Blog post | P2 |
-| rolgordijn trends 2026 | Inspiration | Blog post | P3 |
-| rolgordijn monteren | Installation guide | Blog post | P2 |
-| welk rolgordijn voor welke kamer | Buying guide | Blog post | P1 |
-
-### Local SEO Keywords (If Google Mijn Bedrijf Active)
-
-| Keyword Cluster | Search Intent | Content Type | Priority |
-|----------------|---------------|--------------|----------|
-| rolgordijnen [stad/regio] | Local buy intent | GMB, Footer | P3 |
-| raamdecoratie [stad] | Broader local | GMB | P3 |
-
-## Tone of Voice Recommendations for Dutch Market
-
-Based on analysis of successful Dutch rolgordijnen webshops:
-
-### Core Tone Attributes
-
-**Friendly & Approachable:** Use "je" (informal you), not "u" (formal)
-- Competitors like veneta.com, 123jaloezie.nl all use informal tone
-- "Configureer jouw rolgordijn" not "Configureer uw rolgordijn"
-
-**Clear & Direct:** Short sentences, active voice
-- Average sentence length: 12-18 words
-- "Wij maken rolgordijnen op maat" not "Door ons worden rolgordijnen op maat gemaakt"
-
-**Helpful & Educational:** Focus on guiding the customer
-- "We helpen je graag" appears frequently
-- Answer objections preemptively (measurement concerns, quality questions)
-
-**Confident but Not Pushy:** Emphasize quality and value, avoid aggressive sales language
-- "Tot 40% goedkoper" (value statement) ✓
-- "KOOP NU!!! LAATSTE KANS!!!" (aggressive) ✗
-
-### Writing Style Guidelines
-
-**Emoji Usage:** Minimal to none on product pages, occasional on social
-**Exclamation Points:** Sparingly (1-2 per page maximum)
-**English Terms:** Minimize - use "rolgordijn" not "roller blind"
-**Sentence Length:** Target 15 words average, max 25
-**Paragraph Length:** 2-4 sentences for web readability
-**Lists:** Use frequently - bulleted lists for features, numbered for steps
-
-### Example Tone Comparison
-
-**TOO FORMAL:**
-> "Onze onderneming biedt u de mogelijkheid tot het aanschaffen van rolgordijnen welke naar uw specifieke afmetingen worden vervaardigd."
-
-**TOO CASUAL:**
-> "Yo! Check onze mega vette rolgordijnen!! Super chill en helemaal custom 🔥"
-
-**JUST RIGHT:**
-> "Bij ons bestel je rolgordijnen precies op maat. Jij kiest de kleur en afmetingen, wij maken het perfect passend voor jouw raam."
+---
 
 ## MVP Definition
 
-### Launch With (v1.3)
+### Launch With (v1.5 milestone scope)
 
-Critical for transforming from placeholder to real Dutch rolgordijnen shop.
+Minimum viable analytics and consent for a GDPR-compliant Dutch e-commerce site.
 
-- [ ] **Homepage Dutch copy** — Hero, about, services sections (existing structure, new copy)
-  - Why essential: First impression, brand credibility, SEO foundation
-  - Effort: 4-6 hours copywriting + 1 hour implementation
+- [ ] **Cookie consent banner** — Dutch-language, "Accepteer alles" + "Weiger alles" equal prominence, persistent consent in localStorage, functional site without consent. Why essential: legal requirement; Dutch AP actively enforcing with fines.
+- [ ] **GA4 conditional loading with Consent Mode v2** — gtag.js loads with all 4 parameters defaulted to `'denied'`; updates to `'granted'` when user accepts. Why essential: no analytics data lands without this, and loading without consent mode violates GDPR.
+- [ ] **`view_item` event** — fires on product detail page load with item data. Why essential: top-of-funnel data; shows which products users browse.
+- [ ] **`add_to_cart` event** — fires when user adds item to cart. Why essential: funnel gap analysis between browse and checkout.
+- [ ] **`begin_checkout` event** — fires when user initiates checkout. Why essential: funnel gap analysis between cart and purchase; shows cart abandonment rate.
+- [ ] **`purchase` event on /bevestiging** — fires with transaction_id (UUID from localStorage) and cart contents. Why essential: revenue attribution; without this the entire funnel has no endpoint.
 
-- [ ] **Category page Dutch copy (Rolgordijnen)** — 250-300 word intro explaining what rolgordijnen are
-  - Why essential: SEO landing page for primary keyword "rolgordijnen op maat"
-  - Effort: 2 hours copywriting + 30 min implementation
+### Add After Validation (v1.x)
 
-- [ ] **Subcategory Dutch copy (Transparante & Verduisterende)** — 150-200 words each
-  - Why essential: Product differentiation, answers "which type do I need?"
-  - Effort: 3 hours copywriting + 1 hour implementation
+Features to add once core tracking is live and producing data.
 
-- [ ] **Product page Dutch template copy** — Reusable descriptions for transparant/verduisterend products
-  - Why essential: Product pages are conversion points
-  - Effort: 4 hours copywriting + 2 hours implementation
-
-- [ ] **FAQ Dutch content** — 8-12 questions covering measurement, delivery, returns, installation
-  - Why essential: Reduces friction, builds trust, FAQ schema SEO benefit
-  - Effort: 4 hours research + writing + 1 hour implementation
-
-- [ ] **Basic meta tags (title, description)** — All pages need Dutch titles/descriptions
-  - Why essential: SEO foundation, appears in Google results
-  - Effort: 3 hours across all pages
-
-- [ ] **1 blog post: "Welk rolgordijn voor welke kamer?"** — Buying guide format
-  - Why essential: Long-tail SEO, establishes expertise, addresses common question
-  - Effort: 4 hours research + writing
-
-### Add After Validation (v1.4-v1.5)
-
-Features to add once core Dutch content is live and showing results.
-
-- [ ] **Second blog post: "Rolgordijn opmeten: stappenplan"** — Trigger: First Dutch content live, measuring questions in analytics
-  - Why defer: Foundation pages first, blog content builds over time
-
-- [ ] **Structured data (Product, FAQ, LocalBusiness)** — Trigger: Content finalized, ready for rich results
-  - Why defer: Requires stable Dutch content, technical implementation phase
-
-- [ ] **Trust badge integration (Thuiswinkel Waarborg reference)** — Trigger: Legal entity established, certification obtained
-  - Why defer: Certification process takes time, can reference in copy for now
-
-- [ ] **Measurement guide with visuals** — Trigger: Customer questions reveal confusion points
-  - Why defer: Requires design work, text instructions sufficient for MVP
-
-- [ ] **Room-specific landing pages (slaapkamer, badkamer, dakraam)** — Trigger: Analytics show search volume for these terms
-  - Why defer: Thin content risk, focus on core pages first
+- [ ] **`view_item_list` on category/subcategory pages** — trigger: when GA4 reports show traffic to list pages but unclear click-through to products.
+- [ ] **`select_item` on product card click** — trigger: when product merchandising decisions need data (which card position converts best).
+- [ ] **`view_cart` on cart page** — trigger: when cart abandonment analysis becomes relevant (need baseline data first).
+- [ ] **Consent re-prompt on policy change** — trigger: when cookie purposes change or privacy policy is updated materially.
+- [ ] **Consent mode region restriction** — trigger: when non-EEA traffic is meaningful enough that banner friction matters.
 
 ### Future Consideration (v2+)
 
-Features to defer until product-market fit is established and content strategy is validated.
+- [ ] **Server-side GA4** — defer: requires separate infrastructure, not justified until high traffic volumes where adblocker data loss is significant.
+- [ ] **`add_payment_info` / `add_shipping_info`** — defer: these events require access to Shopify checkout steps, which is not possible without Shopify Plus checkout extensibility.
+- [ ] **GA4 audiences for remarketing** — defer: requires `ad_storage: 'granted'`, which depends on user consent for advertising cookies; most Dutch users will decline.
+- [ ] **Google Ads conversion tracking** — defer: separate from GA4 analytics; requires additional consent (`ad_user_data`, `ad_personalization`) and a Google Ads account.
 
-- [ ] **GEO optimization (Google Mijn Bedrijf)** — Why defer: Requires physical location or service areas, local SEO complexity
-- [ ] **Advanced blog content (trends, styling tips)** — Why defer: Focus on conversion-driving content first
-- [ ] **Customer review collection system** — Why defer: Need orders before reviews
-- [ ] **Video content (installation guides)** — Why defer: Text + images sufficient, video production expensive
-- [ ] **Localized landing pages per region** — Why defer: Thin content risk, Netherlands-wide works first
-- [ ] **Multi-language support (English)** — Why defer: Dutch market sufficient, avoid splitting focus
+---
 
 ## Feature Prioritization Matrix
 
 | Feature | User Value | Implementation Cost | Priority |
 |---------|------------|---------------------|----------|
-| Homepage Dutch copy | HIGH | LOW | P1 |
-| Category page Dutch copy | HIGH | LOW | P1 |
-| Subcategory Dutch copy | HIGH | LOW | P1 |
-| Product page Dutch copy | HIGH | MEDIUM | P1 |
-| FAQ Dutch content | HIGH | MEDIUM | P1 |
-| Meta tags (all pages) | HIGH | LOW | P1 |
-| Blog post: buying guide | MEDIUM | MEDIUM | P1 |
-| Blog post: measuring guide | MEDIUM | MEDIUM | P2 |
-| Structured data | MEDIUM | MEDIUM | P2 |
-| Trust badge reference | MEDIUM | LOW | P2 |
-| Measurement visuals | MEDIUM | HIGH | P2 |
-| Room-specific pages | LOW | MEDIUM | P3 |
-| GEO optimization | MEDIUM | HIGH | P3 |
-| Video content | LOW | HIGH | P3 |
+| Cookie consent banner | HIGH (legal) | MEDIUM | P1 |
+| GA4 Consent Mode v2 loading | HIGH (legal + analytics foundation) | MEDIUM | P1 |
+| `view_item` event | HIGH | LOW | P1 |
+| `add_to_cart` event | HIGH | LOW | P1 |
+| `begin_checkout` event | HIGH | LOW | P1 |
+| `purchase` event + transaction ID | HIGH | HIGH | P1 |
+| `view_item_list` event | MEDIUM | LOW | P2 |
+| `select_item` event | MEDIUM | LOW | P2 |
+| `view_cart` event | MEDIUM | LOW | P2 |
+| Consent re-prompt on policy change | MEDIUM | LOW | P2 |
+| Consent mode region restriction | LOW | MEDIUM | P3 |
+| Server-side GA4 | LOW | HIGH | P3 |
+| Google Ads conversion tracking | LOW | MEDIUM | P3 |
 
 **Priority key:**
-- P1: Must have for v1.3 launch (transforms placeholder to real shop)
-- P2: Should have for v1.4-v1.5 (enhances SEO and trust)
-- P3: Nice to have for v2+ (expansion features)
+- P1: Required for v1.5 launch — legal compliance and core funnel visibility
+- P2: Add when funnel data reveals gaps — improves data quality
+- P3: Future milestone — requires scale or additional infrastructure
 
-## Content Length Guidelines for Dutch Rolgordijnen Pages
+---
 
-Based on competitor analysis and Dutch SEO best practices:
+## Dutch DPA Compliance Requirements (Autoriteit Persoonsgegevens)
 
-| Page Type | Recommended Length | Rationale |
-|-----------|-------------------|-----------|
-| Homepage | 200-400 words | Enough to establish value prop without overwhelming |
-| Category page | 250-300 words | SEO sweet spot for category pages per Dutch experts |
-| Subcategory page | 150-200 words | Differentiate products, answer "when to use" |
-| Product page | 150-250 words | Product specifics, features, customization options |
-| FAQ (total) | 800-1200 words | 8-12 Q&A pairs, comprehensive coverage |
-| Blog post | 800-1500 words | In-depth guides, SEO authority building |
+These are not optional features — they are legal requirements for operating a Dutch e-commerce site with analytics.
 
-**Quality over quantity:** Dutch SEO experts emphasize that 300 helpful words beat 800 fluffy words. Focus on answering user questions clearly.
+| Requirement | Source | Implementation |
+|-------------|--------|----------------|
+| "Reject all" option on first banner layer (not buried in settings) | AP warning campaign April 2025; 50 organisations warned | "Weiger alles" button same prominence as "Accepteer alles" |
+| Equal visual prominence for accept and reject | Austrian court 2025: colored accept + gray reject link = GDPR violation; Dutch AP follows same stance | Same button styling for both options |
+| No pre-ticked consent boxes | GDPR Art. 7; Dutch ePrivacy Act | Default state is rejected; user action required to accept |
+| No cookies before consent | AP actively enforcing | gtag must not fire until `analytics_storage: 'granted'` is set |
+| Consent proof maintained | GDPR Art. 7(1) | Store consent timestamp and version in localStorage |
+| Withdrawal as easy as granting | GDPR Art. 7(3) | Accessible settings link (footer) allows re-displaying banner |
+| No cookie wall | Dutch AP explicit guidance | Site fully functional without accepting analytics |
+| Consent expires (re-prompt after ~12 months) | GDPR recital 32; EDPB guidance | Store consent timestamp; compare on page load |
+| Informed consent (clear explanation of what cookies do) | GDPR Art. 13; AP guidance | Banner must explain purpose: "Om uw websitebezoek te meten en te verbeteren" |
 
-## Technical SEO Features Required
-
-### Meta Tags (P1 - Launch Blocker)
-
-**Every page needs:**
-- `<title>` tag: 50-60 characters, includes primary keyword
-  - Example: "Rolgordijnen op Maat | Tot 40% Goedkoper | Pure Blinds"
-- `<meta name="description">`: 150-160 characters, includes CTA
-  - Example: "Bestel rolgordijnen op maat direct van de fabriek. Gratis verzending, 5 jaar garantie. Configureer nu jouw rolgordijn!"
-- `<meta charset="UTF-8">` and `<meta name="viewport">` (already present in Next.js)
-
-### Open Graph Tags (P1 - Social Sharing)
-
-**Homepage + key pages:**
-- `og:title`, `og:description`, `og:image`, `og:type`, `og:url`
-- Enables proper previews when shared on Facebook, LinkedIn, WhatsApp
-
-### Structured Data (P2 - Rich Results)
-
-**Product Schema:**
-```json
-{
-  "@type": "Product",
-  "name": "Transparante Rolgordijnen op Maat",
-  "description": "...",
-  "offers": {
-    "@type": "Offer",
-    "priceCurrency": "EUR",
-    "price": "Variable (custom dimensions)"
-  }
-}
-```
-
-**FAQ Schema:**
-- Enables rich results with expandable Q&A in Google search
-- High impact for "hoe meet ik rolgordijn op" type queries
-
-**LocalBusiness Schema (if GEO activated):**
-- Name, address, phone, opening hours, service area
-- Deferred until Google Mijn Bedrijf is set up
-
-### Technical Files (P2)
-
-**robots.txt:**
-```
-User-agent: *
-Allow: /
-Sitemap: https://yourdomain.com/sitemap.xml
-```
-
-**sitemap.xml:**
-- Auto-generated by Next.js or manually maintained
-- Include: homepage, category, subcategory, products, blog posts
-- Exclude: /api, /confirmation, /cart, /checkout
-
-### URL Structure (Already Correct)
-
-Current structure follows Dutch SEO best practices:
-- `/` → Homepage
-- `/producten/rolgordijnen` → Category
-- `/producten/rolgordijnen/transparante-rolgordijnen` → Subcategory
-- `/producten/rolgordijnen/transparante-rolgordijnen/product-name` → Product
-- `/blog/welk-rolgordijn-voor-welke-kamer` → Blog
-
-**Keep URLs:**
-- Short and descriptive
-- All lowercase
-- Hyphens not underscores
-- Dutch keywords when possible
-- No date stamps in blog URLs (allows evergreen updates)
-
-## Competitor Feature Comparison
-
-| Feature | Veneta.com | Raamdecoratie.com | 123Jaloezie.nl | Our Approach |
-|---------|------------|-------------------|----------------|--------------|
-| Homepage value prop | "Tot 40% goedkoper" | "Specialist sinds 2014" | "Tegen scherpste prijzen" | "Direct van de fabriek" (factory-direct angle) |
-| Product configurator | Visual step-by-step | Dropdown selectors | Multi-step form | Use existing dimension input, enhance with Dutch labels |
-| Free color samples | Prominent CTA | FAQ mention | Product page offer | Add to product pages + FAQ |
-| Tone of voice | Friendly "je" | Friendly "je" | Friendly "je" | Friendly "je" (consistent with market) |
-| Blog content | Trends, inspiration | Buying guides | Limited blog | Focus on practical guides (measurement, room selection) |
-| Trust signals | Thuiswinkel Waarborg | Webshop Keurmerk | Customer reviews | Reference industry standard, add certification later |
-| Measurement guide | Detailed with images | Text instructions | Video + text | Start with text, add visuals in P2 |
-| Room-specific content | Extensive (per room pages) | FAQ mentions | Limited | Start in blog posts, expand to pages if needed |
-
-**Competitive positioning:**
-- **Veneta:** Broad raamdecoratie, emphasizes trends → We differentiate with rolgordijnen specialization
-- **Raamdecoratie.com:** Emphasizes experience (since 2014) → We differentiate with factory-direct pricing
-- **123Jaloezie:** Price-focused → We match on price but add educational content advantage
-
-## Content Implementation Dependencies
-
-### Before Writing Dutch Copy
-
-**Decisions needed:**
-1. Brand positioning statement: What makes us different? (Factory-direct, specialization, service?)
-2. Target customer definition: DIY homeowners, landlords, interior designers, all?
-3. Geographic focus: Netherlands-wide or specific regions?
-4. Guarantee/warranty terms: 5 years standard?
-5. Delivery terms: Free shipping threshold? Delivery time commitment?
-
-### Content Creation Order
-
-**Phase 1 (Week 1): Foundation Pages**
-1. Define tone of voice guidelines (1 hour)
-2. Homepage copy (hero, about, services) - 6 hours
-3. Category page copy (Rolgordijnen) - 2 hours
-4. Meta tags for homepage + category - 1 hour
-
-**Phase 2 (Week 1-2): Product Pages**
-1. Subcategory copy (Transparante, Verduisterende) - 3 hours
-2. Product page template copy - 4 hours
-3. Meta tags for all product pages - 2 hours
-
-**Phase 3 (Week 2): Support Content**
-1. FAQ content (8-12 questions) - 5 hours
-2. Contact page Dutch copy - 1 hour
-3. Footer links Dutch copy - 1 hour
-
-**Phase 4 (Week 2-3): SEO Content**
-1. Blog post 1: "Welk rolgordijn voor welke kamer?" - 5 hours
-2. Meta tags for blog - 1 hour
-3. Internal linking audit (link blog to products) - 2 hours
-
-**Total estimated effort: 34 hours copywriting + implementation**
-
-## Quality Checklist for Dutch Content
-
-Before marking v1.3 complete, verify:
-
-- [ ] All placeholder English text replaced with Dutch
-- [ ] Tone is consistent across all pages (friendly "je", helpful, clear)
-- [ ] Primary keywords appear naturally (no stuffing)
-- [ ] Every page has unique title and meta description in Dutch
-- [ ] FAQ answers common objections (measurement, delivery, returns)
-- [ ] Product pages explain when to use each type (transparant vs verduisterend)
-- [ ] No broken internal links
-- [ ] No Dutch language errors (spell check, grammar check)
-- [ ] CTAs are clear and action-oriented ("Configureer nu", "Bekijk de collectie")
-- [ ] Trust signals mentioned (guarantee, free shipping, quality)
-- [ ] Contact information present on every page (footer)
+---
 
 ## Sources
 
-### Competitor Analysis
-- [Veneta.com Rolgordijnen](https://www.veneta.com/rolgordijnen/)
-- [Veneta.com Homepage](https://www.veneta.com/)
-- [Veneta.com Interior Trends 2026](https://www.veneta.com/interieur-trends/blog/nl/page/1315/)
-- [123Jaloezie.nl](https://www.123jaloezie.nl/)
-- [Raamdecoratie.com](https://www.raamdecoratie.com/)
-- [Rolgordijnwinkel.nl Verduisterend](https://www.rolgordijnwinkel.nl/rolgordijnen/verduisterend)
-- [Thuisin.nl Transparante Rolgordijnen](https://thuisin.nl/raamdecoratie/rolgordijnen/transparant/)
-
-### SEO Strategy & Best Practices
-- [SEO voor webshops 2026 - Ranking Masters](https://rankingmasters.nl/seo-webshops)
-- [SEO Strategie 2026 - Ads & Impact](https://www.adsimpact.nl/seo-strategie-tips/)
-- [SEO Trends 2026 - Afix](https://www.afix.nl/seo-trends-voor-2026/)
-- [SEO Structuur - Ranking Masters](https://rankingmasters.nl/seo-structuur/)
-- [Verbeter SEO Webwinkel Categoriepagina's - IMU](https://imu.nl/internet-marketing-kennisbank/webshop-marketing/seo-webwinkel-categoriepaginas/)
-- [SEO Content Lengte - Ralf van Veen](https://ralfvanveen.com/content/seo-content-lengte/)
-
-### Trust & Local SEO
-- [Thuiswinkel Waarborg Keurmerk](https://www.thuiswinkel.org/en/trust/trustmarks/thuiswinkel-waarborg/)
-- [Webshop Keurmerken Nederland 2026 - Webshopchecker](https://webshopchecker.nl/uitleg/overzicht-keurmerken/)
-- [Google Mijn Bedrijf Optimalisatie](https://www.mijnbedrijfoptimalisatie.nl/)
-- [Lokale SEO 2025 - Brandfirm](https://www.brandfirm.nl/lokale-seo/)
-
-### Content & Copywriting
-- [Tone of Voice Voorbeelden - Marketing Collega](https://www.marketingcollega.nl/branding/tone-of-voice-voorbeelden-20-stijlen-met-voorbeeldteksten/)
-- [Tone of Voice Bepalen - MEER Collective](https://meercollective.nl/copywriting/tone-of-voice-bepalen/)
-- [Copywriting Tips 2026 - WordStream](https://www.wordstream.com/blog/seo-copywriting)
-
-### Product & Market Research
-- [Rolgordijnen Meten - Raamdecoratie.com](https://www.raamdecoratie.com/inspiratie-advies/hoe-meet-je-rolgordijnen-op/)
-- [Veelgestelde Vragen - Raamdecoratie.com](https://www.raamdecoratie.com/veelgestelde-vragen/)
-- [Raamdecoratie Trends 2026 - Karwei](https://www.karwei.nl/wooninspiratie/b/raamdecoratie-trends)
-- [Plisségordijnen Trends 2026 - ForHome](https://forhome.nl/interieur/plissegordijnen-in-2026-trends-voor-nederlandse-interieurs/)
-- [Welke Raambekleding Populair 2026 - Industrieel Blog](https://www.industrieelblog.nl/interieur/welke-raambekleding-is-populair-in-2026/)
+- [Measure Ecommerce — Google for Developers](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce) — official GA4 event spec
+- [GA4 Recommended Events — Google Analytics Help](https://support.google.com/analytics/answer/9267735) — full event catalogue
+- [Set Up Consent Mode on Websites — Google Tag Platform](https://developers.google.com/tag-platform/security/guides/consent) — Consent Mode v2 parameters
+- [GA4 Transaction ID Deduplication — Google Analytics Help](https://support.google.com/analytics/answer/12313109) — deduplication via transaction_id
+- [Dutch DPA Cookie Banner Requirements — Autoriteit Persoonsgegevens](https://www.autoriteitpersoonsgegevens.nl/en/themes/internet-and-smart-devices/cookies/clear-cookie-banners) — official AP guidance
+- [Dutch DPA Warns 50 Organisations — Nixon Digital](https://www.nixondigital.io/blog/dutch-dpa-cookie-compliance-warning/) — April 2025 enforcement actions
+- [Cookie Banner Requirements Netherlands 2026 — CookieBanner.com](https://cookiebanner.com/blog/cookie-banner-requirements-by-country-eu-overview-2026/) — current EU requirements by country
+- [GA4 Consent Mode v2 — Simo Ahava](https://www.simoahava.com/analytics/consent-mode-v2-google-tags/) — authoritative technical implementation guide
+- [GDPR Cookie Banner in Next.js 15 — Medium/Frontend Weekly](https://medium.com/front-end-weekly/how-to-build-a-gdpr-cookie-banner-in-next-js-15-ga4-consent-mode-cloudfront-geo-detection-aae0961e89c5) — Next.js-specific implementation pattern
+- [Next.js Cookie Consent (No Libraries) — Build With Matija](https://www.buildwithmatija.com/blog/build-cookie-consent-banner-nextjs-15-server-client) — custom implementation without SaaS dependency
+- [GA4 Consent Mode Impact on Data — AnalyticsMates](https://www.analyticsmates.com/post/how-ga4-consent-mode-impacts-your-data-what-to-do-about-it) — what happens to data when consent is denied
+- [Dutch DPA Intensifies Cookie Enforcement — Hogan Lovells](https://www.hoganlovells.com/en/publications/dutch-dpa-intensifies-cookie-enforcement-key-takeaways-) — enforcement escalation context
+- [GA4 Purchase Event on Shopify — Hookflash](https://www.hookflash.co.uk/blog/ga4-tracking-with-shopify-checkout-extensibility) — Shopify-specific purchase tracking challenges
 
 ---
-*Feature research for: Dutch Rolgordijnen Webshop Content & SEO*
-*Researched: 2026-02-14*
-*Focus: Content patterns, SEO keywords, competitor analysis, market positioning for v1.3 milestone*
+
+*Feature research for: GA4 e-commerce tracking and GDPR cookie consent — v1.5 Analytics & Privacy milestone*
+*Researched: 2026-02-22*
+*Focus: Table stakes compliance, funnel event coverage, Dutch DPA requirements, Next.js 15 implementation constraints*

@@ -7,6 +7,7 @@
 - ✅ **v1.2 Product Catalog & Navigation** — Phases 11-14 (shipped 2026-02-13)
 - ✅ **v1.3 Dutch Content & SEO** — Phases 15-18 (shipped 2026-02-14)
 - ✅ **v1.4 Production Ready** — Phases 19-22 (shipped 2026-02-19)
+- 🚧 **v1.5 Analytics & Privacy** — Phases 23-25 (in progress)
 
 ## Phases
 
@@ -62,6 +63,53 @@
 
 </details>
 
+### 🚧 v1.5 Analytics & Privacy (In Progress)
+
+**Milestone Goal:** Full e-commerce funnel tracking with GDPR-compliant cookie consent
+
+- [x] **Phase 23: GA4 Foundation** — GA4 loads with Consent Mode v2 defaults, cross-domain session continuity, SPA page views (completed 2026-02-22)
+- [ ] **Phase 24: E-Commerce Events** — Complete funnel tracked: view_item, add_to_cart, begin_checkout, purchase with deduplication
+- [ ] **Phase 25: Cookie Consent Banner** — GDPR-compliant Dutch-language banner with equal-prominence buttons and persistent consent state
+
+## Phase Details
+
+### Phase 23: GA4 Foundation
+**Goal**: GA4 receives page views from pure-blinds.nl with Consent Mode v2 defaults set, cross-domain session continuity to Shopify checkout established, and SPA route changes tracked automatically
+**Depends on**: Phase 22
+**Requirements**: GA4-01, GA4-02, GA4-03
+**Success Criteria** (what must be TRUE):
+  1. No `_ga` cookie appears in browser storage before a user grants consent — verified in DevTools Application tab
+  2. GA4 DebugView shows page_view events firing on every App Router route change without a full page reload
+  3. A test checkout session from pure-blinds.nl through Shopify checkout back to /bevestiging shows a single continuous GA4 session (no "(direct)/(none)" attribution break)
+  4. GA4 property has all four Consent Mode v2 parameters defaulted to "denied" before gtag.js fires — confirmed by checking gtag initialization order in browser Network tab
+**Plans**: 1 plan
+Plans:
+- [ ] 23-01-PLAN.md — Analytics module, Consent Mode v2 Script tags, SPA route tracking, cross-domain linker
+
+### Phase 24: E-Commerce Events
+**Goal**: The complete GA4 e-commerce funnel — view_item, add_to_cart, begin_checkout, purchase — fires on every relevant user action with correct EUR pricing data, and the purchase event fires exactly once per checkout even on page refresh
+**Depends on**: Phase 23
+**Requirements**: ECOM-01, ECOM-02, ECOM-03, ECOM-04, ECOM-05, ECOM-06
+**Success Criteria** (what must be TRUE):
+  1. GA4 DebugView shows a `view_item` event with correct item_id, item_name, and VAT-inclusive EUR price when a user opens a product detail page
+  2. GA4 DebugView shows an `add_to_cart` event with the configured dimensions and price when a user adds an item to cart
+  3. GA4 DebugView shows a `begin_checkout` event when a user clicks the checkout button, before the Shopify redirect fires
+  4. GA4 DebugView shows a `purchase` event on /bevestiging with a transaction_id and the full items array matching what was in the cart
+  5. Refreshing /bevestiging after a completed checkout does not fire a second `purchase` event — verified in GA4 DebugView and Network tab
+**Plans**: TBD
+
+### Phase 25: Cookie Consent Banner
+**Goal**: A GDPR-compliant Dutch-language cookie consent banner is visible on first visit, "Accepteer alles" and "Weiger alles" buttons are equally prominent, consent state persists across sessions and survives the Shopify checkout redirect, and the site works fully without consent
+**Depends on**: Phase 24
+**Requirements**: CONS-01, CONS-02, CONS-03, CONS-04, CONS-05, CONS-06
+**Success Criteria** (what must be TRUE):
+  1. A new visitor sees a Dutch-language cookie banner with "Accepteer alles" and "Weiger alles" buttons at equal visual size and prominence — no buried or greyed-out reject option
+  2. A user who accepted consent on a previous visit does not see the banner again when returning to the site — banner does not re-appear across browser sessions
+  3. A user who accepted consent and then completed a Shopify checkout returns to /bevestiging without the banner re-appearing
+  4. Inspecting browser cookies before clicking "Accepteer alles" shows no `_ga` cookie present
+  5. Clicking "Weiger alles" allows the user to continue browsing all pages normally — product pages, cart, and checkout function without consent granted
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -88,6 +136,9 @@
 | 20. Environment Configuration | v1.4 | 1/1 | Complete | 2026-02-19 |
 | 21. Cart UX | v1.4 | 2/2 | Complete | 2026-02-19 |
 | 22. Checkout & Order Tracking | v1.4 | 2/2 | Complete | 2026-02-19 |
+| 23. GA4 Foundation | 1/1 | Complete   | 2026-02-22 | - |
+| 24. E-Commerce Events | v1.5 | 0/? | Not started | - |
+| 25. Cookie Consent Banner | v1.5 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-19 after v1.4 milestone completion*
+*Last updated: 2026-02-22 after v1.5 roadmap creation*
