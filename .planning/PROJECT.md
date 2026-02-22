@@ -71,6 +71,16 @@ Customers can order custom-dimension roller blinds with accurate matrix-based pr
 
 ### Active
 
+## Current Milestone: v1.5 Analytics & Privacy
+
+**Goal:** Full e-commerce funnel tracking with GDPR-compliant cookie consent
+
+**Target features:**
+- GA4 integration with conditional loading (only after consent)
+- E-commerce funnel events (view_item, add_to_cart, begin_checkout, purchase)
+- Cookie consent banner with persistent consent state
+- Purchase event tracking via /bevestiging return from Shopify checkout
+
 #### Carried from v1.0
 - [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
 - [ ] Create test products in Shopify store (deferred from Phase 1)
@@ -202,4 +212,4 @@ Customers can order custom-dimension roller blinds with accurate matrix-based pr
 | Inline VAT labels (no breakdown line) | Dutch regulatory compliance with minimal UI disruption | ✓ Good — "incl. 21% BTW" on configurator, shorter "incl. BTW" on cart |
 
 ---
-*Last updated: 2026-02-19 after v1.4 milestone*
+*Last updated: 2026-02-22 after v1.5 milestone start*
