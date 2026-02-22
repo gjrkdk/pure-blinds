@@ -9,9 +9,9 @@ Requirements for Analytics & Privacy milestone. Each maps to roadmap phases.
 
 ### GA4 Foundation
 
-- [ ] **GA4-01**: GA4 loads unconditionally with Consent Mode v2 defaults (all 4 parameters denied before gtag.js fires)
-- [ ] **GA4-02**: Cross-domain tracking configured between pure-blinds.nl and Shopify checkout domain
-- [ ] **GA4-03**: SPA page views tracked automatically on App Router route changes
+- [x] **GA4-01**: GA4 loads unconditionally with Consent Mode v2 defaults (all 4 parameters denied before gtag.js fires)
+- [x] **GA4-02**: Cross-domain tracking configured between pure-blinds.nl and Shopify checkout domain
+- [x] **GA4-03**: SPA page views tracked automatically on App Router route changes
 
 ### E-Commerce Events
 
@@ -66,9 +66,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| GA4-01 | Phase 23 | Pending |
-| GA4-02 | Phase 23 | Pending |
-| GA4-03 | Phase 23 | Pending |
+| GA4-01 | Phase 23 | Complete |
+| GA4-02 | Phase 23 | Complete |
+| GA4-03 | Phase 23 | Complete |
 | ECOM-01 | Phase 24 | Pending |
 | ECOM-02 | Phase 24 | Pending |
 | ECOM-03 | Phase 24 | Pending |

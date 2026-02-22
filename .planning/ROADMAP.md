@@ -67,7 +67,7 @@
 
 **Milestone Goal:** Full e-commerce funnel tracking with GDPR-compliant cookie consent
 
-- [ ] **Phase 23: GA4 Foundation** — GA4 loads with Consent Mode v2 defaults, cross-domain session continuity, SPA page views
+- [x] **Phase 23: GA4 Foundation** — GA4 loads with Consent Mode v2 defaults, cross-domain session continuity, SPA page views (completed 2026-02-22)
 - [ ] **Phase 24: E-Commerce Events** — Complete funnel tracked: view_item, add_to_cart, begin_checkout, purchase with deduplication
 - [ ] **Phase 25: Cookie Consent Banner** — GDPR-compliant Dutch-language banner with equal-prominence buttons and persistent consent state
 
@@ -136,7 +136,7 @@ Plans:
 | 20. Environment Configuration | v1.4 | 1/1 | Complete | 2026-02-19 |
 | 21. Cart UX | v1.4 | 2/2 | Complete | 2026-02-19 |
 | 22. Checkout & Order Tracking | v1.4 | 2/2 | Complete | 2026-02-19 |
-| 23. GA4 Foundation | v1.5 | 0/1 | Planned | - |
+| 23. GA4 Foundation | 1/1 | Complete   | 2026-02-22 | - |
 | 24. E-Commerce Events | v1.5 | 0/? | Not started | - |
 | 25. Cookie Consent Banner | v1.5 | 0/? | Not started | - |
 

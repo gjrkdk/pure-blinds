@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 ## Current Position
 
 Phase: 23 of 25 (GA4 Foundation)
-Plan: 0/? — not yet planned
-Status: Ready to plan
-Last activity: 2026-02-22 — Roadmap created for v1.5 Analytics & Privacy (Phases 23-25)
+Plan: 1/1 — complete
+Status: Phase complete
+Last activity: 2026-02-22 — Completed 23-01 GA4 Foundation plan
 
-Progress: [░░░░░░░░░░] 0% (v1.5)
+Progress: [██░░░░░░░░] 20% (v1.5)
 
 ## Performance Metrics
 
@@ -34,6 +34,7 @@ Progress: [░░░░░░░░░░] 0% (v1.5)
 | v1.2 Catalog | 11-14 | 6 | 1,481s (24.7m) | 247s |
 | v1.3 Dutch/SEO | 15-18 | 9 | 1,180s (19.7m) | 131s |
 | v1.4 Production Ready | 19-22 | 6 | ~194s (3.2m) | ~32s |
+| Phase 23-ga4-foundation P01 | 105 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -45,6 +46,9 @@ Recent decisions affecting current work:
 - v1.5 planning: Load gtag.js unconditionally with all 4 Consent Mode v2 parameters defaulted to "denied" — do NOT use @next/third-parties GoogleAnalytics component (no Consent Mode v2 support as of v16.1.6)
 - v1.5 planning: Use vanilla-cookieconsent@3.1.0 for banner UI — zero dependencies, native Consent Mode v2 signal mapping
 - v1.5 planning: sessionStorage cart snapshot before checkout redirect is the only mechanism for purchase event items data (cart is cleared before redirect)
+- Phase 23-01: Guard analytics on NEXT_PUBLIC_GA4_ID presence (not NODE_ENV) — Vercel preview deployments have NODE_ENV=production, env var is only set in production
+- Phase 23-01: AnalyticsProvider mounted unconditionally outside GA_MEASUREMENT_ID conditional for dev console logging
+- Phase 23-01: Three separate Script tags in root layout for Consent Mode v2 ordering (consent-init inline → gtag.js CDN → config+linker)
 
 ### Pending Todos
 
@@ -67,9 +71,9 @@ Research flags for execution:
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Roadmap created — v1.5 phases 23-25 defined, ready to plan Phase 23
+Stopped at: Completed 23-01-PLAN.md — GA4 Foundation analytics module and root layout integration
 Resume file: None
-Next step: /gsd:plan-phase 23
+Next step: Phase 24 (e-commerce events) or Phase 25 (cookie consent)
 
 ---
-*Last updated: 2026-02-22 after v1.5 roadmap creation*
+*Last updated: 2026-02-22 after completing Phase 23-01 GA4 Foundation*
