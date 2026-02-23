@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useDebounce } from "use-debounce";
 import { useCartStore } from "@/lib/cart/store";
 import { formatPrice } from "@/lib/pricing/calculator";
+import { trackViewItem, trackAddToCart } from "@/lib/analytics";
 
 interface DimensionConfiguratorProps {
   productId: string;
@@ -33,10 +34,27 @@ export default function DimensionConfigurator({
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [addedToCart, setAddedToCart] = useState(false);
 
+  // Ref to ensure view_item fires only once per product page visit
+  // even when the user changes dimensions and price updates multiple times
+  const viewItemFiredRef = useRef(false);
+
   // Cart store
   const addItem = useCartStore((state) => state.addItem);
   const addSample = useCartStore((state) => state.addSample);
   const hasSample = useCartStore((state) => state.hasSample(productId));
+
+  // view_item event: fires once on first price load (guarded by ref)
+  useEffect(() => {
+    if (price === null || viewItemFiredRef.current) return;
+    viewItemFiredRef.current = true;
+    trackViewItem({
+      item_id: productId,
+      item_name: productName,
+      price: price / 100, // cents to EUR decimal (Pitfall 1)
+      quantity: 1,
+      item_category: 'rolgordijnen',
+    });
+  }, [price, productId, productName]);
 
   // Client-side validation (immediate, no debounce)
   const validateField = (
@@ -180,6 +198,16 @@ export default function DimensionConfigurator({
         height: parseInt(height, 10),
       },
       priceInCents: price,
+    });
+
+    trackAddToCart({
+      item_id: productId,
+      item_name: productName,
+      price: price / 100, // cents to EUR decimal
+      quantity: 1,
+      item_category: 'rolgordijnen',
+      width_cm: parseInt(width, 10),  // custom param — popular size analysis
+      height_cm: parseInt(height, 10), // custom param — popular size analysis
     });
 
     setAddedToCart(true);
