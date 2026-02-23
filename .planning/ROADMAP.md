@@ -96,7 +96,10 @@ Plans:
   3. GA4 DebugView shows a `begin_checkout` event when a user clicks the checkout button, before the Shopify redirect fires
   4. GA4 DebugView shows a `purchase` event on /bevestiging with a transaction_id and the full items array matching what was in the cart
   5. Refreshing /bevestiging after a completed checkout does not fire a second `purchase` event — verified in GA4 DebugView and Network tab
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 24-01-PLAN.md — Analytics event functions + view_item/add_to_cart in DimensionConfigurator
+- [ ] 24-02-PLAN.md — begin_checkout + sessionStorage snapshot + _gl linker + PurchaseTracker on /bevestiging
 
 ### Phase 25: Cookie Consent Banner
 **Goal**: A GDPR-compliant Dutch-language cookie consent banner is visible on first visit, "Accepteer alles" and "Weiger alles" buttons are equally prominent, consent state persists across sessions and survives the Shopify checkout redirect, and the site works fully without consent
