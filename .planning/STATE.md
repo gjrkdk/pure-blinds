@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** v1.5 Analytics & Privacy — Phase 24: E-Commerce Events
+**Current focus:** v1.5 Analytics & Privacy — Phase 25: Cookie Consent
 
 ## Current Position
 
-Phase: 24 of 25 (E-Commerce Events)
-Plan: 1/1 — complete
-Status: Plan complete
-Last activity: 2026-02-23 — Completed 24-01 E-Commerce Events (view_item + add_to_cart)
+Phase: 24 of 25 (E-Commerce Events) — COMPLETE
+Plan: 2/2 — complete
+Status: Phase complete
+Last activity: 2026-02-23 — Completed 24-02 E-Commerce Events (begin_checkout + purchase)
 
-Progress: [████░░░░░░] 40% (v1.5)
+Progress: [█████░░░░░] 50% (v1.5)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 35
+- Total plans completed: 37
 - Total v1.1 execution time: 465s (7m 45s)
 - Total v1.2 execution time: 1,481s (24m 41s)
 - Total v1.3 execution time: 1,180s (19m 40s)
@@ -36,6 +36,7 @@ Progress: [████░░░░░░] 40% (v1.5)
 | v1.4 Production Ready | 19-22 | 6 | ~194s (3.2m) | ~32s |
 | Phase 23-ga4-foundation P01 | 105 | 2 tasks | 4 files |
 | Phase 24-e-commerce-events P01 | 98 | 2 tasks | 2 files |
+| Phase 24-e-commerce-events P02 | 81 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -53,6 +54,10 @@ Recent decisions affecting current work:
 - Phase 24-01: GA4EcommerceItem price is EUR decimal — callers divide cents by 100 at call site, not inside the function
 - Phase 24-01: useRef(false) guard in DimensionConfigurator ensures view_item fires exactly once per product page visit even when dimensions change
 - Phase 24-01: item_category hardcoded to 'rolgordijnen' — all current products are roller blinds
+- Phase 24-02: transactionId generated client-side at checkout click (pb-{timestamp}-{random5}) — Shopify order ID not accessible cross-domain
+- Phase 24-02: sessionStorage snapshot written BEFORE clearCart() — cart store clears synchronously, items empty after
+- Phase 24-02: _gl decoration via window.google_tag_data.glBridge.generate() with graceful degradation
+- Phase 24-02: PurchaseTracker dual-layer dedup: sessionStorage (refresh) + localStorage (cross-session/bookmark)
 
 ### Pending Todos
 
@@ -75,9 +80,9 @@ Research flags for execution:
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 24-01-PLAN.md — GA4 e-commerce events view_item and add_to_cart
+Stopped at: Completed 24-02-PLAN.md — GA4 e-commerce events begin_checkout + purchase
 Resume file: None
-Next step: Phase 24 plans 02+ (begin_checkout + purchase) or Phase 25 (cookie consent)
+Next step: Phase 25 (cookie consent with vanilla-cookieconsent)
 
 ---
-*Last updated: 2026-02-23 after completing Phase 24-01 E-Commerce Events (view_item + add_to_cart)*
+*Last updated: 2026-02-23 after completing Phase 24-02 E-Commerce Events (begin_checkout + purchase)*

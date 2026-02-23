@@ -68,7 +68,7 @@
 **Milestone Goal:** Full e-commerce funnel tracking with GDPR-compliant cookie consent
 
 - [x] **Phase 23: GA4 Foundation** — GA4 loads with Consent Mode v2 defaults, cross-domain session continuity, SPA page views (completed 2026-02-22)
-- [ ] **Phase 24: E-Commerce Events** — Complete funnel tracked: view_item, add_to_cart, begin_checkout, purchase with deduplication
+- [x] **Phase 24: E-Commerce Events** — Complete funnel tracked: view_item, add_to_cart, begin_checkout, purchase with deduplication (completed 2026-02-23)
 - [ ] **Phase 25: Cookie Consent Banner** — GDPR-compliant Dutch-language banner with equal-prominence buttons and persistent consent state
 
 ## Phase Details
@@ -98,8 +98,8 @@ Plans:
   5. Refreshing /bevestiging after a completed checkout does not fire a second `purchase` event — verified in GA4 DebugView and Network tab
 **Plans**: 2 plans
 Plans:
-- [ ] 24-01-PLAN.md — Analytics event functions + view_item/add_to_cart in DimensionConfigurator
-- [ ] 24-02-PLAN.md — begin_checkout + sessionStorage snapshot + _gl linker + PurchaseTracker on /bevestiging
+- [x] 24-01-PLAN.md — Analytics event functions + view_item/add_to_cart in DimensionConfigurator
+- [x] 24-02-PLAN.md — begin_checkout + sessionStorage snapshot + _gl linker + PurchaseTracker on /bevestiging
 
 ### Phase 25: Cookie Consent Banner
 **Goal**: A GDPR-compliant Dutch-language cookie consent banner is visible on first visit, "Accepteer alles" and "Weiger alles" buttons are equally prominent, consent state persists across sessions and survives the Shopify checkout redirect, and the site works fully without consent
@@ -140,8 +140,8 @@ Plans:
 | 21. Cart UX | v1.4 | 2/2 | Complete | 2026-02-19 |
 | 22. Checkout & Order Tracking | v1.4 | 2/2 | Complete | 2026-02-19 |
 | 23. GA4 Foundation | 1/1 | Complete   | 2026-02-23 | - |
-| 24. E-Commerce Events | 1/2 | In Progress|  | - |
+| 24. E-Commerce Events | v1.5 | 2/2 | Complete | 2026-02-23 |
 | 25. Cookie Consent Banner | v1.5 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-22 after v1.5 roadmap creation*
+*Last updated: 2026-02-23 after completing Phase 24-02 E-Commerce Events*

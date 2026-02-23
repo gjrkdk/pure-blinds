@@ -17,10 +17,10 @@ Requirements for Analytics & Privacy milestone. Each maps to roadmap phases.
 
 - [x] **ECOM-01**: `view_item` event fires on product detail page with item_id, item_name, price in EUR
 - [x] **ECOM-02**: `add_to_cart` event fires when user adds item to cart with configured dimensions and price
-- [ ] **ECOM-03**: `begin_checkout` event fires on checkout button click before Shopify redirect
-- [ ] **ECOM-04**: `purchase` event fires on /bevestiging with transaction_id and complete items array
-- [ ] **ECOM-05**: Purchase events deduplicated via sessionStorage + localStorage guard (no duplicates on refresh)
-- [ ] **ECOM-06**: Cart contents snapshot stored in sessionStorage before checkout redirect for purchase event data
+- [x] **ECOM-03**: `begin_checkout` event fires on checkout button click before Shopify redirect
+- [x] **ECOM-04**: `purchase` event fires on /bevestiging with transaction_id and complete items array
+- [x] **ECOM-05**: Purchase events deduplicated via sessionStorage + localStorage guard (no duplicates on refresh)
+- [x] **ECOM-06**: Cart contents snapshot stored in sessionStorage before checkout redirect for purchase event data
 
 ### Cookie Consent
 
@@ -71,10 +71,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GA4-03 | Phase 23 | Complete |
 | ECOM-01 | Phase 24 | Complete |
 | ECOM-02 | Phase 24 | Complete |
-| ECOM-03 | Phase 24 | Pending |
-| ECOM-04 | Phase 24 | Pending |
-| ECOM-05 | Phase 24 | Pending |
-| ECOM-06 | Phase 24 | Pending |
+| ECOM-03 | Phase 24 | Complete |
+| ECOM-04 | Phase 24 | Complete |
+| ECOM-05 | Phase 24 | Complete |
+| ECOM-06 | Phase 24 | Complete |
 | CONS-01 | Phase 25 | Pending |
 | CONS-02 | Phase 25 | Pending |
 | CONS-03 | Phase 25 | Pending |
@@ -89,4 +89,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-22*
-*Last updated: 2026-02-22 after v1.5 roadmap creation*
+*Last updated: 2026-02-23 after completing Phase 24-02 (ECOM-03 through ECOM-06)*
