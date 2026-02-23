@@ -6,7 +6,7 @@ const shopify = shopifyApi({
   apiKey: "not-needed-for-custom-app",
   apiSecretKey: "not-needed-for-custom-app",
   scopes: [],
-  hostName: env.SHOPIFY_STORE_DOMAIN,
+  hostName: env.NEXT_PUBLIC_SHOPIFY_DOMAIN,
   apiVersion: env.SHOPIFY_API_VERSION as ApiVersion,
   isEmbeddedApp: false,
   isCustomStoreApp: true,
@@ -16,7 +16,7 @@ const shopify = shopifyApi({
 export function createAdminClient() {
   const session = new Session({
     id: "offline-session",
-    shop: env.SHOPIFY_STORE_DOMAIN,
+    shop: env.NEXT_PUBLIC_SHOPIFY_DOMAIN,
     state: "state",
     isOnline: false,
     accessToken: env.SHOPIFY_ADMIN_ACCESS_TOKEN,

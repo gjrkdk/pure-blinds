@@ -8,7 +8,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     env: {
-      SHOPIFY_STORE_DOMAIN: 'test.myshopify.com',
+      NEXT_PUBLIC_SHOPIFY_DOMAIN: 'test.myshopify.com',
       SHOPIFY_ADMIN_ACCESS_TOKEN: 'shpat_test',
       SHOPIFY_PRODUCT_MAP: JSON.stringify({
         test: {
