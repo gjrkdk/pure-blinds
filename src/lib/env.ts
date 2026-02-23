@@ -6,7 +6,9 @@ export type ShopifyProductMap = Record<
 >;
 
 const envSchema = z.object({
-  SHOPIFY_STORE_DOMAIN: z.string().min(1, "SHOPIFY_STORE_DOMAIN is required"),
+  NEXT_PUBLIC_SHOPIFY_DOMAIN: z
+    .string()
+    .min(1, "NEXT_PUBLIC_SHOPIFY_DOMAIN is required"),
   SHOPIFY_ADMIN_ACCESS_TOKEN: z
     .string()
     .min(1, "SHOPIFY_ADMIN_ACCESS_TOKEN is required"),
