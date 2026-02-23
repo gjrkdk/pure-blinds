@@ -66,6 +66,7 @@ export function trackBeginCheckout(items: GA4EcommerceItem[], totalValue: number
     currency: 'EUR',
     value: totalValue,
     items,
+    transport_type: 'beacon',
   })
 }
 
