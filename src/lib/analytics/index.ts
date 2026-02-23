@@ -59,28 +59,16 @@ export function trackAddToCart(item: GA4EcommerceItem): void {
 /**
  * Track a begin_checkout event when a user initiates checkout.
  *
- * Returns a Promise that resolves when GA4 confirms the event was sent
- * (via event_callback), or after 500ms safety timeout. Await this before
- * navigating away — gtag batches events and won't flush before page unload.
+ * Returns a Promise that resolves after a short delay to give GA4 time
+ * to dispatch the collect request before the page navigates to Shopify.
  */
 export function trackBeginCheckout(items: GA4EcommerceItem[], totalValue: number): Promise<void> {
-  if (!GA_MEASUREMENT_ID || typeof window === 'undefined' || typeof window.gtag !== 'function') {
-    sendGtagEvent('begin_checkout', { currency: 'EUR', value: totalValue, items })
-    return Promise.resolve()
-  }
-
-  return new Promise((resolve) => {
-    const timeout = setTimeout(resolve, 500)
-    sendGtagEvent('begin_checkout', {
-      currency: 'EUR',
-      value: totalValue,
-      items,
-      event_callback: () => {
-        clearTimeout(timeout)
-        resolve()
-      },
-    })
+  sendGtagEvent('begin_checkout', {
+    currency: 'EUR',
+    value: totalValue,
+    items,
   })
+  return new Promise(resolve => setTimeout(resolve, 250))
 }
 
 /**
