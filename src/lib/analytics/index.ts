@@ -59,16 +59,11 @@ export function trackAddToCart(item: GA4EcommerceItem): void {
 /**
  * Track a begin_checkout event when a user initiates checkout.
  *
- * Returns a Promise that resolves after a short delay to give GA4 time
- * to dispatch the collect request before the page navigates to Shopify.
+ * TODO: Not currently firing — GA4 batches the event and the page navigates
+ * to Shopify before the collect request is dispatched. Needs investigation.
  */
-export function trackBeginCheckout(items: GA4EcommerceItem[], totalValue: number): Promise<void> {
-  sendGtagEvent('begin_checkout', {
-    currency: 'EUR',
-    value: totalValue,
-    items,
-  })
-  return new Promise(resolve => setTimeout(resolve, 250))
+export function trackBeginCheckout(_items: GA4EcommerceItem[], _totalValue: number): void {
+  // Disabled — see TODO above
 }
 
 /**

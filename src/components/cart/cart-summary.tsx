@@ -74,7 +74,7 @@ export function CartSummary() {
 
     const transactionId = `pb-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
 
-    await trackBeginCheckout(
+    trackBeginCheckout(
       items.map(item => ({
         item_id: item.productId,
         item_name: item.productName,
