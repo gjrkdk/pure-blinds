@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 import Link from "next/link";
-import { PurchaseTracker } from '@/components/analytics/purchase-tracker'
-
 export const metadata: Metadata = {
   title: 'Bestelling Bevestigd | Pure Blinds',
   description: 'Uw bestelling voor rolgordijnen op maat is bevestigd. Bekijk de volgende stappen.',
@@ -18,7 +16,6 @@ export const metadata: Metadata = {
 export default function ConfirmationPage() {
   return (
     <div className="px-6 py-20 sm:py-28">
-      <PurchaseTracker />
       <div className="mx-auto max-w-lg text-center">
         {/* Success icon */}
         <div className="mx-auto flex h-16 w-16 items-center justify-center border-2 border-foreground">

@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
+import { PurchaseTracker } from "@/components/analytics/purchase-tracker";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -96,6 +97,7 @@ export default function RootLayout({
         {/* AnalyticsProvider mounted outside the GA_MEASUREMENT_ID conditional so dev console
             logging works even when GA4 is not configured. Renders null — no visual output. */}
         <AnalyticsProvider />
+        <PurchaseTracker />
       </body>
     </html>
   );
