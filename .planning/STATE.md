@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** v1.5 Analytics & Privacy — Phase 23: GA4 Foundation
+**Current focus:** v1.5 Analytics & Privacy — Phase 24: E-Commerce Events
 
 ## Current Position
 
-Phase: 23 of 25 (GA4 Foundation)
+Phase: 24 of 25 (E-Commerce Events)
 Plan: 1/1 — complete
-Status: Phase complete
-Last activity: 2026-02-22 — Completed 23-01 GA4 Foundation plan
+Status: Plan complete
+Last activity: 2026-02-23 — Completed 24-01 E-Commerce Events (view_item + add_to_cart)
 
-Progress: [██░░░░░░░░] 20% (v1.5)
+Progress: [████░░░░░░] 40% (v1.5)
 
 ## Performance Metrics
 
@@ -35,6 +35,7 @@ Progress: [██░░░░░░░░] 20% (v1.5)
 | v1.3 Dutch/SEO | 15-18 | 9 | 1,180s (19.7m) | 131s |
 | v1.4 Production Ready | 19-22 | 6 | ~194s (3.2m) | ~32s |
 | Phase 23-ga4-foundation P01 | 105 | 2 tasks | 4 files |
+| Phase 24-e-commerce-events P01 | 98 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -49,6 +50,9 @@ Recent decisions affecting current work:
 - Phase 23-01: Guard analytics on NEXT_PUBLIC_GA4_ID presence (not NODE_ENV) — Vercel preview deployments have NODE_ENV=production, env var is only set in production
 - Phase 23-01: AnalyticsProvider mounted unconditionally outside GA_MEASUREMENT_ID conditional for dev console logging
 - Phase 23-01: Three separate Script tags in root layout for Consent Mode v2 ordering (consent-init inline → gtag.js CDN → config+linker)
+- Phase 24-01: GA4EcommerceItem price is EUR decimal — callers divide cents by 100 at call site, not inside the function
+- Phase 24-01: useRef(false) guard in DimensionConfigurator ensures view_item fires exactly once per product page visit even when dimensions change
+- Phase 24-01: item_category hardcoded to 'rolgordijnen' — all current products are roller blinds
 
 ### Pending Todos
 
@@ -70,10 +74,10 @@ Research flags for execution:
 
 ## Session Continuity
 
-Last session: 2026-02-22
-Stopped at: Completed 23-01-PLAN.md — GA4 Foundation analytics module and root layout integration
+Last session: 2026-02-23
+Stopped at: Completed 24-01-PLAN.md — GA4 e-commerce events view_item and add_to_cart
 Resume file: None
-Next step: Phase 24 (e-commerce events) or Phase 25 (cookie consent)
+Next step: Phase 24 plans 02+ (begin_checkout + purchase) or Phase 25 (cookie consent)
 
 ---
-*Last updated: 2026-02-22 after completing Phase 23-01 GA4 Foundation*
+*Last updated: 2026-02-23 after completing Phase 24-01 E-Commerce Events (view_item + add_to_cart)*

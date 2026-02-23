@@ -15,8 +15,8 @@ Requirements for Analytics & Privacy milestone. Each maps to roadmap phases.
 
 ### E-Commerce Events
 
-- [ ] **ECOM-01**: `view_item` event fires on product detail page with item_id, item_name, price in EUR
-- [ ] **ECOM-02**: `add_to_cart` event fires when user adds item to cart with configured dimensions and price
+- [x] **ECOM-01**: `view_item` event fires on product detail page with item_id, item_name, price in EUR
+- [x] **ECOM-02**: `add_to_cart` event fires when user adds item to cart with configured dimensions and price
 - [ ] **ECOM-03**: `begin_checkout` event fires on checkout button click before Shopify redirect
 - [ ] **ECOM-04**: `purchase` event fires on /bevestiging with transaction_id and complete items array
 - [ ] **ECOM-05**: Purchase events deduplicated via sessionStorage + localStorage guard (no duplicates on refresh)
@@ -69,8 +69,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GA4-01 | Phase 23 | Complete |
 | GA4-02 | Phase 23 | Complete |
 | GA4-03 | Phase 23 | Complete |
-| ECOM-01 | Phase 24 | Pending |
-| ECOM-02 | Phase 24 | Pending |
+| ECOM-01 | Phase 24 | Complete |
+| ECOM-02 | Phase 24 | Complete |
 | ECOM-03 | Phase 24 | Pending |
 | ECOM-04 | Phase 24 | Pending |
 | ECOM-05 | Phase 24 | Pending |

@@ -140,7 +140,7 @@ Plans:
 | 21. Cart UX | v1.4 | 2/2 | Complete | 2026-02-19 |
 | 22. Checkout & Order Tracking | v1.4 | 2/2 | Complete | 2026-02-19 |
 | 23. GA4 Foundation | 1/1 | Complete   | 2026-02-23 | - |
-| 24. E-Commerce Events | v1.5 | 0/? | Not started | - |
+| 24. E-Commerce Events | 1/2 | In Progress|  | - |
 | 25. Cookie Consent Banner | v1.5 | 0/? | Not started | - |
 
 ---
