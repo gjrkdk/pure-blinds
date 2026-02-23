@@ -3,8 +3,51 @@
 import { useState, useSyncExternalStore } from "react";
 import { useCartStore } from "@/lib/cart/store";
 import { formatPrice } from "@/lib/pricing/calculator";
+import { trackBeginCheckout } from "@/lib/analytics";
 
 const emptySubscribe = () => () => {};
+
+function decorateWithGlLinker(url: string): string {
+  try {
+    const win = window as Window & {
+      google_tag_data?: {
+        glBridge?: {
+          generate: (cookies: Record<string, string>) => string
+        }
+      }
+    }
+
+    if (!win.google_tag_data?.glBridge?.generate) return url
+
+    const getCookie = (name: string): string | undefined => {
+      const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
+      return match ? decodeURIComponent(match[1]) : undefined
+    }
+
+    const gaClientId = getCookie('_ga')
+    if (!gaClientId) return url
+
+    const cookies: Record<string, string> = {
+      _ga: gaClientId.replace(/^GA\d+\.\d+\./, ''),
+    }
+
+    const measurementId = process.env.NEXT_PUBLIC_GA4_ID?.replace('G-', '')
+    if (measurementId) {
+      const sessionCookie = getCookie(`_ga_${measurementId}`)
+      if (sessionCookie) {
+        cookies[`_ga_${measurementId}`] = sessionCookie.replace(/^GS\d+\.\d+\./, '')
+      }
+    }
+
+    const glParam = win.google_tag_data.glBridge.generate(cookies)
+    if (!glParam) return url
+
+    const separator = url.includes('?') ? '&' : '?'
+    return `${url}${separator}_gl=${encodeURIComponent(glParam)}`
+  } catch {
+    return url
+  }
+}
 
 export function CartSummary() {
   const mounted = useSyncExternalStore(
@@ -29,6 +72,18 @@ export function CartSummary() {
     setLoading(true);
     setError(null);
 
+    const transactionId = `pb-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+
+    trackBeginCheckout(
+      items.map(item => ({
+        item_id: item.productId,
+        item_name: item.productName,
+        price: item.priceInCents / 100,
+        quantity: item.quantity,
+      })),
+      getTotalPrice() / 100
+    )
+
     try {
       const response = await fetch("/api/checkout", {
         method: "POST",
@@ -39,9 +94,21 @@ export function CartSummary() {
       const data = await response.json();
 
       if (response.ok && data.invoiceUrl) {
+        const snapshot = {
+          transactionId,
+          items: items.map(item => ({
+            item_id: item.productId,
+            item_name: item.productName,
+            price: item.priceInCents / 100,
+            quantity: item.quantity,
+          })),
+          totalValue: getTotalPrice() / 100,
+        }
+        sessionStorage.setItem('purchase_snapshot', JSON.stringify(snapshot))
+
         useCartStore.getState().clearCart();
         localStorage.removeItem("checkout_started");
-        window.location.href = data.invoiceUrl;
+        window.location.href = decorateWithGlLinker(data.invoiceUrl);
       } else {
         setError(
           data.error || "Kan bestelling niet verwerken. Probeer het opnieuw.",
