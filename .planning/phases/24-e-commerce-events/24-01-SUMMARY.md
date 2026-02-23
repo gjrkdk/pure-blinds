@@ -100,6 +100,14 @@ None - no external service configuration required.
 - begin_checkout needs wiring at checkout redirect (handleCheckout in cart page)
 - purchase event needs sessionStorage snapshot mechanism and /bevestiging page integration
 
+## Self-Check: PASSED
+
+- src/lib/analytics/index.ts — FOUND
+- src/components/dimension-configurator.tsx — FOUND
+- .planning/phases/24-e-commerce-events/24-01-SUMMARY.md — FOUND
+- Commit f9ccb98 (Task 1) — FOUND
+- Commit 68ad536 (Task 2) — FOUND
+
 ---
 *Phase: 24-e-commerce-events*
 *Completed: 2026-02-23*
