@@ -1,17 +1,18 @@
-import type { Metadata } from 'next'
+import type { Metadata } from "next";
 import Link from "next/link";
 export const metadata: Metadata = {
-  title: 'Bestelling Bevestigd | Pure Blinds',
-  description: 'Uw bestelling voor rolgordijnen op maat is bevestigd. Bekijk de volgende stappen.',
+  title: "Bestelling Bevestigd | Pure Blinds",
+  description:
+    "Uw bestelling voor rolgordijnen op maat is bevestigd. Bekijk de volgende stappen.",
   openGraph: {
-    locale: 'nl_NL',
-    type: 'website',
-    title: 'Bestelling Bevestigd | Pure Blinds',
-    description: 'Uw bestelling voor rolgordijnen op maat is bevestigd.',
-    siteName: 'Pure Blinds',
+    locale: "nl_NL",
+    type: "website",
+    title: "Bestelling Bevestigd | Pure Blinds",
+    description: "Uw bestelling voor rolgordijnen op maat is bevestigd.",
+    siteName: "Pure Blinds",
   },
   robots: { index: false },
-}
+};
 
 export default function ConfirmationPage() {
   return (
@@ -43,7 +44,6 @@ export default function ConfirmationPage() {
           Uw rolgordijn op maat wordt nu geproduceerd.
         </p>
 
-        {/* What happens next */}
         <div className="mx-auto mt-14 max-w-sm text-left">
           <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
             Wat er nu gebeurt
