@@ -24,7 +24,7 @@ Requirements for Analytics & Privacy milestone. Each maps to roadmap phases.
 
 ### Cookie Consent
 
-- [ ] **CONS-01**: Dutch-language cookie consent banner with "Accepteer alles" and "Weiger alles" buttons
+- [x] **CONS-01**: Dutch-language cookie consent banner with "Accepteer alles" and "Weiger alles" buttons
 - [ ] **CONS-02**: Accept and Reject buttons have equal visual prominence (no dark patterns)
 - [ ] **CONS-03**: No `_ga` cookies set before user grants consent
 - [ ] **CONS-04**: Consent state persisted across sessions in localStorage
@@ -75,7 +75,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ECOM-04 | Phase 24 | Complete |
 | ECOM-05 | Phase 24 | Complete |
 | ECOM-06 | Phase 24 | Complete |
-| CONS-01 | Phase 25 | Pending |
+| CONS-01 | Phase 25 | Complete |
 | CONS-02 | Phase 25 | Pending |
 | CONS-03 | Phase 25 | Pending |
 | CONS-04 | Phase 25 | Pending |
