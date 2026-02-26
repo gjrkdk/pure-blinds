@@ -141,7 +141,7 @@ Plans:
 | 22. Checkout & Order Tracking | v1.4 | 2/2 | Complete | 2026-02-19 |
 | 23. GA4 Foundation | 1/1 | Complete   | 2026-02-23 | - |
 | 24. E-Commerce Events | v1.5 | Complete    | 2026-02-23 | 2026-02-23 |
-| 25. Cookie Consent Banner | 2/2 | Complete   | 2026-02-26 | - |
+| 25. Cookie Consent Banner | 2/2 | Complete    | 2026-02-26 | - |
 
 ---
 *Last updated: 2026-02-23 after completing Phase 24-02 E-Commerce Events*
