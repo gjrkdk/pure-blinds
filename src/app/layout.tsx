@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 import { PurchaseTracker } from "@/components/analytics/purchase-tracker";
+import { CookieConsentBanner } from "@/components/analytics/cookie-consent-banner";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -98,6 +99,7 @@ export default function RootLayout({
             logging works even when GA4 is not configured. Renders null — no visual output. */}
         <AnalyticsProvider />
         <PurchaseTracker />
+        <CookieConsentBanner />
       </body>
     </html>
   );

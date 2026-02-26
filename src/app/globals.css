@@ -46,3 +46,19 @@ a {
     0 1px 3px rgba(0, 0, 0, 0.04),
     0 8px 24px rgba(0, 0, 0, 0.06);
 }
+
+/* vanilla-cookieconsent bar theme — aligned to site design tokens */
+#cc-main {
+  --cc-font-family: var(--font-jakarta), system-ui, sans-serif;
+  --cc-primary-color: var(--foreground);
+  --cc-btn-primary-bg: var(--accent);
+  --cc-btn-primary-color: var(--accent-foreground);
+  --cc-btn-secondary-bg: transparent;
+  --cc-btn-secondary-color: var(--foreground);
+  --cc-btn-secondary-border-color: var(--border);
+  --cc-bg: #ffffff;
+  --cc-text: var(--foreground);
+  --cc-link-color: var(--foreground);
+  --cc-border-radius: 0rem;
+  --cc-bar-border-radius: 0rem;
+}
