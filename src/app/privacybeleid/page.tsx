@@ -89,16 +89,18 @@ export default function PrivacybeleidPage() {
               <h2>Toestemming</h2>
               <p>
                 Bij je eerste bezoek aan onze website verschijnt er een banner
-                onderaan de pagina. Daarin kun je kiezen of je analytische cookies
-                toestaat of weigert. Je keuze heeft geen invloed op de
-                werking van de website — je kunt altijd gewoon rolgordijnen
-                bekijken en bestellen.
+                onderaan de pagina. Daarin kun je direct alle cookies accepteren
+                of via &quot;Voorkeuren&quot; zelf kiezen welke categorieën je
+                wilt toestaan. In het voorkeuren-scherm kun je per categorie
+                cookies aan- of uitzetten, of alsnog alles weigeren. Je keuze
+                heeft geen invloed op de werking van de website — je kunt altijd
+                gewoon rolgordijnen bekijken en bestellen.
               </p>
               <p>
-                Je toestemming (of weigering) bewaren we 12 maanden in je
-                browser. Na die periode vragen we opnieuw om toestemming. Je
-                kunt je keuze ook eerder terugdraaien door de browserdata of
-                local storage te wissen.
+                Je toestemming bewaren we 12 maanden in je browser. Na die
+                periode vragen we opnieuw om toestemming. Je kunt je keuze ook
+                eerder terugdraaien door de browserdata of local storage te
+                wissen.
               </p>
             </section>
 
