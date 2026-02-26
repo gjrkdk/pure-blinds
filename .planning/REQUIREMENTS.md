@@ -25,11 +25,11 @@ Requirements for Analytics & Privacy milestone. Each maps to roadmap phases.
 ### Cookie Consent
 
 - [x] **CONS-01**: Dutch-language cookie consent banner with "Accepteer alles" and "Weiger alles" buttons
-- [ ] **CONS-02**: Accept and Reject buttons have equal visual prominence (no dark patterns)
-- [ ] **CONS-03**: No `_ga` cookies set before user grants consent
-- [ ] **CONS-04**: Consent state persisted across sessions in localStorage
-- [ ] **CONS-05**: Consent state correctly restored on return from Shopify checkout without banner re-appearing
-- [ ] **CONS-06**: Site fully functional without granting consent (no cookie wall)
+- [x] **CONS-02**: Accept and Reject buttons have equal visual prominence (no dark patterns)
+- [x] **CONS-03**: No `_ga` cookies set before user grants consent
+- [x] **CONS-04**: Consent state persisted across sessions in localStorage
+- [x] **CONS-05**: Consent state correctly restored on return from Shopify checkout without banner re-appearing
+- [x] **CONS-06**: Site fully functional without granting consent (no cookie wall)
 
 ## v2 Requirements
 
@@ -76,11 +76,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ECOM-05 | Phase 24 | Complete |
 | ECOM-06 | Phase 24 | Complete |
 | CONS-01 | Phase 25 | Complete |
-| CONS-02 | Phase 25 | Pending |
-| CONS-03 | Phase 25 | Pending |
-| CONS-04 | Phase 25 | Pending |
-| CONS-05 | Phase 25 | Pending |
-| CONS-06 | Phase 25 | Pending |
+| CONS-02 | Phase 25 | Complete |
+| CONS-03 | Phase 25 | Complete |
+| CONS-04 | Phase 25 | Complete |
+| CONS-05 | Phase 25 | Complete |
+| CONS-06 | Phase 25 | Complete |
 
 **Coverage:**
 - v1.5 requirements: 15 total

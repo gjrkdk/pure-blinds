@@ -69,7 +69,7 @@
 
 - [x] **Phase 23: GA4 Foundation** — GA4 loads with Consent Mode v2 defaults, cross-domain session continuity, SPA page views (completed 2026-02-22)
 - [x] **Phase 24: E-Commerce Events** — Complete funnel tracked: view_item, add_to_cart, begin_checkout, purchase with deduplication (completed 2026-02-23)
-- [ ] **Phase 25: Cookie Consent Banner** — GDPR-compliant Dutch-language banner with equal-prominence buttons and persistent consent state
+- [x] **Phase 25: Cookie Consent Banner** — GDPR-compliant Dutch-language banner with equal-prominence buttons and persistent consent state (completed 2026-02-26)
 
 ## Phase Details
 
@@ -141,7 +141,7 @@ Plans:
 | 22. Checkout & Order Tracking | v1.4 | 2/2 | Complete | 2026-02-19 |
 | 23. GA4 Foundation | 1/1 | Complete   | 2026-02-23 | - |
 | 24. E-Commerce Events | v1.5 | Complete    | 2026-02-23 | 2026-02-23 |
-| 25. Cookie Consent Banner | 1/2 | In Progress|  | - |
+| 25. Cookie Consent Banner | 2/2 | Complete   | 2026-02-26 | - |
 
 ---
 *Last updated: 2026-02-23 after completing Phase 24-02 E-Commerce Events*

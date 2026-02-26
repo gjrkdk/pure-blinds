@@ -37,6 +37,7 @@ Progress: [█████████░] 90% (v1.5)
 | Phase 23-ga4-foundation P01 | 105 | 2 tasks | 4 files |
 | Phase 24-e-commerce-events P01 | 98 | 2 tasks | 2 files |
 | Phase 24-e-commerce-events P02 | 81 | 2 tasks | 3 files |
+| Phase 25-cookie-consent-banner P01 | 141 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -58,7 +59,11 @@ Recent decisions affecting current work:
 - Phase 24-02: sessionStorage snapshot written BEFORE clearCart() — cart store clears synchronously, items empty after
 - Phase 24-02: _gl decoration via window.google_tag_data.glBridge.generate() with graceful degradation
 - Phase 24-02: PurchaseTracker dual-layer dedup: sessionStorage (refresh) + localStorage (cross-session/bookmark)
-- Phase 25-02: preferencesModal: { sections: [] } added to CookieConsentBanner to satisfy vanilla-cookieconsent Translation TypeScript type — modal not shown to users for simple accept/reject banner
+- Phase 25-01: vanilla-cookieconsent useLocalStorage: true — consent stored in localStorage, not browser cookie (CONS-04)
+- Phase 25-01: expiresAfterDays: 365 — 12-month GDPR recommendation, overrides library default of 182
+- Phase 25-01: Both onFirstConsent AND onConsent wired to updateGtagConsent — onConsent restores GA4 analytics after Shopify cross-domain redirect (CONS-05)
+- Phase 25-01: Banner mounted outside GA_MEASUREMENT_ID conditional — always shows regardless of GA4 config (CONS-01)
+- Phase 25-01: preferencesModal: { sections: [] } added to satisfy vanilla-cookieconsent Translation TypeScript type — no preferences UI shown to users
 - Phase 25-02: prose prose-sm Tailwind typography classes used for privacy policy body text — @tailwindcss/typography plugin already installed in globals.css
 
 ### Pending Todos
