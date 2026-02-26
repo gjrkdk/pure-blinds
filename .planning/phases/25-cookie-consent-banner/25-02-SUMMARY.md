@@ -67,7 +67,7 @@ Each task was committed atomically:
 
 2. **Task 2: Visual verification checkpoint** - approved by user
 
-**Plan metadata:** (to be added after final commit)
+**Plan metadata:** `c1ad865` (docs: complete privacybeleid plan — visual verification approved)
 
 ## Files Created/Modified
 - `src/app/privacybeleid/page.tsx` - Static Dutch privacy policy page with 7 GDPR sections, Metadata export, Breadcrumbs, prose typography
