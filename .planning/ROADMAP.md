@@ -7,7 +7,7 @@
 - ✅ **v1.2 Product Catalog & Navigation** — Phases 11-14 (shipped 2026-02-13)
 - ✅ **v1.3 Dutch Content & SEO** — Phases 15-18 (shipped 2026-02-14)
 - ✅ **v1.4 Production Ready** — Phases 19-22 (shipped 2026-02-19)
-- 🚧 **v1.5 Analytics & Privacy** — Phases 23-25 (in progress)
+- 🚧 **v1.5 Analytics & Privacy** — Phases 23-26 (in progress)
 
 ## Phases
 
@@ -70,6 +70,7 @@
 - [x] **Phase 23: GA4 Foundation** — GA4 loads with Consent Mode v2 defaults, cross-domain session continuity, SPA page views (completed 2026-02-22)
 - [x] **Phase 24: E-Commerce Events** — Complete funnel tracked: view_item, add_to_cart, begin_checkout, purchase with deduplication (completed 2026-02-23)
 - [x] **Phase 25: Cookie Consent Banner** — GDPR-compliant Dutch-language banner with equal-prominence buttons and persistent consent state (completed 2026-02-26)
+- [ ] **Phase 26: Analytics Gap Closure** — Re-enable begin_checkout event with consent guard, fix cross-domain linker config (gap closure from audit)
 
 ## Phase Details
 
@@ -113,6 +114,17 @@ Plans:
   5. Clicking "Weiger alles" allows the user to continue browsing all pages normally — product pages, cart, and checkout function without consent granted
 **Plans**: TBD
 
+### Phase 26: Analytics Gap Closure
+**Goal**: begin_checkout event fires reliably for consenting users before Shopify redirect, and cross-domain linker correctly accepts incoming _gl parameters on return from Shopify checkout
+**Depends on**: Phase 25
+**Requirements**: ECOM-03, GA4-02
+**Gap Closure**: Closes gaps from v1.5 milestone audit
+**Success Criteria** (what must be TRUE):
+  1. `trackBeginCheckout()` has a working function body that dispatches the `begin_checkout` GA4 event when `analytics_storage` is granted
+  2. The cross-domain linker config includes `accept_incoming: true` so returning from Shopify checkout decodes the `_gl` parameter
+  3. GA4 DebugView shows `begin_checkout` event firing for a consenting user who clicks the checkout button
+**Plans**: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -142,6 +154,7 @@ Plans:
 | 23. GA4 Foundation | 1/1 | Complete   | 2026-02-23 | - |
 | 24. E-Commerce Events | v1.5 | Complete    | 2026-02-23 | 2026-02-23 |
 | 25. Cookie Consent Banner | 2/2 | Complete    | 2026-02-26 | - |
+| 26. Analytics Gap Closure | v1.5 | 0/0 | Not started | - |
 
 ---
 *Last updated: 2026-02-23 after completing Phase 24-02 E-Commerce Events*
