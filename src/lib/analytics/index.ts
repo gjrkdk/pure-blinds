@@ -59,11 +59,15 @@ export function trackAddToCart(item: GA4EcommerceItem): void {
 /**
  * Track a begin_checkout event when a user initiates checkout.
  *
- * TODO: Not currently firing — GA4 batches the event and the page navigates
- * to Shopify before the collect request is dispatched. Needs investigation.
+ * Fire-and-forget: dispatches the event via sendGtagEvent.
+ * The call site in cart-summary.tsx handles event_callback + redirect timing separately.
  */
-export function trackBeginCheckout(_items: GA4EcommerceItem[], _totalValue: number): void {
-  // Disabled — see TODO above
+export function trackBeginCheckout(items: GA4EcommerceItem[], totalValue: number): void {
+  sendGtagEvent('begin_checkout', {
+    currency: 'EUR',
+    value: totalValue,
+    items,
+  })
 }
 
 /**
