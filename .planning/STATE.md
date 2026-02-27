@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-22)
 
 **Core value:** Customers can order custom-dimension roller blinds with accurate matrix-based pricing that works reliably through Shopify checkout on all plan tiers.
-**Current focus:** v1.5 Analytics & Privacy — COMPLETE
+**Current focus:** v1.5 Analytics & Privacy — COMPLETE (Phase 26 gap closure done)
 
 ## Current Position
 
-Phase: 25 of 25 (Cookie Consent Banner) — COMPLETE
-Plan: 2/2 — all plans complete
-Status: Phase 25 complete — v1.5 Analytics & Privacy milestone complete
-Last activity: 2026-02-26 — Visual verification checkpoint approved, Phase 25 complete
+Phase: 26 of 26 (Analytics Gap Closure) — COMPLETE
+Plan: 1/1 — all plans complete
+Status: Phase 26 complete — ECOM-03 and GA4-02 gaps closed; ready for v1.5 milestone re-audit
+Last activity: 2026-02-27 — Phase 26-01 complete, begin_checkout event_callback + accept_incoming linker fix
 
-Progress: [██████████] 100% (v1.5)
+Progress: [██████████] 100% (v1.5 + gap closure)
 
 ## Performance Metrics
 
@@ -39,6 +39,7 @@ Progress: [██████████] 100% (v1.5)
 | Phase 24-e-commerce-events P02 | 81 | 2 tasks | 3 files |
 | Phase 25-cookie-consent-banner P01 | 141 | 2 tasks | 4 files |
 | Phase 25-cookie-consent-banner P02 | 2 | 2 tasks | 2 files |
+| Phase 26-analytics-gap-closure P01 | ~5 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,9 @@ Recent decisions affecting current work:
 - Phase 25-01: preferencesModal: { sections: [] } added to satisfy vanilla-cookieconsent Translation TypeScript type — no preferences UI shown to users
 - Phase 25-02: prose prose-sm Tailwind typography classes used for privacy policy body text — @tailwindcss/typography plugin already installed in globals.css
 - [Phase 25]: Visual verification checkpoint passed — banner appearance, button equality, consent persistence, and privacy page link confirmed by user
+- Phase 26-01: begin_checkout architecture — trackBeginCheckout stays fire-and-forget in analytics module; event_callback + event_timeout:2000 redirect gate handled at call site in cart-summary.tsx
+- Phase 26-01: Guard condition checks both typeof window.gtag === 'function' AND GA_MEASUREMENT_ID — immediate fallback redirect when either is absent (ad blockers, dev/preview)
+- Phase 26-01: accept_incoming: true added to cross-domain linker so _gl parameters from Shopify return redirect are accepted
 
 ### Pending Todos
 
@@ -88,10 +92,10 @@ Research flags for execution:
 
 ## Session Continuity
 
-Last session: 2026-02-26
-Stopped at: Completed 25-02-PLAN.md — Phase 25 (Cookie Consent Banner) complete, v1.5 milestone complete
+Last session: 2026-02-27
+Stopped at: Completed 26-01-PLAN.md — Phase 26 (Analytics Gap Closure) complete, ECOM-03 and GA4-02 gaps closed
 Resume file: None
-Next step: No further planned phases — v1.5 Analytics & Privacy milestone complete
+Next step: Run /gsd:audit-milestone to verify v1.5 gaps are closed, then /gsd:complete-milestone to archive v1.5
 
 ---
-*Last updated: 2026-02-26 after Phase 25 visual verification approved — Phase 25 and v1.5 milestone complete*
+*Last updated: 2026-02-27 after Phase 26 gap closure complete — ECOM-03 (begin_checkout) and GA4-02 (accept_incoming linker) fixed*

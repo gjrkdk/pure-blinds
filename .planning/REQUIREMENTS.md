@@ -17,7 +17,7 @@ Requirements for Analytics & Privacy milestone. Each maps to roadmap phases.
 
 - [x] **ECOM-01**: `view_item` event fires on product detail page with item_id, item_name, price in EUR
 - [x] **ECOM-02**: `add_to_cart` event fires when user adds item to cart with configured dimensions and price
-- [ ] **ECOM-03**: `begin_checkout` event fires on checkout button click before Shopify redirect
+- [x] **ECOM-03**: `begin_checkout` event fires on checkout button click before Shopify redirect
 - [x] **ECOM-04**: `purchase` event fires on /bevestiging with transaction_id and complete items array
 - [x] **ECOM-05**: Purchase events deduplicated via sessionStorage + localStorage guard (no duplicates on refresh)
 - [x] **ECOM-06**: Cart contents snapshot stored in sessionStorage before checkout redirect for purchase event data
@@ -67,11 +67,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | GA4-01 | Phase 23 | Complete |
-| GA4-02 | Phase 26 | Pending |
+| GA4-02 | Phase 26 | Complete |
 | GA4-03 | Phase 23 | Complete |
 | ECOM-01 | Phase 24 | Complete |
 | ECOM-02 | Phase 24 | Complete |
-| ECOM-03 | Phase 26 | Pending |
+| ECOM-03 | Phase 26 | Complete |
 | ECOM-04 | Phase 24 | Complete |
 | ECOM-05 | Phase 24 | Complete |
 | ECOM-06 | Phase 24 | Complete |
@@ -85,10 +85,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 **Coverage:**
 - v1.5 requirements: 15 total
 - Mapped to phases: 15
-- Complete: 13
-- Pending (gap closure): 2 (ECOM-03, GA4-02)
+- Complete: 15
+- Pending (gap closure): 0
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-22*
-*Last updated: 2026-02-23 after completing Phase 24-02 (ECOM-03 through ECOM-06)*
+*Last updated: 2026-02-27 after completing Phase 26 (ECOM-03 and GA4-02 gap closure complete)*

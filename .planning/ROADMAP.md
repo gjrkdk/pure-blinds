@@ -70,7 +70,7 @@
 - [x] **Phase 23: GA4 Foundation** — GA4 loads with Consent Mode v2 defaults, cross-domain session continuity, SPA page views (completed 2026-02-22)
 - [x] **Phase 24: E-Commerce Events** — Complete funnel tracked: view_item, add_to_cart, begin_checkout, purchase with deduplication (completed 2026-02-23)
 - [x] **Phase 25: Cookie Consent Banner** — GDPR-compliant Dutch-language banner with equal-prominence buttons and persistent consent state (completed 2026-02-26)
-- [ ] **Phase 26: Analytics Gap Closure** — Re-enable begin_checkout event with consent guard, fix cross-domain linker config (gap closure from audit)
+- [x] **Phase 26: Analytics Gap Closure** — begin_checkout event fires via event_callback redirect gate, cross-domain linker accepts incoming _gl parameters (completed 2026-02-27)
 
 ## Phase Details
 
@@ -112,7 +112,10 @@ Plans:
   3. A user who accepted consent and then completed a Shopify checkout returns to /bevestiging without the banner re-appearing
   4. Inspecting browser cookies before clicking "Accepteer alles" shows no `_ga` cookie present
   5. Clicking "Weiger alles" allows the user to continue browsing all pages normally — product pages, cart, and checkout function without consent granted
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [x] 25-01-PLAN.md — Banner UI, consent lifecycle, Consent Mode v2 integration
+- [x] 25-02-PLAN.md — Privacy policy page
 
 ### Phase 26: Analytics Gap Closure
 **Goal**: begin_checkout event fires reliably for consenting users before Shopify redirect, and cross-domain linker correctly accepts incoming _gl parameters on return from Shopify checkout
@@ -123,7 +126,9 @@ Plans:
   1. `trackBeginCheckout()` has a working function body that dispatches the `begin_checkout` GA4 event when `analytics_storage` is granted
   2. The cross-domain linker config includes `accept_incoming: true` so returning from Shopify checkout decodes the `_gl` parameter
   3. GA4 DebugView shows `begin_checkout` event firing for a consenting user who clicks the checkout button
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [x] 26-01-PLAN.md — Re-enable begin_checkout, event_callback redirect gate, accept_incoming linker fix
 
 ## Progress
 
@@ -154,7 +159,7 @@ Plans:
 | 23. GA4 Foundation | 1/1 | Complete   | 2026-02-23 | - |
 | 24. E-Commerce Events | v1.5 | Complete    | 2026-02-23 | 2026-02-23 |
 | 25. Cookie Consent Banner | 2/2 | Complete    | 2026-02-26 | - |
-| 26. Analytics Gap Closure | v1.5 | 0/0 | Not started | - |
+| 26. Analytics Gap Closure | v1.5 | 1/1 | Complete | 2026-02-27 |
 
 ---
-*Last updated: 2026-02-23 after completing Phase 24-02 E-Commerce Events*
+*Last updated: 2026-02-27 after completing Phase 26 Analytics Gap Closure — ECOM-03 and GA4-02 closed*
