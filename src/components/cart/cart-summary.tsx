@@ -121,14 +121,24 @@ export function CartSummary() {
         }
 
         // Gate redirect behind event_callback so GA4 dispatches before navigation
+        // Safety timeout guarantees redirect even if gtag callback never fires
         if (typeof window.gtag === 'function' && GA_MEASUREMENT_ID) {
+          let redirected = false
+          const safeRedirect = () => {
+            if (!redirected) {
+              redirected = true
+              redirectToShopify()
+            }
+          }
           window.gtag('event', 'begin_checkout', {
             currency: 'EUR',
             value: getTotalPrice() / 100,
             items: checkoutItems,
-            event_callback: redirectToShopify,
+            event_callback: safeRedirect,
             event_timeout: 2000,
           })
+          // Fallback: redirect after 2.5s if callback never fires
+          setTimeout(safeRedirect, 2500)
         } else {
           redirectToShopify()
         }
