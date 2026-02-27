@@ -8,6 +8,7 @@ import { getProduct } from '@/lib/product/catalog';
 import { QuantityInput } from './quantity-input';
 import { RemoveDialog } from './remove-dialog';
 import { formatPrice } from '@/lib/pricing/calculator';
+import { trackRemoveFromCart } from '@/lib/analytics';
 
 interface CartItemProps {
   item: CartItemType;
@@ -27,6 +28,15 @@ export function CartItem({ item }: CartItemProps) {
   };
 
   const handleConfirmRemove = () => {
+    // Fire remove_from_cart before removing — all item types tracked, samples without dimensions
+    trackRemoveFromCart({
+      item_id: item.productId,
+      item_name: item.productName,
+      price: item.priceInCents / 100,
+      quantity: item.quantity,
+      item_category: 'rolgordijnen',
+      ...(item.options ? { width_cm: item.options.width, height_cm: item.options.height } : {}),
+    });
     removeItem(item.id);
     setIsRemoveDialogOpen(false);
   };

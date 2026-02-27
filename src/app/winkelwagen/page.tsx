@@ -1,10 +1,11 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/cart/store';
 import { CartItem } from '@/components/cart/cart-item';
 import { CartSummary } from '@/components/cart/cart-summary';
+import { trackViewCart } from '@/lib/analytics';
 
 const emptySubscribe = () => () => {};
 
@@ -15,6 +16,34 @@ export default function CartPage() {
     () => false
   );
   const items = useCartStore((state) => state.items);
+
+  // Ref guard: ensure view_cart fires only once per page visit
+  const viewCartFiredRef = useRef(false);
+
+  useEffect(() => {
+    if (!mounted || viewCartFiredRef.current) return;
+
+    // Only fire when there are non-sample items to track
+    const ga4Items = items
+      .filter((item) => item.type !== 'sample')
+      .map((item) => ({
+        item_id: item.productId,
+        item_name: item.productName,
+        price: item.priceInCents / 100,
+        quantity: item.quantity,
+        item_category: 'rolgordijnen' as const,
+        ...(item.options ? { width_cm: item.options.width, height_cm: item.options.height } : {}),
+      }));
+
+    if (ga4Items.length === 0) return;
+
+    const totalValue = items
+      .filter((item) => item.type !== 'sample')
+      .reduce((sum, item) => sum + (item.priceInCents * item.quantity) / 100, 0);
+
+    viewCartFiredRef.current = true;
+    trackViewCart(ga4Items, totalValue);
+  }, [mounted, items]);
 
   if (!mounted) {
     return (

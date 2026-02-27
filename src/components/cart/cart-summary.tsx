@@ -92,6 +92,8 @@ export function CartSummary() {
             item_name: item.productName,
             price: item.priceInCents / 100,
             quantity: item.quantity,
+            item_category: 'rolgordijnen',
+            ...(item.options ? { width_cm: item.options.width, height_cm: item.options.height } : {}),
           })),
           totalValue: getTotalPrice() / 100,
         }
@@ -107,6 +109,8 @@ export function CartSummary() {
           item_name: item.productName,
           price: item.priceInCents / 100,
           quantity: item.quantity,
+          item_category: 'rolgordijnen',
+          ...(item.options ? { width_cm: item.options.width, height_cm: item.options.height } : {}),
         }))
 
         // Fire begin_checkout for dev console logging (no-op when GA_MEASUREMENT_ID is falsy)
