@@ -71,6 +71,35 @@ export function trackBeginCheckout(items: GA4EcommerceItem[], totalValue: number
 }
 
 /**
+ * Track a view_cart event when a user visits the cart page.
+ *
+ * Fires once per page visit — use a useRef guard in the calling component
+ * to prevent duplicate events. Only fires when items.length > 0.
+ * Sample items are excluded from the items array (they are not ecommerce products).
+ */
+export function trackViewCart(items: GA4EcommerceItem[], totalValue: number): void {
+  sendGtagEvent('view_cart', {
+    currency: 'EUR',
+    value: totalValue,
+    items,
+  })
+}
+
+/**
+ * Track a remove_from_cart event when a user confirms item removal from cart.
+ *
+ * Fires just before the item is removed from the cart store.
+ * Include all item types (products and samples).
+ */
+export function trackRemoveFromCart(item: GA4EcommerceItem): void {
+  sendGtagEvent('remove_from_cart', {
+    currency: 'EUR',
+    value: item.price * item.quantity,
+    items: [item],
+  })
+}
+
+/**
  * Track a purchase event after a successful order.
  *
  * transactionId is the Shopify order ID extracted from /bevestiging URL params.
