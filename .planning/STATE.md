@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-02-22)
 Phase: 26 of 26 (Analytics Gap Closure) — COMPLETE
 Plan: 1/1 — all plans complete
 Status: Phase 26 complete — ECOM-03 and GA4-02 gaps closed; ready for v1.5 milestone re-audit
-Last activity: 2026-02-27 — Phase 26-01 complete, begin_checkout event_callback + accept_incoming linker fix
+Last activity: 2026-02-27 - Completed quick task 19: Enhance GA4 ecommerce tracking with detailed product data (items, amounts, cart values, purchase totals)
 
 Progress: [██████████] 100% (v1.5 + gap closure)
 
@@ -102,6 +102,12 @@ Deployment action required:
 Research flags for execution:
 - Phase 24 (purchase event): Validate whether sessionStorage snapshot survives Shopify cross-domain redirect back to /bevestiging — requires a real test checkout in DevTools
 - Phase 25 (consent restoration): Confirm vanilla-cookieconsent cookie name/format before deciding between server-side and client-side consent restoration approach
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 19 | Enhance GA4 ecommerce tracking with detailed product data (items, amounts, cart values, purchase totals) | 2026-02-27 | 80f16e0 | [19-enhance-ga4-ecommerce-tracking-with-deta](./quick/19-enhance-ga4-ecommerce-tracking-with-deta/) |
 
 ## Session Continuity
 
