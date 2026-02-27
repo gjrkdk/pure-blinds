@@ -150,3 +150,13 @@
 
 ---
 
+
+## v1.5 Analytics & Privacy (Shipped: 2026-02-27)
+
+**Phases completed:** 22 phases, 35 plans, 6 tasks
+
+**Key accomplishments:**
+- (none recorded)
+
+---
+

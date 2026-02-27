@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A Dutch-language custom roller blinds webshop (pure-blinds.nl) with dynamic pricing based on customer-specified dimensions, SEO infrastructure for Google.nl ranking, and Shopify checkout integration. Prices are calculated using per-product matrix lookups (width x height) with 10cm increments. The webshop is production-ready with environment-based Shopify configuration, VAT-inclusive pricing, and improved cart UX for mobile and desktop.
+A Dutch-language custom roller blinds webshop (pure-blinds.nl) with dynamic pricing based on customer-specified dimensions, SEO infrastructure for Google.nl ranking, Shopify checkout integration, and GA4 analytics with GDPR-compliant cookie consent. Prices are calculated using per-product matrix lookups (width x height) with 10cm increments. The webshop is production-ready with environment-based Shopify configuration, VAT-inclusive pricing, full e-commerce funnel tracking, and improved cart UX for mobile and desktop.
 
 ## Core Value
 
@@ -68,18 +68,23 @@ Customers can order custom-dimension roller blinds with accurate matrix-based pr
 - ✓ VAT-inclusive price labels ("Incl. 21% BTW") on configurator, cart, and total — v1.4
 - ✓ Cart clears at checkout initiation to prevent duplicate orders — v1.4
 - ✓ Draft Orders with samples tagged `kleurstaal` for Shopify admin filtering — v1.4
+- ✓ GA4 loads with Consent Mode v2 defaults (all 4 parameters denied before gtag.js fires) — v1.5
+- ✓ Cross-domain tracking between pure-blinds.nl and Shopify checkout with accept_incoming — v1.5
+- ✓ SPA page views tracked automatically on App Router route changes — v1.5
+- ✓ view_item event fires on product page with EUR price (once per visit via useRef guard) — v1.5
+- ✓ add_to_cart event fires with configured dimensions and EUR price — v1.5
+- ✓ begin_checkout event fires before Shopify redirect with event_callback gate — v1.5
+- ✓ purchase event fires on /bevestiging with transaction_id and full items array — v1.5
+- ✓ Purchase event deduplicated via sessionStorage + localStorage guard — v1.5
+- ✓ Cart snapshot stored in sessionStorage before checkout redirect — v1.5
+- ✓ Dutch cookie consent banner with vanilla-cookieconsent and equal-weight buttons — v1.5
+- ✓ No _ga cookies set before user grants consent (Consent Mode v2) — v1.5
+- ✓ Consent persisted in localStorage with 365-day expiry — v1.5
+- ✓ Consent restored after Shopify checkout redirect via onConsent hook — v1.5
+- ✓ Site fully functional without granting consent (no cookie wall) — v1.5
+- ✓ Dutch privacy policy page at /privacybeleid — v1.5
 
 ### Active
-
-## Current Milestone: v1.5 Analytics & Privacy
-
-**Goal:** Full e-commerce funnel tracking with GDPR-compliant cookie consent
-
-**Target features:**
-- GA4 integration with conditional loading (only after consent)
-- E-commerce funnel events (view_item, add_to_cart, begin_checkout, purchase)
-- Cookie consent banner with persistent consent state
-- Purchase event tracking via /bevestiging return from Shopify checkout
 
 #### Carried from v1.0
 - [ ] Add Phase 3 verification documentation (process gap from v1.0 audit)
@@ -111,9 +116,9 @@ Customers can order custom-dimension roller blinds with accurate matrix-based pr
 
 **Product domain:** Custom roller blinds where every order has unique dimensions. Netherlands-focused market.
 
-**Current codebase state (v1.4 shipped):**
-- 4,819 LOC TypeScript/TSX
-- Tech stack: Next.js 15 App Router, TypeScript, Tailwind CSS v4, Zustand, Shopify Admin API, Velite (MDX), schema-dts
+**Current codebase state (v1.5 shipped):**
+- 5,653 LOC TypeScript/TSX
+- Tech stack: Next.js 15 App Router, TypeScript, Tailwind CSS v4, Zustand, Shopify Admin API, Velite (MDX), schema-dts, vanilla-cookieconsent, GA4 gtag.js
 - 3 API routes: /api/pricing (POST with productId), /api/checkout (POST), /api/health (GET)
 - Pure pricing engine with zero Shopify dependencies, accepts any pricing matrix as parameter
 - 2 products in rollerblinds-only catalog with per-product pricing matrices and literal union types
@@ -153,6 +158,8 @@ Customers can order custom-dimension roller blinds with accurate matrix-based pr
 - Contact form has no backend (client-side validation only)
 - Velite uses relative imports (Turbopack doesn't support #content/* alias)
 - CHKOUT-02 design delta: cart clears at checkout initiation, not after payment confirmation (intentional)
+- begin_checkout double-fires in production (trackBeginCheckout + window.gtag event_callback both dispatch) — fix: guard with if (!GA_MEASUREMENT_ID)
+- PurchaseTracker mounted in root layout instead of /bevestiging page (functionally correct via dedup)
 
 **Multi-phase vision:**
 - ✅ Phase 1: MVP webshop (own store, fastest validation) — v1.0 shipped
@@ -160,9 +167,10 @@ Customers can order custom-dimension roller blinds with accurate matrix-based pr
 - ✅ Phase 3: Product catalog & navigation — v1.2 shipped
 - ✅ Phase 4: Dutch content & SEO foundation — v1.3 shipped
 - ✅ Phase 5: Production readiness — v1.4 shipped
-- Phase 6: Shopify app v1 (theme-based stores, largest market)
-- Phase 7: Shopify app v2 (native pricing for Plus merchants)
-- Phase 8: Headless/API (technical merchants, full freedom)
+- ✅ Phase 6: Analytics & privacy — v1.5 shipped
+- Phase 7: Shopify app v1 (theme-based stores, largest market)
+- Phase 8: Shopify app v2 (native pricing for Plus merchants)
+- Phase 9: Headless/API (technical merchants, full freedom)
 
 ## Constraints
 
@@ -210,6 +218,11 @@ Customers can order custom-dimension roller blinds with accurate matrix-based pr
 | Mobile cart icon reuses CartIcon component | Unified badge logic, no bespoke mobile implementation | ✓ Good — single source of truth for badge rendering and animation |
 | Conditional kleurstaal tag via spread | Clean GraphQL input construction, tag only when samples present | ✓ Good — minimal code change, operations team can filter in Shopify admin |
 | Inline VAT labels (no breakdown line) | Dutch regulatory compliance with minimal UI disruption | ✓ Good — "incl. 21% BTW" on configurator, shorter "incl. BTW" on cart |
+| gtag.js loaded unconditionally with Consent Mode v2 | GA4 needs consent defaults before any tracking; not using @next/third-parties (no CM v2 support) | ✓ Good — three-Script ordering pattern, all 4 params denied by default |
+| vanilla-cookieconsent for banner | Zero dependencies, native Consent Mode v2 signal mapping, localStorage persistence | ✓ Good — lightweight, customizable, GDPR-compliant |
+| sessionStorage cart snapshot before redirect | Cart clears before Shopify redirect; snapshot is only mechanism for purchase event items | ✓ Good — written before clearCart(), read on /bevestiging return |
+| event_callback + event_timeout for begin_checkout | GA4 must dispatch before Shopify redirect navigation | ✓ Good — 2s timeout safety net, immediate fallback when gtag absent |
+| GA_MEASUREMENT_ID as analytics guard (not NODE_ENV) | Vercel preview deployments have NODE_ENV=production | ✓ Good — analytics only fires when env var explicitly set |
 
 ---
-*Last updated: 2026-02-22 after v1.5 milestone start*
+*Last updated: 2026-02-27 after v1.5 milestone complete*
