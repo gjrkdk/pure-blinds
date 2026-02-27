@@ -3,7 +3,8 @@
 import { useState, useSyncExternalStore } from "react";
 import { useCartStore } from "@/lib/cart/store";
 import { formatPrice } from "@/lib/pricing/calculator";
-import { trackBeginCheckout } from "@/lib/analytics";
+import { trackBeginCheckout } from "@/lib/analytics"
+import { GA_MEASUREMENT_ID } from "@/lib/analytics/gtag";
 
 const emptySubscribe = () => () => {};
 
@@ -74,16 +75,6 @@ export function CartSummary() {
 
     const transactionId = `pb-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
 
-    trackBeginCheckout(
-      items.map(item => ({
-        item_id: item.productId,
-        item_name: item.productName,
-        price: item.priceInCents / 100,
-        quantity: item.quantity,
-      })),
-      getTotalPrice() / 100
-    )
-
     try {
       const response = await fetch("/api/checkout", {
         method: "POST",
@@ -108,7 +99,35 @@ export function CartSummary() {
 
         useCartStore.getState().clearCart();
         localStorage.removeItem("checkout_started");
-        window.location.href = decorateWithGlLinker(data.invoiceUrl);
+
+        const shopifyUrl = decorateWithGlLinker(data.invoiceUrl)
+
+        const checkoutItems = items.map(item => ({
+          item_id: item.productId,
+          item_name: item.productName,
+          price: item.priceInCents / 100,
+          quantity: item.quantity,
+        }))
+
+        // Fire begin_checkout for dev console logging (no-op when GA_MEASUREMENT_ID is falsy)
+        trackBeginCheckout(checkoutItems, getTotalPrice() / 100)
+
+        const redirectToShopify = () => {
+          window.location.href = shopifyUrl
+        }
+
+        // Gate redirect behind event_callback so GA4 dispatches before navigation
+        if (typeof window.gtag === 'function' && GA_MEASUREMENT_ID) {
+          window.gtag('event', 'begin_checkout', {
+            currency: 'EUR',
+            value: getTotalPrice() / 100,
+            items: checkoutItems,
+            event_callback: redirectToShopify,
+            event_timeout: 2000,
+          })
+        } else {
+          redirectToShopify()
+        }
       } else {
         setError(
           data.error || "Kan bestelling niet verwerken. Probeer het opnieuw.",

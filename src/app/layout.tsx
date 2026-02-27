@@ -89,7 +89,7 @@ export default function RootLayout({
                 __html: `
                   gtag('js', new Date());
                   gtag('config', '${GA_MEASUREMENT_ID}');
-                  gtag('set', 'linker', { 'domains': ['${process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN}'] });
+                  gtag('set', 'linker', { 'domains': ['${process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN}'], 'accept_incoming': true });
                 `,
               }}
             />
